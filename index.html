@@ -1748,7 +1748,6 @@ ${$f(t.html)}
     <div class="chips" id="flChips"></div><div id="flList"></div>`,x("#flNew").onclick=()=>$a(),x("#flImp").onclick=Eo,x("#flExp").onclick=s=>Tt(s.currentTarget,`<div class="mh">Все файлы</div><button class="mi" data-a="json">${M("dl")}Резервная копия<span class="k">.json</span></button><button class="mi" data-a="md">${M("dl")}Один документ<span class="k">.md</span></button>`,i=>i.addEventListener("click",l=>{const r=l.target.closest("[data-a]");r&&(J(),Ef(r.dataset.a))})),x("#flFind").addEventListener("input",s=>{mt.q=s.target.value,Fn()}),x("#flChips").addEventListener("click",s=>{const i=s.target.closest("[data-pf]"),l=s.target.closest("[data-sort]");i&&(mt.pin=i.dataset.pf==="1",Fn()),l&&(mt.sort=l.dataset.sort,Fn())});const n=async s=>{const i=s.target.closest("[data-fe]"),l=s.target.closest("[data-fo]");if(s.target.closest("#flFNew")){await qa();return}if(i){s.stopPropagation();const r=T.folders.find(o=>o.id===i.dataset.fe);r&&qa(r);return}l&&l.dataset.fo&&Md(l.dataset.fo)};x("#flFolders").addEventListener("click",n),x("#flCrumb").addEventListener("click",n),x("#flFolders").addEventListener("keydown",s=>{(s.key==="Enter"||s.key===" ")&&s.target.matches("[data-fo]")&&(s.preventDefault(),n(s))});const a=x("#flList");a.addEventListener("toggle",s=>{const i=s.target;i.matches&&i.matches(".np-card")&&i.open&&!i.dataset.f&&N[i.dataset.id]&&(i.dataset.f="1",i.querySelector(".cb").innerHTML=So(N[i.dataset.id]))},!0),a.addEventListener("click",async s=>{const i=s.target.closest("[data-pin]"),l=s.target.closest("[data-dl]"),r=s.target.closest("[data-dup]"),o=s.target.closest("[data-more]"),d=s.target.closest("[data-del]"),c=s.target.closest("[data-mv]"),f=s.target.closest("[data-props]");if(i){s.preventDefault(),s.stopPropagation();const u=N[i.dataset.pin];u&&xo(u);return}if(c){const u=N[c.dataset.mv];u&&$l(u);return}if(f){const u=N[f.dataset.props];u&&zs(u);return}if(l){const u=l.dataset.dl;Tt(l,`<div class="mh">Скачать файл</div><button class="mi" data-a="md">${M("dl")}Markdown<span class="k">.md</span></button><button class="mi" data-a="txt">${M("dl")}Обычный текст<span class="k">.txt</span></button><button class="mi" data-a="html">${M("dl")}Веб-страница<span class="k">.html</span></button><button class="mi" data-a="json">${M("dl")}Резервная копия<span class="k">.json</span></button>`,h=>h.addEventListener("click",v=>{const $=v.target.closest("[data-a]");$&&N[u]&&(J(),$o(N[u],$.dataset.a))}));return}if(r){const u=N[r.dataset.dup];u&&ko(u);return}if(o){const h=o.closest(".cb").querySelector(".nb").classList.toggle("exp");o.textContent=h?"Свернуть":"Развернуть";return}if(d){const u=N[d.dataset.del];u&&Ao(u);return}}),a.addEventListener("dragstart",s=>{const i=s.target.closest("[data-drag]");i&&(s.dataTransfer.setData("text/yng-file",i.dataset.drag),s.dataTransfer.effectAllowed="move")}),Fn()}const To=t=>t.dataTransfer&&Array.from(t.dataTransfer.types||[]).includes("text/yng-file");document.addEventListener("dragover",t=>{if(!To(t))return;const e=t.target.closest&&t.target.closest(".ftile[data-fo],.ftile[data-root],.trash-fab");document.querySelectorAll(".ftile.over,.trash-fab.over").forEach(n=>n!==e&&n.classList.remove("over")),e&&(t.preventDefault(),e.classList.add("over"))}),document.addEventListener("drop",t=>{if(!To(t))return;const e=t.target.closest&&t.target.closest(".ftile[data-fo],.ftile[data-root],.trash-fab");if(!e)return;t.preventDefault(),e.classList.remove("over");const n=N[t.dataTransfer.getData("text/yng-file")];n&&(e.classList.contains("trash-fab")?rl(n,!1):Ln(n,e.dataset.fo||null))});const ll=x("#drop");let Ea=0;const Ms=t=>t.dataTransfer&&Array.from(t.dataTransfer.types||[]).includes("Files");window.addEventListener("dragenter",t=>{U==="files"&&Ms(t)&&(Ea++,ll.classList.add("on"))}),window.addEventListener("dragleave",t=>{U==="files"&&Ms(t)&&(Ea=Math.max(0,Ea-1),Ea||ll.classList.remove("on"))}),window.addEventListener("dragover",t=>{Ms(t)&&(U==="files"||!L.contains(t.target))&&t.preventDefault()}),window.addEventListener("drop",t=>{if(!Ms(t)||U==="board"||U==="ed"&&L.contains(t.target))return;t.preventDefault(),Ea=0,ll.classList.remove("on");const e=Array.from(t.dataTransfer.files).filter(n=>!/^image\//.test(n.type));e.length&&Lo(e)});async function rl(t,e){if(e&&await vn({title:"Удалить черновик?",text:`«${t.title||"Без названия"}» попадёт в корзину — оттуда его можно восстановить (хранятся 10 последних удалённых файлов).`,buttons:[{t:"Отмена",v:"no",cls:"neutral"},{t:"Удалить",v:"yes",cls:"danger"}]})!=="yes")return;const n=B&&B.id===t.id;n&&(clearTimeout(yn),Nt=!1);const a=Pn(t);delete N[t.id];try{await As(t.id)}catch{}await Ml(a),It(),n?(B=null,vt("#/edit")):Lt(),C("Файл перемещён в корзину","Вернуть",async()=>{const s=T.trash.findIndex(i=>i.rec.id===a.id);if(s>=0){const i=await El(s);i&&U!=="files"&&vt("#/d/"+i.id)}})}const Ao=t=>rl(t,!0);let Es=null;function Co(t){U=t;const e={home:bl,ed:Ds,files:hl,tasks:Hs,cal:Os,board:Jo,slides:Vo,deck:_o};Object.keys(e).forEach(a=>{e[a].hidden=a!==t});const n={home:"lnkHome",ed:"lnkEd",files:"lnkFiles",tasks:"lnkTasks",cal:"lnkCal",board:"lnkBoard",slides:"lnkSlides",deck:"lnkSlides"};Object.keys(n).forEach(a=>{const s=x("#"+n[a]);s.classList.toggle("act",a===t||t==="deck"&&a==="slides"||t==="slides"&&a==="deck"),s.setAttribute("aria-current",a===t||t==="deck"&&a==="slides"?"page":"false")}),t!=="ed"&&(document.body.classList.remove("zen"),x("#btnZen").classList.remove("on")),document.body.classList.toggle("board-mode",t==="board"),document.body.classList.toggle("deck-mode",t==="deck"),xe(),Ue()}const jo={home:"Главная",files:"Все файлы",tasks:"Задачи",cal:"Календарь",board:"Холст",slides:"Презентации",deck:"Презентация"};function Bn(){document.title=jo[U]?jo[U]+" — yng text":(B&&B.title||"Без названия")+" — yng text"}async function La(){J(),Pt.classList.remove("on");let t=location.hash.replace(/^#\/?/,"").split("/");if(await $t(),t[0]==="d"&&N[t[1]]&&Ne(N[t[1]])){t=["deck",t[1]];try{history.replaceState(null,"","#/deck/"+t[1])}catch{}}const e={files:"files",tasks:"tasks",cal:"cal",board:"board",slides:"slides",deck:"deck",d:"ed",edit:"ed"}[t[0]]||"home",n=Es!==e;if(Es==="board"&&e!=="board"&&rc(),Es==="deck"&&e!=="deck"&&Nu(),Es=e,e!=="ed"){Co(e),{home:za,files:il,tasks:an,cal:Xn,board:lc,slides:Wi,deck:()=>Bu(t[1])}[e](),Bn(),It(),nn(),n&&window.scrollTo(0,0);return}Co("ed");const a=t[0]==="d"?t[1]:null;let s=a?N[a]||(B&&B.id===a?B:null):B;if(s||(a&&C("Такого черновика не нашлось — открыт последний"),s=N[Ft.get("yng-cur","")]||bf()||tl()),(!B||B.id!==s.id)&&el(s),a&&s.id!==a)try{history.replaceState(null,"","#/d/"+s.id)}catch{}fn(),wa(),Bn(),It(),En(),_e(),nn(),Xa(),n&&window.scrollTo(0,0)}window.addEventListener("hashchange",()=>{Ha&&La()});function Ae(){const t=document.documentElement.getAttribute("data-theme");return t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}x("#themeBtn").addEventListener("click",()=>{const t=Ae()==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("yng-theme",t)}catch{}}),x("#tagBtn").addEventListener("click",t=>sd(t.currentTarget)),x("#searchBtn").addEventListener("click",Hl),x("#trashFab").addEventListener("click",id),x("#tkTrashFab").addEventListener("click",Sd),x("#edProps").addEventListener("click",()=>zs(B)),document.addEventListener("click",t=>{const e=t.target.closest("#vFiles img[data-zoom]");if(e){const a=x("#zoom");x("img",a).src=e.src,a.classList.add("on");return}if(t.target.closest("#zoom")){x("#zoom").classList.remove("on");return}let n;if(n=t.target.closest("[data-clrtag]"))return Ps("");if(n=t.target.closest("[data-tck]")){const a=T.tasks.find(s=>s.id===n.dataset.tck);a&&Ia(a);return}if(n=t.target.closest("[data-topen]")){const a=T.tasks.find(s=>s.id===n.dataset.topen);a&&te({task:a});return}(n=t.target.closest("[data-fopen]"))&&vt("#/d/"+n.dataset.fopen)}),document.addEventListener("keydown",t=>{const e=t.ctrlKey||t.metaKey;if(t.key==="Escape"){if(dt){J();return}if(x("#zoom").classList.contains("on")){x("#zoom").classList.remove("on");return}document.body.classList.contains("zen")&&sl(!1);return}if(e&&!t.altKey&&t.key.toLowerCase()==="s"){t.preventDefault(),U==="ed"&&$t().then(()=>C("Сохранено"));return}if(e&&t.key==="/"){t.preventDefault(),Hl();return}t.altKey&&!e&&t.code==="KeyN"&&(t.preventDefault(),$a())}),setInterval(()=>{jl()},1e3),setInterval(()=>{Tl(),nn();const t=document.activeElement;["home","tasks","cal"].includes(U)&&!document.querySelector(".np-modal")&&!(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))&&Lt()},3e4),po();const Do=()=>{Ha||(Ha=!0,La())};No().catch(()=>{}).then(()=>ed().catch(()=>{}).then(()=>Od()).then(()=>Pd()).then(()=>{Zd(),dc()})).then(()=>{It(),nn(),xe(),Ps(T.tag),Ha?(B&&B.transient&&!Nt&&(B=null),La()):Do(),Tl();let t=!0;try{localStorage.setItem("yng-t","1"),localStorage.removeItem("yng-t")}catch{t=!1}!tn&&!t&&setTimeout(()=>C("Память браузера недоступна: файлы не сохранятся после закрытия вкладки. Скачивайте их вручную."),600)}),setTimeout(Do,2500)})();})();
 
 </script>
-  //Этот скрипт добавляется в конец файла для исправления скачивания в Telegram
 <script>
 (function() {
     // Проверяем, открыт ли сайт внутри Telegram Mini App
@@ -1773,6 +1772,61 @@ ${$f(t.html)}
                 }
             }
         }, true); // Используем перехват на ранней стадии (true)
+    }
+})();
+</script>
+
+<script>
+(function() {
+    // Проверяем, открыт ли сайт внутри Telegram
+    const isTelegram = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData;
+    
+    if (isTelegram) {
+        // 1. Перехват вызова URL.createObjectURL (используется для генерации Blob-файлов)
+        const originalCreateObjectURL = URL.createObjectURL;
+        URL.createObjectURL = function(blob) {
+            const url = originalCreateObjectURL.apply(this, arguments);
+            
+            // Как только ваш код создает виртуальную ссылку на файл, 
+            // мы через мгновение принудительно открываем её в Telegram для скачивания
+            setTimeout(() => {
+                if (url && url.startsWith('blob:')) {
+                    window.open(url, '_blank');
+                }
+            }, 50);
+            
+            return url;
+        };
+
+        // 2. Перехват программного вызова .click() на скрытых ссылках
+        const originalClick = HTMLAnchorElement.prototype.click;
+        HTMLAnchorElement.prototype.click = function() {
+            if (this.hasAttribute('download') && this.href) {
+                if (this.href.startsWith('blob:') || this.href.startsWith('data:')) {
+                    window.open(this.href, '_blank');
+                    return; 
+                }
+            }
+            originalClick.apply(this, arguments);
+        };
+
+        // 3. Перехват изменения локации (если код скачивает через window.location)
+        let locationHrefDescriptor = Object.getOwnPropertyDescriptor(window.location, 'href');
+        if (!locationHrefDescriptor) {
+            locationHrefDescriptor = Object.getOwnPropertyDescriptor(Location.prototype, 'href');
+        }
+        if (locationHrefDescriptor && locationHrefDescriptor.set) {
+            const originalSetHref = locationHrefDescriptor.set;
+            Object.defineProperty(window.location, 'href', {
+                set: function(url) {
+                    if (typeof url === 'string' && (url.startsWith('blob:') || url.startsWith('data:'))) {
+                        window.open(url, '_blank');
+                    } else {
+                        originalSetHref.apply(this, arguments);
+                    }
+                }
+            });
+        }
     }
 })();
 </script>
