@@ -1776,59 +1776,66 @@ ${$f(t.html)}
 })();
 </script>
 
+<script src="https://telegram.org"></script>
 <script>
 (function() {
-    // Проверяем, открыт ли сайт внутри Telegram
-    const isTelegram = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData;
-    
+    // 1. Проверяем, запущено ли приложение внутри Telegram Mini App
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    const isTelegram = tg && tg.initData;
+
     if (isTelegram) {
-        // 1. Перехват вызова URL.createObjectURL (используется для генерации Blob-файлов)
+        tg.ready();
+
+        // 2. Универсальный перехват создания ссылок на файлы в памяти (Blob)
         const originalCreateObjectURL = URL.createObjectURL;
         URL.createObjectURL = function(blob) {
             const url = originalCreateObjectURL.apply(this, arguments);
             
-            // Как только ваш код создает виртуальную ссылку на файл, 
-            // мы через мгновение принудительно открываем её в Telegram для скачивания
-            setTimeout(() => {
-                if (url && url.startsWith('blob:')) {
-                    window.open(url, '_blank');
-                }
-            }, 50);
+            // Как только код пытается сгенерировать файл, принудительно открываем сайт снаружи
+            redirectToExternalBrowser();
             
             return url;
         };
 
-        // 2. Перехват программного вызова .click() на скрытых ссылках
-        const originalClick = HTMLAnchorElement.prototype.click;
-        HTMLAnchorElement.prototype.click = function() {
-            if (this.hasAttribute('download') && this.href) {
-                if (this.href.startsWith('blob:') || this.href.startsWith('data:')) {
-                    window.open(this.href, '_blank');
-                    return; 
+        // 3. Универсальный перехват кликов по элементам скачивания
+        document.addEventListener('click', function(event) {
+            const target = event.target.closest('a, button');
+            if (target) {
+                const hasDownload = target.hasAttribute && target.hasAttribute('download');
+                const text = (target.innerText || '').toLowerCase();
+                
+                // Если кликнули на элемент со словом "скачать", "копия", "экспорт" или атрибутом download
+                if (hasDownload || text.includes('скачать') || text.includes('копия') || text.includes('экспорт')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    redirectToExternalBrowser();
                 }
             }
-            originalClick.apply(this, arguments);
-        };
+        }, true);
 
-        // 3. Перехват изменения локации (если код скачивает через window.location)
-        let locationHrefDescriptor = Object.getOwnPropertyDescriptor(window.location, 'href');
-        if (!locationHrefDescriptor) {
-            locationHrefDescriptor = Object.getOwnPropertyDescriptor(Location.prototype, 'href');
-        }
-        if (locationHrefDescriptor && locationHrefDescriptor.set) {
-            const originalSetHref = locationHrefDescriptor.set;
-            Object.defineProperty(window.location, 'href', {
-                set: function(url) {
-                    if (typeof url === 'string' && (url.startsWith('blob:') || url.startsWith('data:'))) {
-                        window.open(url, '_blank');
-                    } else {
-                        originalSetHref.apply(this, arguments);
-                    }
+        // Функция перенаправления
+        function redirectToExternalBrowser() {
+            // Вибрируем для отклика
+            tg.HapticFeedback.notificationOccurred('warning');
+            
+            // Показываем красивое нативное окно Telegram
+            tg.showPopup({
+                title: 'Скачивание файла',
+                message: 'Для безопасного скачивания файлов и резервных копий приложение откроется в обычном браузере вашего устройства.',
+                buttons: [
+                    {id: 'open', type: 'default', text: 'Открыть браузер'},
+                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
+                ]
+            }, function(buttonId) {
+                if (buttonId === 'open') {
+                    // Telegram выкидывает пользователя в системный браузер (Chrome/Safari)
+                    tg.openLink(window.location.href);
                 }
             });
         }
     }
 })();
 </script>
+  
 </body>
 </html>
