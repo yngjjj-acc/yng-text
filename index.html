@@ -1375,7 +1375,20 @@ cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' widt
 .dk-selbox u[data-h=rot-se]{right:calc(-30px*var(--ik,1));bottom:calc(-30px*var(--ik,1))}
 
 
-/* =====<script src="https://telegram.org/js/telegram-web-app.js"></script>
+/* ===== fix: прокрутка шапки на мобильных ===== */
+@media (max-width:1040px){
+  .nav-in{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x}
+  .nav-in::-webkit-scrollbar{display:none}
+  .nav-in>*{flex:0 0 auto}
+  .nav-in>.nav-sp{flex:1 0 8px;min-width:8px}
+}
+
+/* ===== логотип yng text: чёрный в светлой теме, белый в тёмной ===== */
+.logo-mark,.logo-mark svg{background:none;border-radius:0}
+.logo-mark{width:auto;height:auto;color:var(--text)}
+.logo-mark svg{width:21px;height:24px;fill:currentColor;stroke:none}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 /* ===== Telegram Mini App: init, сохранение файлов, прокрутка шапки ===== */
 const TG = (window.Telegram && Telegram.WebApp && Telegram.WebApp.platform && Telegram.WebApp.platform !== 'unknown') ? Telegram.WebApp : null;
@@ -1456,19 +1469,6 @@ async function yngSave(blob, name){
   addEventListener('hashchange', fix); addEventListener('load', fix);
 })();
 </script>
- fix: прокрутка шапки на мобильных ===== */
-@media (max-width:1040px){
-  .nav-in{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x}
-  .nav-in::-webkit-scrollbar{display:none}
-  .nav-in>*{flex:0 0 auto}
-  .nav-in>.nav-sp{flex:1 0 8px;min-width:8px}
-}
-
-/* ===== логотип yng text: чёрный в светлой теме, белый в тёмной ===== */
-.logo-mark,.logo-mark svg{background:none;border-radius:0}
-.logo-mark{width:auto;height:auto;color:var(--text)}
-.logo-mark svg{width:21px;height:24px;fill:currentColor;stroke:none}
-</style>
 </head>
 <body>
 <div id="wp" hidden aria-hidden="true"><div class="wp-img"></div><div class="wp-dim"></div></div>
