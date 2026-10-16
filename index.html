@@ -7254,8 +7254,8 @@ async function commit(){
     } else {
       const now = Date.now(); let hist = rec.hist || [];
       if(!rec.transient && rec.html !== html && rec.html.length < 600000 && !htmlEmpty(rec.html) && (!hist.length || now - hist[hist.length - 1].t > 180000)) hist = hist.concat({t: rec.updated, html: rec.html}).slice(-10);
-      Object.assign(rec, {title, html, updated: now, hist}); delete rec.transient;
-      DR[rec.id] = rec; await dbPut(rec);
+      Object.assign(rec, {title, html, updated: now, hist}); delete rec.transient; if(rec.team) rec.team.dirty = true;
+      DR[rec.id] = rec; await dbPut(rec); if(rec.team) tmPushSoon(rec);
       if(rec === cur){ setSt('сохранено', 'ok'); updDate(); }
     }
   }catch(e){
@@ -7819,7 +7819,7 @@ async function route(){
 
 /* ================= Команды (фаза 1) ================= */
 const vTeams = document.getElementById('vTeams');
-const TM_ERR = {auth:'Не удалось подтвердить Telegram-аккаунт', no_db:'На сервере не подключена база данных', bad_input:'Проверьте введённые данные', team_limit:'Вы уже состоите в 3 командах', team_full:'В команде уже 10 участников', bad_key:'Ключ не найден', already_member:'Вы уже в этой команде', forbidden:'Недостаточно прав', not_found:'Не найдено', owner_cannot_leave:'Владелец не может выйти: удалите команду', network:'Нет связи с сервером', server:'Ошибка сервера'};
+const TM_ERR = {auth:'Не удалось подтвердить Telegram-аккаунт', no_db:'На сервере не подключена база данных', bad_input:'Проверьте введённые данные', too_big:'Файл слишком большой (максимум около 1,9 МБ)', files_limit:'В команде уже 100 файлов', conflict:'Файл уже изменил другой участник', team_limit:'Вы уже состоите в 3 командах', team_full:'В команде уже 10 участников', bad_key:'Ключ не найден', already_member:'Вы уже в этой команде', forbidden:'Недостаточно прав', not_found:'Не найдено', owner_cannot_leave:'Владелец не может выйти: удалите команду', network:'Нет связи с сервером', server:'Ошибка сервера'};
 const TM_PERM = {owner:'Владелец', admin:'Админ', editor:'Редактор', viewer:'Наблюдатель'};
 const TM_EMO = ['👥','🚀','📚','💡','🎨','🔥','🌱','🧠','🎯','⚡','🛠️','🌍'];
 let tmSp = false, tmData = null;
@@ -7844,23 +7844,28 @@ async function renderTeams(){
 async function tmList(){
   const d = await tmApi('me'); tmData = d;
   const cards = d.teams.map(t => '<button type="button" class="tm-card" data-tm="open" data-id="' + esc(t.id) + '"><span class="tm-av">' + esc(t.emoji || '👥') + '</span><span><b>' + esc(t.name) + '</b><br><span style="color:var(--text-2);font-size:13px">' + t.n + '/' + d.limits.members + ' · ' + TM_PERM[t.perm] + '</span></span></button>').join('');
-  vTeams.innerHTML = tmHead('Вы состоите в командах: ' + d.teams.length + ' из ' + d.limits.teams + '. Файлы команд появятся в следующем обновлении.') +
+  vTeams.innerHTML = tmHead('Вы состоите в командах: ' + d.teams.length + ' из ' + d.limits.teams + '.') +
     '<div class="np-bar"><button class="btn small" type="button" data-tm="create">Создать команду</button><button class="btn small" type="button" data-tm="join">Войти по ключу</button></div>' +
     (cards ? '<div class="tm-grid">' + cards + '</div>' : '<div class="np-empty"><b>Пока нет команд</b>Создайте свою или войдите по ключу.</div>');
   const sp = TG.initDataUnsafe && TG.initDataUnsafe.start_param;
   if(sp && !tmSp){ tmSp = true; tmJoinDlg(sp); }
 }
 async function tmTeam(id){
-  const d = await tmApi('team.get', {id}); tmData = d; const own = d.my.perm === 'owner', staff = own || d.my.perm === 'admin';
+  const d = await tmApi('team.get', {id}); tmData = d; d.files = (await tmApi('file.list', {id})).files; d.tasks = (await tmApi('task.list', {id}).catch(() => ({tasks: []}))).tasks; const own = d.my.perm === 'owner', staff = own || d.my.perm === 'admin';
   const rows = d.members.map(m => {
     const chip = (m.role_label || m.role_emoji) ? '<span class="tm-chip" style="background:' + esc(m.role_color || '#8e8e93') + '">' + esc((m.role_emoji || '') + ' ' + (m.role_label || '')).trim() + '</span>' : '';
     const edit = own && m.perm !== 'owner' ? '<button class="btn small" type="button" data-tm="member" data-uid="' + m.id + '">Изменить</button>' : (staff && m.perm !== 'owner' && m.id !== d.my.id && !(d.my.perm === 'admin' && m.perm === 'admin') ? '<button class="btn small" type="button" data-tm="kick" data-uid="' + m.id + '">Убрать</button>' : '');
     return '<div class="tm-row"><span class="tm-av" style="width:36px;height:36px;font-size:16px">' + esc((m.name || '?').slice(0, 1).toUpperCase()) + '</span><span class="grow"><b>' + esc(m.name) + '</b>' + (m.id === d.my.id ? ' (вы)' : '') + chip + '<br><span style="color:var(--text-2);font-size:13px">' + TM_PERM[m.perm] + (m.username ? ' · @' + esc(m.username) : '') + '</span></span>' + edit + '</div>';
   }).join('');
+  const edt = ['owner','admin','editor'].includes(d.my.perm), adm = own || d.my.perm === 'admin', bt = (a, t, f) => '<button class="btn small" type="button" data-tm="' + a + '"' + (f ? ' data-fid="' + esc(f) + '"' : '') + '>' + t + '</button>';
+  const filesHtml = '<div class="eyebrow" style="margin:18px 0 4px">Файлы команды</div>' + (edt ? '<div class="np-bar">' + bt('fadd', 'Добавить из моих файлов') + bt('fnew', 'Новый файл') + '</div>' : '') +
+    (d.files.map(f => '<div class="tm-row"><span class="grow"><b>' + esc(f.title || 'Без названия') + '</b><br><span style="color:var(--text-2);font-size:13px">' + esc(f.by || '') + ' · ' + fmtDate(f.updated_at) + '</span></span>' + bt('fopen', edt ? 'Открыть' : 'Просмотр', f.id) + bt('fcopy', 'Копия', f.id) + (adm ? bt('fdel', 'Удалить', f.id) : '') + '</div>').join('') || '<p style="color:var(--text-2)">Файлов пока нет.</p>');
+  const tasksHtml = '<div class="eyebrow" style="margin:18px 0 4px">Задачи команды</div>' + (edt ? '<div class="np-bar">' + bt('tadd', 'Добавить задачу') + '</div>' : '') + (staff ? '<p style="color:var(--text-2);font-size:13px">Чтобы добавлять задачи и файлы из чата: добавьте бота в группу и отправьте /link.</p>' : '') +
+    (d.tasks.map(t => '<div class="tm-row">' + (edt ? bt('ttoggle', t.done ? '☑' : '☐', t.id) : '<span>' + (t.done ? '☑' : '☐') + '</span>') + '<span class="grow" style="' + (t.done ? 'text-decoration:line-through;color:var(--text-2)' : '') + '">' + esc(t.text) + '</span></div>').join('') || '<p style="color:var(--text-2)">Задач пока нет. Добавьте здесь или командой /task в привязанном чате.</p>');
   const link = (typeof YNG_INVITE_BASE !== 'undefined' && YNG_INVITE_BASE && d.team.key) ? '<button class="btn small" type="button" data-tm="copylink">Скопировать ссылку</button> ' : '';
   vTeams.innerHTML = '<p><a href="#/teams">← Все команды</a></p><div style="display:flex;gap:14px;align-items:center;margin-bottom:18px"><span class="tm-av" style="width:64px;height:64px;font-size:32px">' + esc(d.team.emoji || '👥') + '</span><div><h1 class="fl-h1" style="margin:0">' + esc(d.team.name) + '</h1><span style="color:var(--text-2)">' + d.members.length + '/' + tmData.members.length + '</span></div></div>' +
     (d.team.key ? '<div class="eyebrow">Ключ приглашения</div><span class="tm-key">' + esc(tmKeyFmt(d.team.key)) + '</span><button class="btn small" type="button" data-tm="copykey">Копировать</button> ' + link + (own ? '<button class="btn small" type="button" data-tm="rekey">Новый ключ</button>' : '') + '<p style="color:var(--text-2);font-size:13px">Новые участники входят как наблюдатели, права назначает владелец.</p>' : '') +
-    '<div class="eyebrow" style="margin:18px 0 4px">Участники</div>' + rows +
+    filesHtml + tasksHtml + '<div class="eyebrow" style="margin:18px 0 4px">Участники</div>' + rows +
     '<div class="np-bar" style="margin-top:18px">' + (own ? '<button class="btn small" type="button" data-tm="edit">Название и эмодзи</button><button class="btn small" type="button" data-tm="del">Удалить команду</button>' : '<button class="btn small" type="button" data-tm="leave">Выйти из команды</button>') + '</div>';
   vTeams.querySelector('.fl-h1 + span').textContent = d.members.length + ' из 10 участников';
 }
@@ -7884,6 +7889,51 @@ function tmMemberDlg(m){
   ov.querySelector('#tmRm').onclick = async () => { try{ await tmApi('member.remove', {id: tmData.team.id, user_id: m.id}); ov.remove(); renderTeams(); }catch(e){ tmFail(e); } };
 }
 const tmCopy = async (t, ok) => { try{ await navigator.clipboard.writeText(t); toast(ok); }catch(e){ toast(t); } };
+
+/* ----- файлы команды ----- */
+const tmCanEdit = () => ['owner','admin','editor'].includes(tmData.my.perm);
+const tmQ = new Map(), tmT = {};
+function tmPushSoon(rec){ clearTimeout(tmT[rec.id]); tmT[rec.id] = setTimeout(() => tmPush(rec), 1500); }
+function tmPush(rec){ clearTimeout(tmT[rec.id]); const p = (tmQ.get(rec.id) || Promise.resolve()).then(() => tmDoPush(rec)); tmQ.set(rec.id, p); return p; }
+async function tmDoPush(rec){
+  if(!rec.team || !rec.team.dirty) return;
+  try{
+    const r = await tmApi('file.save', {id: rec.team.tid, fid: rec.team.fid, title: rec.title, html: rec.html, base: rec.team.ver});
+    rec.team.ver = r.version; rec.team.dirty = false; await dbPut(rec);
+    if(rec === cur) setSt('сохранено в команде', 'ok');
+  }catch(e){
+    if(e.message === 'conflict'){ rec.team = null; rec.title = (rec.title || 'Без названия') + ' (моя версия)'; if(rec === cur) titleEl.value = rec.title; await dbPut(rec); toast('Файл уже изменил другой участник: ваша версия сохранена отдельной копией. Откройте файл команды заново.'); }
+    else tmFail(e);
+  }
+}
+async function tmLocalFrom(f, link){
+  const now = Date.now(), rec = {id: link ? 'tm' + f.id : uid(), title: link ? f.title : (f.title || 'Без названия') + ' (копия)', html: f.html, created: now, updated: now, pinned: false, hist: []};
+  if(link) rec.team = {tid: tmData.team.id, fid: f.id, ver: f.version, perm: tmData.my.perm, dirty: false};
+  DR[rec.id] = rec; await dbPut(rec); badge(); return rec;
+}
+async function tmFileAct(a, fid){
+  const tid = tmData.team.id;
+  if(a === 'fdel'){ if(confirm('Удалить файл у всей команды?')){ await tmApi('file.delete', {id: tid, fid}); renderTeams(); } return; }
+  if(a === 'fadd'){
+    const recs = Object.values(DR).filter(r => !isDeck(r) && !r.team).sort((x, y) => y.updated - x.updated);
+    const ov = tmDlg('<h3>Добавить в команду</h3><p style="color:var(--text-2);font-size:13px">В команду уходит копия файла. Личный файл остаётся у вас.</p>' + (recs.map(r => '<button type="button" class="tm-card" style="margin-bottom:8px" data-pick="' + esc(r.id) + '"><b>' + esc(r.title || 'Без названия') + '</b></button>').join('') || 'Личных файлов пока нет.'));
+    ov.addEventListener('click', async e => { const bt = e.target.closest('[data-pick]'); if(!bt) return; const r = DR[bt.dataset.pick];
+      try{ await tmApi('file.create', {id: tid, title: r.title, html: r.html}); ov.remove(); toast('Файл добавлен в команду'); renderTeams(); }catch(err){ tmFail(err); } });
+    return;
+  }
+  if(a === 'fnew'){
+    const ov = tmDlg('<h3>Новый файл</h3><label>Название<input id="tmN" maxlength="160"></label><button class="btn small" type="button" id="tmGo">Создать и открыть</button>');
+    ov.querySelector('#tmGo').onclick = async () => { try{ const r = await tmApi('file.create', {id: tid, title: ov.querySelector('#tmN').value, html: '<p><br></p>'}); ov.remove(); await tmFileAct('fopen', r.fid); }catch(err){ tmFail(err); } };
+    return;
+  }
+  if(a === 'fopen'){ const ex = DR['tm' + fid]; if(ex && ex.team && ex.team.dirty) await tmPush(ex); }
+  const file = (await tmApi('file.get', {id: tid, fid})).file;
+  if(a === 'fcopy'){ await tmLocalFrom(file, false); toast('Копия сохранена в «Файлах»'); }
+  else if(a === 'fopen'){
+    if(tmCanEdit()){ await commit(); const r = await tmLocalFrom(file, true); nav('#/d/' + r.id); }
+    else { const ov = tmDlg('<h3>' + esc(file.title) + '</h3><div style="max-height:50vh;overflow:auto;margin-bottom:10px">' + sanitize(file.html) + '</div><button class="btn small" type="button" id="tmCp">Сохранить копию себе</button>'); ov.querySelector('#tmCp').onclick = async () => { await tmLocalFrom(file, false); ov.remove(); toast('Копия сохранена в «Файлах»'); }; }
+  }
+}
 vTeams.addEventListener('click', async e => {
   const b = e.target.closest('[data-tm]'); if(!b) return; const a = b.dataset.tm, tid = tmData && tmData.team && tmData.team.id;
   try{
@@ -7891,6 +7941,10 @@ vTeams.addEventListener('click', async e => {
     else if(a === 'open') nav('#/teams/' + b.dataset.id);
     else if(a === 'create'){ if(tmData && tmData.teams.length >= tmData.limits.teams) toast(TM_ERR.team_limit); else tmEditDlg(null); }
     else if(a === 'join') tmJoinDlg('');
+    else if(a[0] === 'f') await tmFileAct(a, b.dataset.fid);
+    else if(a === 'ttoggle'){ await tmApi('task.toggle', {id: tid, task: b.dataset.fid}); renderTeams(); }
+    else if(a === 'tadd'){ const ov = tmDlg('<h3>Новая задача</h3><label>Текст<input id="tmN" maxlength="300"></label><button class="btn small" type="button" id="tmGo">Добавить</button>');
+      ov.querySelector('#tmGo').onclick = async () => { try{ await tmApi('task.add', {id: tid, text: ov.querySelector('#tmN').value}); ov.remove(); renderTeams(); }catch(err){ tmFail(err); } }; }
     else if(a === 'edit') tmEditDlg(tmData.team);
     else if(a === 'member') tmMemberDlg(tmData.members.find(m => String(m.id) === b.dataset.uid));
     else if(a === 'copykey') tmCopy(tmData.team.key, 'Ключ скопирован');
