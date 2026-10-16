@@ -7934,6 +7934,40 @@ async function tmFileAct(a, fid){
     else { const ov = tmDlg('<h3>' + esc(file.title) + '</h3><div style="max-height:50vh;overflow:auto;margin-bottom:10px">' + sanitize(file.html) + '</div><button class="btn small" type="button" id="tmCp">Сохранить копию себе</button>'); ov.querySelector('#tmCp').onclick = async () => { await tmLocalFrom(file, false); ov.remove(); toast('Копия сохранена в «Файлах»'); }; }
   }
 }
+
+/* ----- живая синхронизация открытого командного файла ----- */
+let tmBusy = false;
+function tmBanner(text, act){
+  let b = document.getElementById('tmBn');
+  if(!text){ if(b) b.remove(); return; }
+  if(!b){ b = document.createElement('div'); b.id = 'tmBn'; b.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:8000;max-width:92vw;background:var(--bg-elev,#fff);color:var(--text);border:1px solid var(--line-2);border-radius:980px;padding:8px 14px;box-shadow:0 6px 24px rgba(0,0,0,.2);font-size:13px;display:flex;gap:10px;align-items:center'; document.body.appendChild(b); }
+  b.textContent = ''; const sp = document.createElement('span'); sp.textContent = text; b.appendChild(sp);
+  if(act){ const x = document.createElement('button'); x.className = 'btn small'; x.type = 'button'; x.textContent = act.label; x.onclick = act.fn; b.appendChild(x); }
+}
+async function tmApplyRemote(rec, f, keepCopy){
+  if(keepCopy){ const now = Date.now(), c = {id: uid(), title: (rec.title || 'Без названия') + ' (моя версия)', html: rec.html, created: now, updated: now, pinned: false, hist: []}; DR[c.id] = c; await dbPut(c); badge(); }
+  clearTimeout(timer); dirty = false;
+  rec.html = f.html; rec.title = f.title; rec.updated = Date.now(); rec.team.ver = f.version; rec.team.dirty = false; await dbPut(rec);
+  if(cur && cur.id === rec.id){ ed.innerHTML = sanitize(f.html); titleEl.value = f.title; refreshInline(); ed.classList.toggle('is-empty', isEmptyEl(ed)); counter(); updDate(); }
+  tmBanner('');
+}
+async function tmTick(){
+  const rec = cur;
+  if(!rec || !rec.team || view !== 'ed'){ tmBanner(''); return; }
+  if(document.hidden || tmBusy) return;
+  tmBusy = true;
+  try{
+    const r = await tmApi('file.poll', {id: rec.team.tid, fid: rec.team.fid, base: rec.team.ver});
+    if(cur !== rec) return;
+    if(r.file){
+      if(!rec.team.dirty && document.activeElement !== ed) await tmApplyRemote(rec, r.file, false);
+      else tmBanner('Коллега обновил файл', {label: 'Обновить', fn: () => tmApplyRemote(rec, r.file, rec.team.dirty)});
+    } else if(r.who.length) tmBanner('👥 Сейчас в файле: ' + r.who.join(', '));
+    else tmBanner('');
+  }catch(e){ if(e.message === 'not_found'){ tmBanner('Файл удалён из команды'); } }
+  finally{ tmBusy = false; }
+}
+if(TG && TG.initData && YNG_SEND_URL) setInterval(tmTick, 8000);
 vTeams.addEventListener('click', async e => {
   const b = e.target.closest('[data-tm]'); if(!b) return; const a = b.dataset.tm, tid = tmData && tmData.team && tmData.team.id;
   try{
