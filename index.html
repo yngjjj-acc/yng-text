@@ -1444,6 +1444,65 @@ p.tbe{margin:12px 0;overflow-x:auto;cursor:pointer;border-radius:6px}p.tbe:hover
 .tb-mh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.tb-mc{overflow:auto;min-height:0}
 .tb-mo .tb-back{display:none}.tb-mo .tb-wrap{max-height:58vh}.tb-ro .tb-bar{display:none}.tb-ro .tb-title{pointer-events:none}
 .tm-ov{z-index:9700}.emp-ov{z-index:9800}
+/* ===== v4: раздел «Таблицы» — редизайн ===== */
+.tbl-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+.tbl-top .btn svg,.tb-bk svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tbl-cnt{margin-left:auto;font-size:13px;color:var(--text-3)}
+.tbc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:0 0 24px}
+.tbc{display:flex;flex-direction:column;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--bg-elev);overflow:hidden;cursor:pointer;outline:none;transition:border-color .2s var(--ease),box-shadow .25s var(--ease)}
+.tbc:hover,.tbc:focus-visible{border-color:var(--accent);box-shadow:var(--shadow)}
+.tbc-pv{height:96px;padding:12px 14px 0;background:rgba(120,120,128,.08);border-bottom:1px solid var(--line-2);overflow:hidden;-webkit-mask-image:none}
+.tbc-g{display:grid;border:1px solid var(--line-2);border-radius:8px 8px 0 0;border-bottom:0;background:var(--bg-elev);overflow:hidden}
+.tbc-g i{font-style:normal;font-size:10.5px;line-height:22px;height:22px;padding:0 6px;color:var(--text-2);border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbc-g i{margin-right:-1px}.tbc-g i.h{font-weight:600;color:var(--text);background:rgba(120,120,128,.1)}
+.tbc-bd{padding:12px 14px 2px;min-width:0}.tbc-bd b{display:block;font-size:16px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbc-bd span{display:block;margin-top:3px;font-size:12.5px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbc-ft{display:flex;gap:2px;justify-content:flex-end;padding:4px 8px 8px}
+.tbc-ib{width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:var(--text-2);display:inline-grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.tbc-ib svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tbc-ib:hover,.tbc-ib:focus-visible{background:rgba(120,120,128,.18);color:var(--text);outline:none}
+.tbc-ib.dn:hover,.tbc-ib.dn:focus-visible{background:rgba(255,59,48,.14);color:#ff3b30}
+.tbd h3{margin:0 0 12px;font-size:20px;letter-spacing:-.02em}
+.tbd{border-radius:20px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.tbd input{padding:12px 14px;margin:0 0 16px;border-radius:12px;font-size:16px}
+.tbd input:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tbd-a{display:flex;gap:8px;justify-content:flex-end}
+.tbp-ov{background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tbp{width:min(480px,100%);max-height:min(640px,88dvh);display:flex;flex-direction:column;background:var(--bg-elev);color:var(--text);border-radius:22px;padding:20px 18px 14px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.tbp-h{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.tbp-h h3{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}.tbp-h p{margin:0;font-size:13.5px;line-height:1.45;color:var(--text-2)}
+.tbp-x{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:rgba(120,120,128,.16);color:var(--text-2);display:grid;place-items:center;cursor:pointer}
+.tbp-x svg,.tbp-s svg,.tbp-ic svg,.tbp-ei svg{stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tbp-x svg{width:16px;height:16px}.tbp-x:hover{background:rgba(120,120,128,.28)}
+.tbp-s{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;margin-bottom:10px;border-radius:12px;background:rgba(120,120,128,.14);color:var(--text-3)}
+.tbp-s:focus-within{background:var(--bg-elev);box-shadow:0 0 0 2px var(--accent)}.tbp-s svg{width:17px;height:17px;flex:none}
+.tbp-s input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--text)}
+.tbp-l{overflow-y:auto;margin:0 -6px;padding:0 6px 4px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch}
+.tbp-r{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:14px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.tbp-r:hover,.tbp-r:focus-visible{border-color:var(--accent);background:var(--accent-soft);outline:none}
+.tbp-ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}.tbp-ic svg{width:22px;height:22px}
+.tbp-t{flex:1;min-width:0}.tbp-t b{display:block;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tbp-t small{display:block;margin-top:2px;color:var(--text-3);font-size:12.5px}
+.tbp-go{flex:none;font-size:13px;font-weight:600;color:var(--accent)}
+.tbp-e{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:28px 12px;color:var(--text-2);font-size:14px}.tbp-e b{color:var(--text);font-size:17px}.tbp-e .btn{margin-top:10px}
+.tbp-ei{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:4px}.tbp-ei svg{width:28px;height:28px}
+@media (max-width:560px){.tbp-ov{align-items:flex-end;padding:0}.tbp{width:100%;max-height:86dvh;border-radius:22px 22px 0 0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}.tbp-go{display:none}.tbc-grid{grid-template-columns:1fr}.tbl-cnt{margin-left:0;width:100%}}
+.tb-back{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px}
+.tb-bk{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 14px 0 8px;border-radius:980px;background:rgba(120,120,128,.14);color:var(--text);font-size:14px;font-weight:500;text-decoration:none;transition:background .2s}
+.tb-bk:hover{background:rgba(120,120,128,.26);text-decoration:none}
+.tb-sv{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text-3)}.tb-sv i{width:8px;height:8px;border-radius:50%;background:#30b455}.tb-sv.wait i{background:#ff9f0a}
+.tb-hd{margin:0 0 14px}
+.tb-hd .tb-title{font-size:clamp(26px,4.4vw,36px);font-weight:700;letter-spacing:-.03em;line-height:1.15;padding:4px 8px;margin:0 -8px 6px;width:calc(100% + 16px);border-radius:10px;transition:background .2s,box-shadow .2s}
+.tb-hd .tb-title:hover{background:rgba(120,120,128,.1)}.tb-hd .tb-title:focus{background:var(--bg-elev);box-shadow:0 0 0 2px var(--accent)}
+.tb-meta{display:flex;flex-wrap:wrap;gap:6px}.tb-meta span{font-size:12.5px;color:var(--text-2);padding:3px 10px;border-radius:980px;background:rgba(120,120,128,.12)}
+.tb-shell{border:1px solid var(--line-2);border-radius:18px;background:var(--bg-elev);box-shadow:var(--shadow);overflow:hidden}
+.tb-shell .tb-bar{padding:10px 12px;margin:0;background:rgba(120,120,128,.07);border-bottom:1px solid var(--line-2)}
+.tb-shell .tb-fxr{margin:0;padding:8px 12px;border-bottom:1px solid var(--line-2)}
+.tb-shell .tb-fxr input{border-radius:10px}.tb-shell .tb-fxr span{background:rgba(120,120,128,.12);border-radius:8px;padding:6px 8px;min-width:48px;box-sizing:border-box}
+.tb-shell .tb-wrap{border:0;border-radius:0;max-height:calc(100vh - 400px);max-height:calc(100dvh - 400px);min-height:260px}
+.tb-sb{display:flex;justify-content:space-between;gap:12px;padding:8px 14px;border-top:1px solid var(--line-2);background:rgba(120,120,128,.07);font-size:12.5px;color:var(--text-3)}.tb-sb span:first-child{color:var(--text-2);font-weight:500}
+.tb-mo .tb-shell{box-shadow:none}.tb-mo .tb-shell .tb-wrap{max-height:56vh;max-height:56dvh}.tb-mo .tb-hd .tb-meta{display:none}.tb-mo .tb-hd .tb-title{font-size:22px;margin-bottom:0}
+@media (max-width:560px){.tb-sb span:last-child{display:none}.tb-shell .tb-wrap{max-height:calc(100dvh - 360px);min-height:220px}}
+
 @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -2030,6 +2089,9 @@ function dialog(html, cls, mount){
     mount && mount(m, done);
     (m.querySelector('[data-focus]') || m.querySelector('button')).focus();
   });
+}
+function askYN(title, text, ok){
+  return dialog(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts"><button type="button" class="btn small neutral" data-v="no" data-focus>Отмена</button><button type="button" class="btn small danger" data-v="yes">${esc(ok || 'Удалить')}</button></div>`, '', m => { m.style.zIndex = 9900; }).then(v => v === 'yes');
 }
 function modal({title, text, buttons}){
   return dialog(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts">${buttons.map(b => `<button type="button" class="btn small ${b.cls || ''}" data-v="${b.v}"${b.v === 'no' ? ' data-focus' : ''}>${esc(b.t)}</button>`).join('')}</div>`);
@@ -6658,7 +6720,7 @@ function dkRibDraw(){
       dkB('alignL', svg('alL'), 'По левому краю') + dkB('alignC', svg('alC'), 'По центру') + dkB('alignR', svg('alR'), 'По правому краю') + dkB('alignJ', svg('alJ'), 'По ширине') + dkSep +
       dkB('ul', svg('ul'), 'Маркированный список') + dkB('ol', svg('ol'), 'Нумерованный список') + dkB('quote', svg('quote'), 'Цитата') + dkB('codeb', svg('code'), 'Код в тексте') + dkB('link', svg('link'), 'Ссылка') + dkB('clear', svg('eraser'), 'Убрать форматирование') + dkSep +
       dkB('i-text', 'Aa', 'Добавить текстовый блок') + dkB('i-image', ico('dkimg'), 'Изображение') + dkB('i-video', ico('dkvideo'), 'Видео на слайд (.mp4, .webm, .mov, до 35 МБ)') + dkB('i-table', svg('table'), 'Таблица') + dkB('i-code', svg('code'), 'Блок кода') +
-      dkB('i-fx', ico('dkfx'), 'Формулы') + dkB('i-chart', ico('dkchart'), 'Диаграммы') + dkB('i-tbl', ico('dkchart'), 'Таблица из раздела «Таблицы»') + dkB('i-plate', ico('dkplate'), 'Плашка с текстом') + dkB('i-shape', ico('dkshape'), 'Фигура') + dkB('i-emoji', ico('dkemoji'), 'Эмодзи') + dkSep +
+      dkB('i-fx', ico('dkfx'), 'Формулы') + dkB('i-chart', ico('dkchart'), 'Диаграммы') + dkB('i-tbl', svg('tbl'), 'Таблица из раздела «Таблицы»') + dkB('i-plate', ico('dkplate'), 'Плашка с текстом') + dkB('i-shape', ico('dkshape'), 'Фигура') + dkB('i-emoji', ico('dkemoji'), 'Эмодзи') + dkSep +
       dkB('i-task', svg('task'), 'Карточка задачи на слайд') + dkB('i-file', ico('dkfile'), 'Текстовый файл на слайд') + dkSep + dkB('undo', svg('undo'), 'Отменить (Ctrl+Z)') + dkB('redo', svg('redo'), 'Повторить (Ctrl+Y)');
   } else if(t === 'tpl'){
     r.innerHTML = `<div class="dkt-row">${DK_TPL.map(x => {
@@ -7068,7 +7130,8 @@ const SV = {
   redo:'<path d="M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3"/>',
   hr:'<path d="M4 12h16"/>',
   task: IC.tasks,
-  alL:'<path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>', alC:'<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>', alR:'<path d="M4 6h16M10 10h10M4 14h16M10 18h10"/>', alJ:'<path d="M4 6h16M4 10h16M4 14h16M4 18h10"/>',
+  alL:'<path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>', alC:'<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>', alR:'<path d="M4 6h16M10 10h10M4 14h16M10 18h10"/>', alJ:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>',
+  tbl:'<rect x="3" y="8" width="13.500" height="12" rx="2"/><path d="M3 13h13.500M9.500 13v7"/><path d="M7 4.500h11a2.500 2.500 0 0 1 2.500 2.500v9"/>',
   page:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
   eraser: IC.eraser
 };
@@ -7079,7 +7142,7 @@ const TOOLS = [
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
   '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить вложенность (Shift+Tab)'],['indent',svg('indent'),'Вложенный пункт (Tab)'],
   '|',['quote',svg('quote'),'Цитата / акцентный блок'],['code',svg('code'),'Блок кода или формулы'],['hr',svg('hr'),'Разделитель'],
-  '|',['table',svg('table'),'Таблица'],['tbl',svg('table'),'Таблица из раздела «Таблицы» (обновляется сама)'],['image',svg('image'),'Изображение'],['link',svg('link'),'Ссылка (Ctrl+K)'],['task',svg('task'),'Задача в тексте (дедлайн, приоритет, теги)'],['attach','<svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.5 17.2a1.7 1.7 0 0 1-2.4-2.4L14.5 7.5"/></svg>','Прикрепить файл (до 15 МБ)'],['fx','<svg viewBox="0 0 24 24"><path d="M17.500 5.500H7l5.500 6.500L7 18.500h10.500"/></svg>','Формулы: визуальный конструктор'],['chart','<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg>','Диаграммы'],
+  '|',['table',svg('table'),'Таблица'],['tbl',svg('tbl'),'Таблица из раздела «Таблицы» (обновляется сама)'],['image',svg('image'),'Изображение'],['link',svg('link'),'Ссылка (Ctrl+K)'],['task',svg('task'),'Задача в тексте (дедлайн, приоритет, теги)'],['attach','<svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.5 17.2a1.7 1.7 0 0 1-2.4-2.4L14.5 7.5"/></svg>','Прикрепить файл (до 15 МБ)'],['fx','<svg viewBox="0 0 24 24"><path d="M17.500 5.500H7l5.500 6.500L7 18.500h10.500"/></svg>','Формулы: визуальный конструктор'],['chart','<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg>','Диаграммы'],
   '|',['clear',svg('eraser'),'Убрать форматирование'],['undo',svg('undo'),'Отменить'],['redo',svg('redo'),'Повторить'],
   '|',['page',svg('page'),'Параметры страницы: A5, A4, A3'],['view','Aa','Вид: шрифт, размер, ширина']
 ];
@@ -8018,7 +8081,7 @@ async function tmLocalFrom(f, link){
 }
 async function tmFileAct(a, fid){
   const tid = tmData.team.id;
-  if(a === 'fdel'){ if(confirm('Удалить файл у всей команды?')){ await tmApi('file.delete', {id: tid, fid}); renderTeams(); } return; }
+  if(a === 'fdel'){ if(await askYN('Удалить файл?', 'Файл будет удалён у всей команды.')){ await tmApi('file.delete', {id: tid, fid}); renderTeams(); } return; }
   if(a === 'fadd'){
     const recs = Object.values(DR).filter(r => !isDeck(r) && !r.team).sort((x, y) => y.updated - x.updated);
     const ov = tmDlg('<h3>Добавить в команду</h3><p style="color:var(--text-2);font-size:13px">В команду уходит копия файла. Личный файл остаётся у вас.</p>' + (recs.map(r => '<button type="button" class="tm-card" style="margin-bottom:8px" data-pick="' + esc(r.id) + '"><b>' + esc(r.title || 'Без названия') + '</b></button>').join('') || 'Личных файлов пока нет.'));
@@ -8088,10 +8151,10 @@ vTeams.addEventListener('click', async e => {
     else if(a === 'member') tmMemberDlg(tmData.members.find(m => String(m.id) === b.dataset.uid));
     else if(a === 'copykey') tmCopy(tmData.team.key, 'Ключ скопирован');
     else if(a === 'copylink') tmCopy(YNG_INVITE_BASE + tmData.team.key, 'Ссылка скопирована');
-    else if(a === 'rekey'){ if(confirm('Старый ключ перестанет работать. Создать новый?')){ await tmApi('team.rekey', {id: tid}); renderTeams(); } }
-    else if(a === 'kick'){ if(confirm('Убрать участника из команды?')){ await tmApi('member.remove', {id: tid, user_id: Number(b.dataset.uid)}); renderTeams(); } }
-    else if(a === 'leave'){ if(confirm('Выйти из команды?')){ await tmApi('member.remove', {id: tid}); nav('#/teams'); } }
-    else if(a === 'del'){ if(confirm('Удалить команду «' + tmData.team.name + '» для всех участников?')){ await tmApi('team.delete', {id: tid}); nav('#/teams'); } }
+    else if(a === 'rekey'){ if(await askYN('Создать новый ключ?', 'Старый ключ перестанет работать.', 'Создать')){ await tmApi('team.rekey', {id: tid}); renderTeams(); } }
+    else if(a === 'kick'){ if(await askYN('Убрать участника?', 'Участник потеряет доступ к команде.', 'Убрать')){ await tmApi('member.remove', {id: tid, user_id: Number(b.dataset.uid)}); renderTeams(); } }
+    else if(a === 'leave'){ if(await askYN('Выйти из команды?', 'Вы потеряете доступ к файлам и задачам команды.', 'Выйти')){ await tmApi('member.remove', {id: tid}); nav('#/teams'); } }
+    else if(a === 'del'){ if(await askYN('Удалить команду?', '«' + tmData.team.name + '» будет удалена для всех участников.')){ await tmApi('team.delete', {id: tid}); nav('#/teams'); } }
   }catch(err){ tmFail(err); }
 });
 
@@ -8172,12 +8235,15 @@ function tbPaint(){
   vTables.querySelectorAll('#tbG td').forEach(td => { const r = +td.dataset.r, c = +td.dataset.c; td.classList.toggle('sel', multi && r >= s.r1 && r <= s.r2 && c >= s.c1 && c <= s.c2); td.classList.toggle('cur', r === cur.r && c === cur.c); });
   const nm = document.getElementById('tbNm'), fx = document.getElementById('tbFx'), x = TB.t.cells[cur.r + '_' + cur.c];
   if(nm) nm.textContent = tbName(cur.c) + (cur.r + 1);
+  const sbs = document.getElementById('tbSbSel'); if(sbs) sbs.textContent = multi ? tbName(s.c1) + (s.r1 + 1) + ':' + tbName(s.c2) + (s.r2 + 1) + ' · ячеек: ' + (s.r2 - s.r1 + 1) * (s.c2 - s.c1 + 1) : 'Ячейка ' + tbName(cur.c) + (cur.r + 1);
+  const mt = document.getElementById('tbMeta'); if(mt) mt.innerHTML = '<span>Строк: ' + TB.t.R + '</span><span>Столбцов: ' + TB.t.C + '</span><span>Заполнено: ' + Object.keys(TB.t.cells).length + '</span><span>Изменена: ' + esc(tbShortDate(TB.t.updated)) + '</span>';
   if(fx && document.activeElement !== fx) fx.value = x ? String(x.v) : '';
 }
 function tbSelect(r, c, ext){ if(ext) TB.end = {r, c}; else { TB.cur = {r, c}; TB.end = {r, c}; } }
 const tbScroll = () => { const td = vTables.querySelector('#tbG td.cur'); if(td) td.scrollIntoView({block: 'nearest', inline: 'nearest'}); };
-function tbSaveNow(){ clearTimeout(TB.timer); TB.timer = 0; if(TB.t){ TB.t.updated = Date.now(); tbPut(TB.t); TBC[TB.t.id] = TB.t; tbRefreshAll(); } }
-const tbSave = () => { clearTimeout(TB.timer); TB.timer = setTimeout(tbSaveNow, 300); };
+function tbStat(ok){ const e = document.getElementById('tbSv'); if(!e) return; e.className = 'tb-sv ' + (ok ? 'ok' : 'wait'); e.lastChild.textContent = ok ? 'Сохранено' : 'Сохранение…'; }
+function tbSaveNow(){ clearTimeout(TB.timer); TB.timer = 0; if(TB.t){ TB.t.updated = Date.now(); tbPut(TB.t); TBC[TB.t.id] = TB.t; tbRefreshAll(); tbStat(true); } }
+const tbSave = () => { clearTimeout(TB.timer); tbStat(false); TB.timer = setTimeout(tbSaveNow, 300); };
 function tbMut(fn){
   if(TB.ro) return;
   TB.undo.push(JSON.stringify(TB.t)); if(TB.undo.length > 40) TB.undo.shift(); TB.redo = []; fn();
@@ -8258,8 +8324,23 @@ async function tbImport(f){
     t.R = Math.min(1000, Math.max(30, rows.length + 5)); t.C = Math.min(78, Math.max(10, mc + 2)); await tbPut(t); toast('Таблица создана'); }
   renderTables();
 }
-function tbAsk(title, val, cb){ const ov = tmDlg('<h3>' + title + '</h3><input id="tbA" maxlength="80" value="' + esc(val) + '"><button class="btn small" type="button" id="tbOk">Сохранить</button>'); const i = ov.querySelector('#tbA'); i.focus(); i.select(); const go = () => { ov.remove(); cb(i.value.trim() || val); }; ov.querySelector('#tbOk').onclick = go; i.onkeydown = e => { if(e.key === 'Enter') go(); }; }
+function tbAsk(title, val, cb, okLabel){
+  const ov = tmDlg('<h3>' + title + '</h3><input id="tbA" maxlength="80" value="' + esc(val) + '" autocomplete="off"><div class="tbd-a"><button class="btn small neutral" type="button" id="tbNo">Отмена</button><button class="btn small" type="button" id="tbOk">' + (okLabel || 'Сохранить') + '</button></div>');
+  ov.firstChild.classList.add('tbd');
+  const i = ov.querySelector('#tbA'); i.focus(); i.select();
+  const go = () => { ov.remove(); cb(i.value.trim() || val); };
+  ov.querySelector('#tbOk').onclick = go; ov.querySelector('#tbNo').onclick = () => ov.remove();
+  i.onkeydown = e => { if(e.key === 'Enter') go(); else if(e.key === 'Escape') ov.remove(); };
+}
 const tbBtn = (a, t, ti, v) => '<button type="button" data-tb="' + a + '"' + (v ? ' data-v="' + v + '"' : '') + ' title="' + ti + '">' + t + '</button>';
+const TBI = {pen: IC.edit, dup: IC.dup, trash: IC.trash, plus: IC.plus, up: IC.up, dl: IC.dl, tbl: SV.tbl, back: '<path d="M15 5l-7 7 7 7"/>', x: '<path d="M6 6l12 12M18 6L6 18"/>', search: '<circle cx="11" cy="11" r="6.500"/><path d="M16 16l4 4"/>'};
+const tbIco = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + TBI[k] + '</svg>';
+const tbShortDate = ts => new Date(ts).toLocaleString('ru-RU', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+function tbThumb(t){
+  const R = Math.min(4, t.R || 4), C = Math.min(4, t.C || 4); let h = '<div class="tbc-g" style="grid-template-columns:repeat(' + C + ',1fr)">';
+  for(let r = 0; r < R; r++) for(let c = 0; c < C; c++){ const x = t.cells[r + '_' + c]; const v = x && x.v !== undefined && x.v !== '' ? String(x.v) : ''; h += '<i' + (t.hdr && r === 0 ? ' class="h"' : '') + '>' + esc(v.length > 14 ? v.slice(0, 13) + '…' : v) + '</i>'; }
+  return h + '</div>';
+}
 const tbHead = s => '<div class="eyebrow" style="margin-bottom:8px">Данные</div><h1 class="fl-h1">Таблицы</h1><p class="lead">' + s + '</p>';
 async function renderTables(){
   if(TB.timer) tbSaveNow();
@@ -8267,22 +8348,33 @@ async function renderTables(){
   const id = location.hash.split('/')[2];
   try{ if(id) await tbOpen(id); else await tbList(); }catch(e){ vTables.innerHTML = tbHead('') + '<div class="np-empty"><b>Хранилище браузера недоступно</b>' + esc(String(e && e.message || e)) + '</div>'; }
 }
+function tbCardKey(e){ const c = e.target.closest && e.target.closest('.tbc'); if(c && e.target === c && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); nav('#/tables/' + c.dataset.id); } }
 async function tbList(){
   TB.t = null; const all = (await tbAll()).sort((a, b) => b.updated - a.updated); all.forEach(t => { TBC[t.id] = t; });
-  vTables.innerHTML = tbHead('Таблицы хранятся в памяти этого браузера. Формулы: СУММ, СРЗНАЧ, МИН, МАКС, СЧЁТ и арифметика.') +
-    '<div class="np-bar">' + tbBtn('new', 'Новая таблица', '').replace('type="button"', 'type="button" class="btn small"') + '<button class="btn small" type="button" data-tb="import">Импорт CSV / JSON</button>' + (all.length ? '<button class="btn small" type="button" data-tb="backup">Резервная копия</button>' : '') + '<input type="file" id="tbFileIn" accept=".csv,.tsv,.txt,.json" hidden></div>' +
-    (all.length ? '<div class="tm-grid">' + all.map(t => '<div class="tm-card tb-card" data-tb="open" data-id="' + esc(t.id) + '" role="button" tabindex="0"><span class="tm-av">▦</span><span style="flex:1;min-width:0"><b>' + esc(t.title) + '</b><br><span style="color:var(--text-2);font-size:13px">' + Object.keys(t.cells).length + ' яч. · ' + fmtDate(t.updated) + '</span><br><span class="tb-ca"><button class="btn small" type="button" data-tb="ren" data-id="' + esc(t.id) + '">Имя</button> <button class="btn small" type="button" data-tb="dup" data-id="' + esc(t.id) + '">Копия</button> <button class="btn small" type="button" data-tb="del" data-id="' + esc(t.id) + '">Удалить</button></span></span></div>').join('') + '</div>' : '<div class="np-empty"><b>Пока нет таблиц</b>Создайте новую или импортируйте CSV.</div>');
+  const nT = all.length;
+  vTables.innerHTML = tbHead('Таблицы хранятся в памяти этого браузера.') +
+    '<div class="tbl-top"><button class="btn small" type="button" data-tb="new">' + tbIco('plus') + 'Новая таблица</button><button class="btn small neutral" type="button" data-tb="import">' + tbIco('up') + 'Импорт CSV / JSON</button>' + (nT ? '<button class="btn small neutral" type="button" data-tb="backup">' + tbIco('dl') + 'Резервная копия</button><span class="tbl-cnt">Всего: ' + nT + '</span>' : '') + '<input type="file" id="tbFileIn" accept=".csv,.tsv,.txt,.json" hidden></div>' +
+    (nT ? '<div class="tbc-grid">' + all.map(t => {
+      const id = esc(t.id), nc = Object.keys(t.cells).length;
+      return '<article class="tbc" data-tb="open" data-id="' + id + '" role="button" tabindex="0" aria-label="Открыть таблицу ' + esc(t.title) + '">' +
+        '<div class="tbc-pv">' + tbThumb(t) + '</div>' +
+        '<div class="tbc-bd"><b title="' + esc(t.title) + '">' + esc(t.title) + '</b><span>' + (t.R || 0) + ' × ' + (t.C || 0) + ' · заполнено ' + nc + ' · ' + tbShortDate(t.updated) + '</span></div>' +
+        '<div class="tbc-ft"><button type="button" class="tbc-ib" data-tb="ren" data-id="' + id + '" title="Переименовать" aria-label="Переименовать">' + tbIco('pen') + '</button><button type="button" class="tbc-ib" data-tb="dup" data-id="' + id + '" title="Создать копию" aria-label="Создать копию">' + tbIco('dup') + '</button><button type="button" class="tbc-ib dn" data-tb="del" data-id="' + id + '" title="Удалить" aria-label="Удалить">' + tbIco('trash') + '</button></div></article>';
+    }).join('') + '</div>' : '<div class="np-empty"><b>Пока нет таблиц</b>Создайте новую или импортируйте CSV.<br><div style="display: flex; justify-content: center; margin-top: 12px;"><button class="btn small" type="button" data-tb="new" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; width: auto; height: auto;">' + tbIco('plus') + 'Новая таблица</button></div></div>');
+  vTables.onkeydown = tbCardKey;
 }
 async function tbOpen(id){
   const t = (await tbAll()).find(x => x.id === id); if(!t){ nav('#/tables'); toast('Таблица не найдена'); return; }
   TB.t = t; TB.cur = {r: 0, c: 0}; TB.end = {r: 0, c: 0}; TB.undo = []; TB.redo = []; TB.range = false;
-  vTables.innerHTML = '<p class="tb-back"><a href="#/tables">← Все таблицы</a></p><input id="tbTitle" class="tb-title" maxlength="80" value="' + esc(t.title) + '"><div class="tb-bar">' +
+  vTables.innerHTML = '<nav class="tb-back"><a href="#/tables" class="tb-bk">' + tbIco('back') + 'Все таблицы</a><span class="tb-sv ok" id="tbSv"><i></i><span>Сохранено</span></span></nav>' +
+    '<div class="tb-hd"><input id="tbTitle" class="tb-title" maxlength="80" aria-label="Название таблицы" placeholder="Название таблицы" value="' + esc(t.title) + '"><div class="tb-meta" id="tbMeta"></div></div>' +
+    '<div class="tb-shell"><div class="tb-bar">' +
     tbBtn('undo', '↶', 'Отменить') + tbBtn('redo', '↷', 'Повторить') + tbBtn('b', '<b>Ж</b>', 'Жирный') + tbBtn('i', '<i>К</i>', 'Курсив') +
     '<label class="tb-cl" title="Цвет текста">A<input type="color" data-tbi="c" value="#000000"></label><label class="tb-cl" title="Заливка">▨<input type="color" data-tbi="f" value="#ffe08a"></label>' + tbBtn('nofill', '∅', 'Убрать цвет и заливку') +
     tbBtn('al', '⇤', 'По левому краю', 'left') + tbBtn('al', '≡', 'По центру', 'center') + tbBtn('al', '⇥', 'По правому краю', 'right') +
     '<select data-tbi="t" title="Тип данных"><option value="">Авто</option><option value="text">Текст</option><option value="num">Число</option><option value="fin">Финансовый</option><option value="date">Дата</option></select>' +
     tbBtn('copy', 'Копировать', 'Копировать') + tbBtn('paste', 'Вставить', 'Вставить') + tbBtn('range', 'Диапазон', 'Выделять несколько ячеек касанием') + tbBtn('rows', 'Строки и столбцы', '') + tbBtn('data', 'Данные', '') + tbBtn('exp', 'Экспорт', '') +
-    '</div><div class="tb-fxr"><span id="tbNm">A1</span><input id="tbFx" autocomplete="off' + (TB.ro ? '" readonly="readonly' : '') + '" placeholder="Значение или формула, например =СУММ(A1:A5)"></div><div class="tb-wrap" id="tbWrap"><table class="tb-g" id="tbG"></table></div>';
+    '</div><div class="tb-fxr"><span id="tbNm">A1</span><input id="tbFx" autocomplete="off' + (TB.ro ? '" readonly="readonly' : '') + '" placeholder="Значение или формула, например =СУММ(A1:A5)"></div><div class="tb-wrap" id="tbWrap"><table class="tb-g" id="tbG"></table></div><div class="tb-sb"><span id="tbSbSel">A1</span><span>Формулы начинаются со знака «=»</span></div></div>';
   tbRender();
 }
 function tbOp(x, ov){
@@ -8308,11 +8400,11 @@ const tbDb = (x, t) => '<button class="btn small" type="button" data-x="' + x + 
 vTables.addEventListener('click', async e => {
   const b = e.target.closest('[data-tb]'); if(!b) return; const a = b.dataset.tb, id = b.dataset.id;
   if(!TB.t){
-    if(a === 'new') tbAsk('Новая таблица', 'Новая таблица', async n => { const t = tbNew(n); await tbPut(t); nav('#/tables/' + t.id); });
+    if(a === 'new') tbAsk('Новая таблица', 'Новая таблица', async n => { const t = tbNew(n); await tbPut(t); nav('#/tables/' + t.id); }, 'Создать');
     else if(a === 'open') nav('#/tables/' + id);
     else if(a === 'ren'){ const t = (await tbAll()).find(x => x.id === id); tbAsk('Название', t.title, async n => { t.title = n; await tbPut(t); renderTables(); }); }
     else if(a === 'dup'){ const t = (await tbAll()).find(x => x.id === id), c = JSON.parse(JSON.stringify(t)); c.id = uid(); c.title += ' (копия)'; c.updated = Date.now(); await tbPut(c); renderTables(); }
-    else if(a === 'del'){ if(confirm('Удалить таблицу? Она будет удалена из этого браузера.')){ await tbDel(id); delete TBC[id]; tbRefreshAll(); renderTables(); } }
+    else if(a === 'del'){ const t = TBC[id] || (await tbAll()).find(x => x.id === id); if(await askYN('Удалить таблицу?', '«' + (t && t.title || 'Без названия') + '» будет удалена из этого браузера без возможности восстановления.')){ await tbDel(id); delete TBC[id]; tbRefreshAll(); renderTables(); } }
     else if(a === 'import'){ const f = document.getElementById('tbFileIn'); f.onchange = () => { if(f.files[0]) tbImport(f.files[0]); }; f.click(); }
     else if(a === 'backup') yngSave(new Blob([JSON.stringify(await tbAll())], {type: 'application/json'}), 'yng-tables-backup.json');
     return;
@@ -8422,8 +8514,25 @@ function tbFill(p, src){
 function tbPick(){
   return new Promise(async res => {
     await tbLoadCache(true); const all = Object.values(TBC).sort((a, b) => b.updated - a.updated);
-    const ov = tmDlg('<h3>Выберите таблицу</h3>' + (all.map(t => '<button type="button" class="tm-card" style="margin-bottom:8px" data-pk="' + esc(t.id) + '"><span class="tm-av">▦</span><b>' + esc(t.title) + '</b></button>').join('') || '<p>Таблиц пока нет. Создайте их в разделе «Таблицы».</p>'));
-    ov.addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if(b){ ov.remove(); res(b.dataset.pk); } });
+    const ov = document.createElement('div'); ov.className = 'tm-ov tbp-ov';
+    ov.innerHTML = '<div class="tbp" role="dialog" aria-modal="true" aria-label="Выбор таблицы"><div class="tbp-h"><div><h3>Вставить таблицу</h3><p>Выберите таблицу из раздела «Таблицы». Она обновляется вместе с оригиналом.</p></div><button type="button" class="tbp-x" data-pkx aria-label="Закрыть">' + tbIco('x') + '</button></div>' +
+      (all.length > 5 ? '<label class="tbp-s">' + tbIco('search') + '<input type="search" id="tbpQ" placeholder="Найти таблицу" autocomplete="off"></label>' : '') +
+      '<div class="tbp-l" id="tbpL"></div></div>';
+    document.body.appendChild(ov);
+    const done = v => { document.removeEventListener('keydown', kd, true); ov.remove(); res(v); };
+    const kd = e => { if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); done(null); } };
+    document.addEventListener('keydown', kd, true);
+    const L = ov.querySelector('#tbpL');
+    const draw = () => {
+      const qv = ((ov.querySelector('#tbpQ') || {}).value || '').trim().toLowerCase(), list = all.filter(t => !qv || t.title.toLowerCase().includes(qv));
+      if(!all.length) L.innerHTML = '<div class="tbp-e"><div class="tbp-ei">' + tbIco('tbl') + '</div><b>Таблиц пока нет</b><span>Создайте таблицу в разделе «Таблицы», затем вернитесь сюда.</span><a class="btn small" href="#/tables" data-pkx>Открыть раздел «Таблицы»</a></div>';
+      else if(!list.length) L.innerHTML = '<div class="tbp-e"><b>Ничего не найдено</b><span>Попробуйте изменить запрос.</span></div>';
+      else L.innerHTML = list.map(t => '<button type="button" class="tbp-r" data-pk="' + esc(t.id) + '"><span class="tbp-ic">' + tbIco('tbl') + '</span><span class="tbp-t"><b>' + esc(t.title) + '</b><small>' + (t.R || 0) + ' × ' + (t.C || 0) + ' · ' + tbShortDate(t.updated) + '</small></span><span class="tbp-go">Вставить</span></button>').join('');
+    };
+    draw();
+    const qi = ov.querySelector('#tbpQ'); if(qi){ qi.addEventListener('input', draw); qi.addEventListener('keydown', e => { if(e.key === 'Enter'){ const f = L.querySelector('[data-pk]'); if(f) done(f.dataset.pk); } }); }
+    ov.addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if(b){ done(b.dataset.pk); return; } if(e.target.closest('[data-pkx]') || e.target === ov) done(null); });
+    const f = ov.querySelector('.tbp-r') || ov.querySelector('.tbp-x'); if(!qi && f) f.focus(); if(qi) qi.focus();
   });
 }
 let tbMo = null;
