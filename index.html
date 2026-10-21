@@ -1504,6 +1504,31 @@ p.tbe{margin:12px 0;overflow-x:auto;cursor:pointer;border-radius:6px}p.tbe:hover
 @media (max-width:560px){.tb-sb span:last-child{display:none}.tb-shell .tb-wrap{max-height:calc(100dvh - 360px);min-height:220px}}
 
 @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* ===== Таблицы: тёмная тема сетки, иконки, меню, подсказки ===== */
+.tb-g th{background:#f2f2f4;color:#6e6e73}
+:root[data-theme="dark"] .tb-g th{background:#2c2c2e;color:#a1a1a6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tb-g th{background:#2c2c2e;color:#a1a1a6}}
+.tb-bar .tb-ib{padding:0 8px;gap:6px;min-width:34px}
+.tb-ib svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tb-ib span{font-size:13px;font-weight:500}
+.tb-sep{display:inline-block;width:1px;height:20px;background:var(--line-2);margin:0 4px;flex:none}
+.tb-menu{display:flex;flex-direction:column;min-width:170px;padding:4px}
+.tb-menu .mi.on{color:var(--accent);font-weight:600}
+.sw button.on{outline:2px solid var(--accent);outline-offset:2px}
+.tb-swrow{flex-wrap:wrap;padding:4px 2px 10px}.tb-lb{font-size:13px;color:var(--text-2);margin:8px 0 2px}
+.tb-seg{display:flex;gap:4px;padding:3px;border-radius:12px;background:rgba(120,120,128,.14);margin:4px 0 10px}
+.tb-seg button{flex:1;border:0;border-radius:9px;padding:8px 4px;background:transparent;color:var(--text-2);font:inherit;font-size:13px;cursor:pointer}
+.tb-seg button.on{background:var(--bg-elev);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.18);font-weight:600}
+.tb-ac{position:fixed;z-index:9900;width:min(340px,calc(100vw - 16px));background:var(--bg-elev);color:var(--text);border:1px solid var(--line-2);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden;font-size:14px}
+.tb-acl{display:flex;flex-direction:column;padding:6px;max-height:230px;overflow:auto}
+.tb-aci{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border:0;border-radius:9px;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.tb-aci b{min-width:66px;color:var(--accent)}.tb-aci span{color:var(--text-2);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-aci.on,.tb-aci:hover{background:var(--accent-soft)}
+.tb-ach{padding:10px 14px;border-top:1px solid var(--line-2);background:rgba(120,120,128,.07);display:flex;flex-direction:column;gap:3px}
+.tb-ac>.tb-ach:first-child{border-top:0}
+.tb-ach code{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text)}.tb-ach span{font-size:12.5px;color:var(--text-2)}.tb-ach small{font-size:12px;color:var(--text-3)}
+.np-pop{z-index:9950}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
@@ -6612,7 +6637,7 @@ function dkEndEdit(){
     let changed = false;
     if(o.t === 'text'){ let h = dkPlain(el.innerHTML) || el.querySelector('img') ? sanitize(el.innerHTML) : ''; if(h.replace(/<p><br><\/p>/g, '').trim()) h = h.replace(/<p><br><\/p>/g, ''); if(h !== o.html){ o.html = h; changed = true; } }
     else if(o.t === 'table'){ const t = el.querySelector('table'); const h = t ? sanitize(t.outerHTML) : o.html; if(h !== o.html){ o.html = h; changed = true; } }
-    else if(o.t === 'code'){ const t = el.textContent.replace(/ /g, ' '); if(t !== o.text){ o.text = t; changed = true; } }
+    else if(o.t === 'code'){ const t = el.textContent.replace(/ /g, ' '); if(t !== o.text){ o.text = t; changed = true; } }
     if(changed){ dk.undo.push(before); if(dk.undo.length > 40) dk.undo.shift(); dk.redo = []; dkDirty(); }
     box && (box.innerHTML = dkObjInner(o, dk.deck, dkSlideObj(), 'edit'));
   }
@@ -8168,7 +8193,7 @@ const tbName = c => { let s = ''; for(c++; c > 0; c = Math.floor((c - 1) / 26)) 
 const tbCol = s => s.toUpperCase().split('').reduce((a, ch) => a * 26 + ch.charCodeAt(0) - 64, 0) - 1;
 const tbRef = k => { const m = k.match(/^([A-Z]+)(\d+)$/); return [+m[2] - 1, tbCol(m[1])]; };
 const tbNum = s => { const x = String(s).trim().replace(/\s/g, '').replace(',', '.'); return x !== '' && /^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(x) ? parseFloat(x) : null; };
-const tbClr = s => /^#[0-9a-f]{6}$/i.test(s || '') ? s : '';
+const tbClr = s => /^(#[0-9a-f]{6}|rgba?\(\d{1,3},\s?\d{1,3},\s?\d{1,3}(,\s?(0|1|0?\.\d+))?\))$/i.test(s || '') ? s : '';
 const tbNew = title => ({id: uid(), title: title || 'Новая таблица', R: 30, C: 10, cells: {}, cw: {}, rh: {}, hr: [], hc: [], hdr: false, filter: null, updated: Date.now()});
 const TBF = {SUM: (...a) => a.flat(9).reduce((x, y) => x + y, 0), AVG: (...a) => { a = a.flat(9); return a.length ? TBF.SUM(a) / a.length : 0; }, MIN: (...a) => { a = a.flat(9); return a.length ? Math.min(...a) : 0; }, MAX: (...a) => { a = a.flat(9); return a.length ? Math.max(...a) : 0; }, COUNT: (...a) => a.flat(9).length};
 function tbCalc(src, val){
@@ -8363,19 +8388,102 @@ async function tbList(){
     }).join('') + '</div>' : '<div class="np-empty"><b>Пока нет таблиц</b>Создайте новую или импортируйте CSV.<br><div style="display: flex; justify-content: center; margin-top: 12px;"><button class="btn small" type="button" data-tb="new" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; width: auto; height: auto;">' + tbIco('plus') + 'Новая таблица</button></div></div>');
   vTables.onkeydown = tbCardKey;
 }
+/* ===== Таблицы: иконки, палитра редактора, меню, подсказки формул ===== */
+Object.assign(TBI, {
+  undo: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  redo: '<path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',
+  bold: '<path d="M7 5h6a3.5 3.5 0 0 1 0 7H7zM7 12h7a3.5 3.5 0 0 1 0 7H7z"/>',
+  italic: '<path d="M14 5h-4M14 19h-4M15 5l-6 14"/>',
+  tcol: '<path d="M6 16l6-12 6 12M8.3 11.5h7.4"/><path d="M5 20.5h14" stroke-width="2.6"/>',
+  fill: '<path d="M4.5 12.5L11 6l6.5 6.5-5.5 5.5a2 2 0 0 1-2.8 0z"/><path d="M8 8.5L11.5 5"/><path d="M19.5 14.5s1.6 1.9 1.6 3a1.6 1.6 0 0 1-3.2 0c0-1.1 1.6-3 1.6-3z"/>',
+  clear: IC.eraser, alL: SV.alL, alC: SV.alC, alR: SV.alR,
+  fmt: '<path d="M4 18l4.5-12L13 18M5.8 14h5.4"/><path d="M16 8h4M16 12h4M16 16h4"/>',
+  copy: IC.copy, paste: '<rect x="6" y="5" width="12" height="16" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 12h6M9 16h4"/>',
+  range: '<rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 3"/><path d="M9.5 14.5l5-5M10 9.5h4.5V14"/>',
+  rows: '<rect x="3.5" y="4.5" width="13" height="15" rx="2"/><path d="M3.5 10h13M3.5 15h13M10 4.5v15M20 8v6M17 11h6"/>',
+  data: '<path d="M4 6h16l-6 7v5l-4 2v-7z"/>', exp: IC.dl
+});
+const tbIb = (a, k, ti, v, label) => '<button type="button" class="tb-ib" data-tb="' + a + '"' + (v ? ' data-v="' + v + '"' : '') + ' title="' + ti + '" aria-label="' + ti + '">' + tbIco(k) + (label ? '<span>' + label + '</span>' : '') + '</button>';
+const tbSep = '<i class="tb-sep" aria-hidden="true"></i>';
+const TB_TYPES = [['', 'Авто'], ['text', 'Текст'], ['num', 'Число'], ['fin', 'Финансовый'], ['date', 'Дата']];
+const tbSolid = () => COLORS.map(c => c.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),[^)]*\)/, 'rgb($1,$2,$3)'));
+const tbSeg = cur => '<div class="tb-seg" id="tbOp">' + [['has', 'содержит'], ['eq', 'равно'], ['gt', 'больше'], ['lt', 'меньше']].map(([v, t]) => '<button type="button" data-op="' + v + '"' + (v === (cur || 'has') ? ' class="on"' : '') + '>' + t + '</button>').join('') + '</div>';
+function tbPopup(btn, a){
+  if(a === 'cpick'){
+    const prop = btn.dataset.v, cols = prop === 'f' ? COLORS : tbSolid();
+    openPop(btn, '<div class="sw">' + cols.map(k => '<button type="button" data-k="' + k + '" style="background:' + k + '" aria-label="' + (prop === 'f' ? 'Цвет заливки' : 'Цвет текста') + '"></button>').join('') + '<button type="button" class="no" data-k="transparent" aria-label="Убрать цвет" title="Убрать цвет"></button></div>', p => {
+      p.addEventListener('click', e => { const k = e.target.closest('[data-k]'); if(!k) return; tbFmt(prop, k.dataset.k === 'transparent' ? '' : k.dataset.k); closePop(); });
+    });
+  } else {
+    const cx = TB.t.cells[TB.cur.r + '_' + TB.cur.c] || {};
+    openPop(btn, '<div class="tb-menu">' + TB_TYPES.map(([v, t]) => '<button type="button" class="mi' + ((cx.t || '') === v ? ' on' : '') + '" data-k="' + v + '">' + t + '</button>').join('') + '</div>', p => {
+      p.addEventListener('click', e => { const k = e.target.closest('[data-k]'); if(!k) return; tbFmt('t', k.dataset.k); closePop(); });
+    });
+  }
+}
+const TBFN = [
+  {n: 'СУММ', sig: 'СУММ(ячейка1:ячейка2)', d: 'Сумма чисел диапазона. Аргументы можно перечислять через «;»', ex: '=СУММ(A1:A5)'},
+  {n: 'СРЗНАЧ', sig: 'СРЗНАЧ(ячейка1:ячейка2)', d: 'Среднее арифметическое чисел диапазона', ex: '=СРЗНАЧ(B2:B9)'},
+  {n: 'МИН', sig: 'МИН(ячейка1:ячейка2)', d: 'Наименьшее число диапазона', ex: '=МИН(C1:C10)'},
+  {n: 'МАКС', sig: 'МАКС(ячейка1:ячейка2)', d: 'Наибольшее число диапазона', ex: '=МАКС(C1:C10)'},
+  {n: 'СЧЁТ', sig: 'СЧЁТ(ячейка1:ячейка2)', d: 'Количество ячеек с числами', ex: '=СЧЁТ(D1:D20)'}
+];
+const tbNorm = s => s.toUpperCase().replace(/Ё/g, 'Е');
+let tbAcEl = null;
+function tbAcClose(){ if(tbAcEl){ tbAcEl.remove(); tbAcEl = null; } }
+function tbAcCtx(inp){
+  const v = inp.value, pos = inp.selectionStart == null ? v.length : inp.selectionStart; if(v[0] !== '=') return null;
+  const before = v.slice(0, pos), m = before.match(/(?:^=|[-+*\/^(;,:])\s*([A-Za-zА-Яа-яЁё]*)$/), st = [];
+  for(let i = 0; i < before.length; i++){ const ch = before[i]; if(ch === '('){ const mm = before.slice(0, i).match(/([A-Za-zА-Яа-яЁё]+)$/); st.push(mm ? tbNorm(mm[1]) : ''); } else if(ch === ')') st.pop(); }
+  const fn = st.length ? (TBFN.find(f => tbNorm(f.n) === st[st.length - 1]) || null) : null;
+  return {v, pos, pre: m ? m[1] : null, fn};
+}
+function tbAcShow(inp){
+  const c = tbAcCtx(inp); if(!c){ tbAcClose(); return; }
+  const list = (c.pre === null || (c.fn && c.pre === '')) ? [] : TBFN.filter(f => tbNorm(f.n).startsWith(tbNorm(c.pre)));
+  if(!list.length && !c.fn){ tbAcClose(); return; }
+  if(!tbAcEl){
+    tbAcEl = document.createElement('div'); tbAcEl.className = 'tb-ac'; tbAcEl._i = 0;
+    tbAcEl.addEventListener('mousedown', e => e.preventDefault());
+    tbAcEl.addEventListener('click', e => { const b = e.target.closest('.tb-aci'); if(b) tbAcPick(+b.dataset.i); });
+    document.body.appendChild(tbAcEl);
+  }
+  const i = Math.min(tbAcEl._i || 0, Math.max(0, list.length - 1)); tbAcEl._i = i; tbAcEl._list = list; tbAcEl._ctx = c; tbAcEl._inp = inp;
+  const h = list.length ? list[i] : c.fn;
+  tbAcEl.innerHTML = (list.length ? '<div class="tb-acl">' + list.map((f, k) => '<button type="button" class="tb-aci' + (k === i ? ' on' : '') + '" data-i="' + k + '"><b>' + f.n + '</b><span>' + esc(f.d) + '</span></button>').join('') + '</div>' : '') +
+    '<div class="tb-ach"><code>' + esc(h.sig) + '</code><span>' + esc(h.d) + '</span><small>Пример: ' + esc(h.ex) + '</small></div>';
+  const r = inp.getBoundingClientRect(), w = tbAcEl.offsetWidth, hh = tbAcEl.offsetHeight;
+  let top = r.bottom + 4; if(top + hh > innerHeight - 8) top = Math.max(8, r.top - hh - 4);
+  tbAcEl.style.left = Math.max(8, Math.min(r.left, innerWidth - w - 8)) + 'px'; tbAcEl.style.top = top + 'px';
+}
+function tbAcPick(k){
+  if(!tbAcEl) return; const {v, pos, pre} = tbAcEl._ctx, inp = tbAcEl._inp, f = tbAcEl._list[k]; if(!f) return;
+  const start = pos - (pre ? pre.length : 0); inp.value = v.slice(0, start) + f.n + '(' + v.slice(pos);
+  const np = start + f.n.length + 1; inp.focus(); inp.setSelectionRange(np, np); tbAcEl._i = 0; tbAcShow(inp);
+}
+function tbAcAttach(inp){
+  inp.addEventListener('keydown', e => {
+    if(!tbAcEl || tbAcEl._inp !== inp) return; const n = tbAcEl._list.length;
+    if(n && (e.key === 'ArrowDown' || e.key === 'ArrowUp')){ e.preventDefault(); e.stopImmediatePropagation(); tbAcEl._i = (tbAcEl._i + (e.key === 'ArrowDown' ? 1 : n - 1)) % n; tbAcShow(inp); }
+    else if(n && (e.key === 'Enter' || e.key === 'Tab')){ e.preventDefault(); e.stopImmediatePropagation(); tbAcPick(tbAcEl._i); }
+    else if(e.key === 'Escape'){ e.stopImmediatePropagation(); tbAcClose(); }
+  });
+  inp.addEventListener('input', () => { if(tbAcEl) tbAcEl._i = 0; tbAcShow(inp); });
+  inp.addEventListener('click', () => tbAcShow(inp));
+  inp.addEventListener('keyup', e => { if(['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) tbAcShow(inp); });
+  inp.addEventListener('blur', () => setTimeout(() => { if(tbAcEl && tbAcEl._inp === inp) tbAcClose(); }, 120));
+}
 async function tbOpen(id){
   const t = (await tbAll()).find(x => x.id === id); if(!t){ nav('#/tables'); toast('Таблица не найдена'); return; }
   TB.t = t; TB.cur = {r: 0, c: 0}; TB.end = {r: 0, c: 0}; TB.undo = []; TB.redo = []; TB.range = false;
   vTables.innerHTML = '<nav class="tb-back"><a href="#/tables" class="tb-bk">' + tbIco('back') + 'Все таблицы</a><span class="tb-sv ok" id="tbSv"><i></i><span>Сохранено</span></span></nav>' +
     '<div class="tb-hd"><input id="tbTitle" class="tb-title" maxlength="80" aria-label="Название таблицы" placeholder="Название таблицы" value="' + esc(t.title) + '"><div class="tb-meta" id="tbMeta"></div></div>' +
     '<div class="tb-shell"><div class="tb-bar">' +
-    tbBtn('undo', '↶', 'Отменить') + tbBtn('redo', '↷', 'Повторить') + tbBtn('b', '<b>Ж</b>', 'Жирный') + tbBtn('i', '<i>К</i>', 'Курсив') +
-    '<label class="tb-cl" title="Цвет текста">A<input type="color" data-tbi="c" value="#000000"></label><label class="tb-cl" title="Заливка">▨<input type="color" data-tbi="f" value="#ffe08a"></label>' + tbBtn('nofill', '∅', 'Убрать цвет и заливку') +
-    tbBtn('al', '⇤', 'По левому краю', 'left') + tbBtn('al', '≡', 'По центру', 'center') + tbBtn('al', '⇥', 'По правому краю', 'right') +
-    '<select data-tbi="t" title="Тип данных"><option value="">Авто</option><option value="text">Текст</option><option value="num">Число</option><option value="fin">Финансовый</option><option value="date">Дата</option></select>' +
-    tbBtn('copy', 'Копировать', 'Копировать') + tbBtn('paste', 'Вставить', 'Вставить') + tbBtn('range', 'Диапазон', 'Выделять несколько ячеек касанием') + tbBtn('rows', 'Строки и столбцы', '') + tbBtn('data', 'Данные', '') + tbBtn('exp', 'Экспорт', '') +
+    tbIb('undo', 'undo', 'Отменить (Ctrl+Z)') + tbIb('redo', 'redo', 'Повторить (Ctrl+Y)') + tbSep + tbIb('b', 'bold', 'Жирный (Ctrl+B)') + tbIb('i', 'italic', 'Курсив (Ctrl+I)') + tbIb('cpick', 'tcol', 'Цвет текста', 'c') + tbIb('cpick', 'fill', 'Заливка ячеек', 'f') + tbIb('nofill', 'clear', 'Убрать цвет и заливку') + tbSep +
+    tbIb('al', 'alL', 'По левому краю', 'left') + tbIb('al', 'alC', 'По центру', 'center') + tbIb('al', 'alR', 'По правому краю', 'right') + tbIb('type', 'fmt', 'Тип данных', '', 'Формат') + tbSep +
+    tbIb('copy', 'copy', 'Копировать') + tbIb('paste', 'paste', 'Вставить') + tbIb('range', 'range', 'Выделять несколько ячеек касанием') + tbSep + tbIb('rows', 'rows', 'Строки и столбцы', '', 'Строки и столбцы') + tbIb('data', 'data', 'Данные: сортировка и фильтр', '', 'Данные') + tbIb('exp', 'exp', 'Экспорт', '', 'Экспорт') +
     '</div><div class="tb-fxr"><span id="tbNm">A1</span><input id="tbFx" autocomplete="off' + (TB.ro ? '" readonly="readonly' : '') + '" placeholder="Значение или формула, например =СУММ(A1:A5)"></div><div class="tb-wrap" id="tbWrap"><table class="tb-g" id="tbG"></table></div><div class="tb-sb"><span id="tbSbSel">A1</span><span>Формулы начинаются со знака «=»</span></div></div>';
-  tbRender();
+  tbRender(); { const fxe = document.getElementById('tbFx'); if(fxe && !TB.ro) tbAcAttach(fxe); }
 }
 function tbOp(x, ov){
   const t = TB.t, s = tbRng(), n = s.r2 - s.r1 + 1, m = s.c2 - s.c1 + 1, rg = (a, b) => Array.from({length: b - a + 1}, (_, i) => a + i);
@@ -8389,13 +8497,13 @@ function tbOp(x, ov){
   else if(x === 'size'){ const w = +ov.querySelector('#tbW').value, h = +ov.querySelector('#tbH').value; mut(() => { if(w > 0) rg(s.c1, s.c2).forEach(c => { t.cw[c] = Math.min(800, Math.max(30, w)); }); if(h > 0) rg(s.r1, s.r2).forEach(r => { t.rh[r] = Math.min(400, Math.max(18, h)); }); }); }
   else if(x === 'sort-a') mut(() => tbSort(1)); else if(x === 'sort-d') mut(() => tbSort(-1));
   else if(x === 'hdr') mut(() => { t.hdr = !t.hdr; }); else if(x === 'nofilter') mut(() => { t.filter = null; });
-  else if(x === 'filter'){ const op = ov.querySelector('#tbOp').value, v = ov.querySelector('#tbV').value; mut(() => { t.filter = v === '' ? null : {c: TB.cur.c, op, val: v}; }); }
+  else if(x === 'filter'){ const op = (ov.querySelector('#tbOp .on') || {dataset: {op: 'has'}}).dataset.op, v = ov.querySelector('#tbV').value; mut(() => { t.filter = v === '' ? null : {c: TB.cur.c, op, val: v}; }); }
   else if(x === 'csv'){ ov.remove(); yngSave(new Blob([tbCsv()], {type: 'text/csv;charset=utf-8'}), tbFile() + '.csv'); }
   else if(x === 'json'){ ov.remove(); yngSave(new Blob([JSON.stringify(t)], {type: 'application/json'}), tbFile() + '.json'); }
   else if(x === 'pdf'){ ov.remove(); tbPdf(); }
   else if(x === 'pasteok'){ const v = ov.querySelector('#tbP').value; ov.remove(); if(v) tbPaste(v); }
 }
-const tbDlgFill = (html) => { const ov = tmDlg(html); ov.addEventListener('click', e => { const b = e.target.closest('[data-x]'); if(b) tbOp(b.dataset.x, ov); }); return ov; };
+const tbDlgFill = (html) => { const ov = tmDlg(html); ov.addEventListener('click', e => { const sg = e.target.closest('.tb-seg [data-op]'); if(sg){ ov.querySelectorAll('.tb-seg [data-op]').forEach(x => x.classList.toggle('on', x === sg)); return; } const b = e.target.closest('[data-x]'); if(b) tbOp(b.dataset.x, ov); }); return ov; };
 const tbDb = (x, t) => '<button class="btn small" type="button" data-x="' + x + '" style="margin:0 6px 8px 0">' + t + '</button>';
 vTables.addEventListener('click', async e => {
   const b = e.target.closest('[data-tb]'); if(!b) return; const a = b.dataset.tb, id = b.dataset.id;
@@ -8413,11 +8521,12 @@ vTables.addEventListener('click', async e => {
   if(a === 'undo') tbHist(TB.undo, TB.redo); else if(a === 'redo') tbHist(TB.redo, TB.undo);
   else if(a === 'b' || a === 'i') tbFmt(a); else if(a === 'al') tbFmt('al', b.dataset.v);
   else if(a === 'nofill') tbMut(() => tbEach(x => { delete x.f; delete x.c; }));
+  else if(a === 'cpick' || a === 'type') tbPopup(b, a);
   else if(a === 'range'){ TB.range = !TB.range; b.classList.toggle('on', TB.range); }
   else if(a === 'copy'){ const t = tbGrab(); try{ await navigator.clipboard.writeText(t); toast('Скопировано'); }catch(err){ toast('Скопировано внутри приложения'); } }
   else if(a === 'paste'){ let t = ''; try{ t = await navigator.clipboard.readText(); }catch(err){} if(t) tbPaste(t); else if(TB.clip) tbPaste(TB.clip.text); else tbDlgFill('<h3>Вставить</h3><p style="color:var(--text-2);font-size:13px">Вставьте скопированные ячейки (из Excel или Google Таблиц) в поле:</p><textarea id="tbP" style="width:100%;height:120px;box-sizing:border-box"></textarea><button class="btn small" type="button" data-x="pasteok">Вставить</button>'); }
   else if(a === 'rows') tbDlgFill('<h3>Строки и столбцы</h3><p style="color:var(--text-2);font-size:13px">Действие применяется к выделенным ячейкам.</p>' + tbDb('ri-a', 'Строка выше') + tbDb('ri-b', 'Строка ниже') + tbDb('rd', 'Удалить строки') + tbDb('ci-l', 'Столбец слева') + tbDb('ci-r', 'Столбец справа') + tbDb('cd', 'Удалить столбцы') + tbDb('rh', 'Скрыть строки') + tbDb('ch', 'Скрыть столбцы') + tbDb('show', 'Показать скрытые') + tbDb('addr', '+20 строк') + tbDb('addc', '+5 столбцов') + '<div style="margin-top:8px"><input id="tbW" type="number" min="30" placeholder="Ширина столбцов, px"><input id="tbH" type="number" min="18" placeholder="Высота строк, px"></div>' + tbDb('size', 'Применить размер'));
-  else if(a === 'data') tbDlgFill('<h3>Данные</h3><p style="color:var(--text-2);font-size:13px">Сортировка и фильтр работают по столбцу ' + tbName(TB.cur.c) + '. Формулы при сортировке не пересчитывают ссылки.</p>' + tbDb('sort-a', 'А→Я / по возрастанию') + tbDb('sort-d', 'Я→А / по убыванию') + tbDb('hdr', (TB.t.hdr ? '✓ ' : '') + 'Первая строка — заголовок') + '<div style="margin-top:6px"><select id="tbOp" style="width:100%;padding:10px;margin:4px 0"><option value="has">содержит</option><option value="eq">равно</option><option value="gt">больше</option><option value="lt">меньше</option></select><input id="tbV" placeholder="Значение фильтра" value="' + esc(TB.t.filter ? TB.t.filter.val : '') + '"></div>' + tbDb('filter', 'Применить фильтр') + tbDb('nofilter', 'Сбросить фильтр'));
+  else if(a === 'data') tbDlgFill('<h3>Данные</h3><p style="color:var(--text-2);font-size:13px">Сортировка и фильтр работают по столбцу ' + tbName(TB.cur.c) + '. Формулы при сортировке не пересчитывают ссылки.</p>' + tbDb('sort-a', 'А→Я / по возрастанию') + tbDb('sort-d', 'Я→А / по убыванию') + tbDb('hdr', (TB.t.hdr ? '✓ ' : '') + 'Первая строка — заголовок') + '<div style="margin-top:6px">' + tbSeg(TB.t.filter && TB.t.filter.op) + '<input id="tbV" placeholder="Значение фильтра" value="' + esc(TB.t.filter ? TB.t.filter.val : '') + '"></div>' + tbDb('filter', 'Применить фильтр') + tbDb('nofilter', 'Сбросить фильтр'));
   else if(a === 'exp') tbDlgFill('<h3>Экспорт</h3>' + tbDb('csv', 'CSV (открывается в Excel)') + tbDb('pdf', 'PDF') + tbDb('json', 'Резервная копия (JSON)'));
 });
 vTables.addEventListener('change', e => {
@@ -8432,6 +8541,7 @@ function tbEdit(r, c, init){
   const td = vTables.querySelector('#tbG td[data-r="' + r + '"][data-c="' + c + '"]'); if(!td || td.querySelector('input')) return;
   const x = TB.t.cells[r + '_' + c], old = x ? String(x.v) : '', inp = document.createElement('input'); inp.className = 'tb-in'; inp.value = init !== undefined ? init : old;
   td.textContent = ''; td.appendChild(inp); inp.focus(); if(init === undefined) inp.select(); else inp.setSelectionRange(inp.value.length, inp.value.length);
+  tbAcAttach(inp); tbAcShow(inp);
   let done = false; const fin = ok => { if(done) return; done = true; if(ok && inp.value !== old) tbMut(() => tbSet(r, c, inp.value)); else tbRender(); };
   inp.addEventListener('keydown', ev => { ev.stopPropagation();
     if(ev.key === 'Enter'){ fin(true); tbSelect(Math.min(r + 1, TB.t.R - 1), c, false); tbPaint(); }
@@ -8562,8 +8672,13 @@ function tbSnapDlg(id){
   const sv = ov.querySelector('#tsSv'); if(sv) sv.onclick = async () => { const c = JSON.parse(JSON.stringify(t)); c.id = uid(); c.title = (c.title || 'Таблица') + ' (копия)'; c.updated = Date.now(); await tbPut(c); TBC[c.id] = c; ov.remove(); toast('Копия сохранена в разделе «Таблицы»'); };
 }
 function dkTblStyle(o){
-  const ov = tmDlg('<h3>Оформление таблицы</h3><label>Размер шрифта, px<input id="tsF" type="number" min="8" max="80" value="' + (o.fs || 16) + '"></label><label>Цвет границ<input id="tsB" type="color" value="' + (tbClr(o.bc) || '#8e8e93') + '"></label><label>Цвет текста<input id="tsT" type="color" value="' + (tbClr(o.tc) || '#000000') + '"></label><label style="display:flex;gap:8px;align-items:center"><input id="tsN" type="checkbox" style="width:auto"' + (o.tc ? '' : ' checked') + '> Цвет текста по теме слайда</label><button class="btn small" type="button" id="tsOk">Применить</button>');
-  ov.querySelector('#tsOk').onclick = () => { dkPush(); o.fs = Math.max(8, Math.min(80, +ov.querySelector('#tsF').value || 16)); o.bc = ov.querySelector('#tsB').value; o.tc = ov.querySelector('#tsN').checked ? '' : ov.querySelector('#tsT').value; ov.remove(); dkStageDraw(); dkSelect([o.id]); dkDirty(); dkThumbs(); };
+  let bc = o.bc || '#8e8e93', tc = o.tc || '';
+  const pal = ['#1d1d1f', '#8e8e93', '#ffffff'].concat(tbSolid());
+  const row = (id, cur, none) => '<div class="sw tb-swrow" id="' + id + '">' + pal.map(k => '<button type="button" data-k="' + k + '" style="background:' + k + '" aria-label="Цвет"' + (cur === k ? ' class="on"' : '') + '></button>').join('') + (none ? '<button type="button" class="no' + (cur === '' ? ' on' : '') + '" data-k="" aria-label="По теме слайда" title="По теме слайда"></button>' : '') + '</div>';
+  const ov = tmDlg('<h3>Оформление таблицы</h3><label>Размер шрифта, px<input id="tsF" type="number" min="8" max="80" value="' + (o.fs || 16) + '"></label><div class="tb-lb">Цвет границ</div>' + row('tsB', bc, false) + '<div class="tb-lb">Цвет текста</div>' + row('tsT', tc, true) + '<button class="btn small" type="button" id="tsOk">Применить</button>');
+  const wire = (id, set) => ov.querySelector('#' + id).addEventListener('click', e => { const k = e.target.closest('[data-k]'); if(!k) return; set(k.dataset.k); ov.querySelectorAll('#' + id + ' button').forEach(x => x.classList.toggle('on', x === k)); });
+  wire('tsB', v => { bc = v; }); wire('tsT', v => { tc = v; });
+  ov.querySelector('#tsOk').onclick = () => { dkPush(); o.fs = Math.max(8, Math.min(80, +ov.querySelector('#tsF').value || 16)); o.bc = bc; o.tc = tc; ov.remove(); dkStageDraw(); dkSelect([o.id]); dkDirty(); dkThumbs(); };
 }
 tbLoadCache().catch(() => {});
 
