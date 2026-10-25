@@ -1626,6 +1626,10 @@ body.on-home #vHome .tagbar{background:rgba(255,255,255,.42);border:1px solid rg
 body.on-home #vHome .dgrid .wd{animation:hsWd .7s cubic-bezier(.2,.8,.2,1) both}
 body.on-home #vHome .dgrid .wd:nth-child(2){animation-delay:.08s}body.on-home #vHome .dgrid .wd:nth-child(3){animation-delay:.16s}
 @keyframes hsWd{from{opacity:0;translate:0 14px}}
+
+/* ===== ссылка-плашка в тексте ===== */
+p.lkc{margin:12px 0;cursor:pointer}
+p.lkc .lkc-a:hover{border-color:#0a84ff!important;background:rgba(10,132,255,.1)!important}
 </style>
 <script>
 /* ресурсы главного экрана */
@@ -1915,6 +1919,7 @@ function sanitize(html){
       if(n.nodeType !== 1) continue;
       const tag = n.tagName.toLowerCase();
       if(DROP.has(tag)) continue;
+    if(n.classList && (n.classList.contains('sbl') || n.classList.contains('atl'))) continue;
       if(!OK.has(tag)){
         if(BLK.test(tag)){
           const tmp = document.createElement('div'); walk(n, tmp);
@@ -1944,6 +1949,7 @@ function sanitize(html){
       if(tag === 'p'){
         const k = n.getAttribute('data-tk'), fxs = n.getAttribute('data-fx'), fw = n.getAttribute('data-fw');
         const chs = n.getAttribute('data-ch');
+        const lks = n.getAttribute('data-lk'); if(lks && /^https?:\/\/[^\s"'<>]{1,2000}$/i.test(lks)){ el.setAttribute('data-lk', lks); const lt = n.getAttribute('data-lt'); if(lt) el.setAttribute('data-lt', lt.slice(0, 120)); lkFill(el); dst.appendChild(el); continue; }
         const tbs = n.getAttribute('data-tb'); if(tbs && /^[\w-]{3,40}$/.test(tbs)){ el.setAttribute('data-tb', tbs); tbFill(el, n); dst.appendChild(el); continue; }
         if(chs && chValid(chs)){ el.setAttribute('data-ch', chs); chFill(el); dst.appendChild(el); continue; }
         if(fxs && fxValid(fxs)){ el.setAttribute('data-fx', fxs); fxFill(el); dst.appendChild(el); continue; }
@@ -2015,6 +2021,7 @@ function info(rec){
 }
 function htmlToMd(html){
   const root = document.createElement('div'); root.innerHTML = sanitize(html); tkPre(root);
+  root.querySelectorAll('p[data-lk]').forEach(p => { const u = p.getAttribute('data-lk'), a = document.createElement('a'); a.setAttribute('href', u); a.textContent = p.getAttribute('data-lt') || u; p.textContent = ''; p.appendChild(a); });
   const inl = (n) => {
     if(n.nodeType === 3) return n.nodeValue.replace(/\s*\n\s*/g, ' ');
     if(n.nodeType !== 1) return '';
@@ -3380,6 +3387,7 @@ function pdfPrepare(){
 }
 async function printDoc(){
   await flush(); deselImg();
+  if(TG) return docPdf();
   const t = document.title; document.title = (cur && cur.title) || 'Без названия';
   const undo = pdfPrepare();
   const back = () => { undo(); document.title = t; window.removeEventListener('afterprint', back); setDocTitle(); };
@@ -4260,6 +4268,7 @@ function bdPbHtml(objs, same){
   }
   if(same && objs.length === 1 && o.type === 'arrow') h += `<button type="button" class="bd-ib" data-bdlbl="1" title="Подпись к стрелке" aria-label="Подпись">${ico('bdlbl')}</button>` + (o.route ? `<button type="button" class="bd-ib" data-bdrst="1" title="Сбросить траекторию (двойной клик)" aria-label="Сбросить траекторию">${ico('restore')}</button>` : '');
   if(same && objs.length === 1 && (o.type === 'file' || o.type === 'task' || o.type === 'tbl')) h += `<button type="button" class="bd-ib" data-bdo2="1" title="${o.type === 'file' ? 'Открыть в редакторе' : o.type === 'tbl' ? 'Редактировать таблицу' : 'Открыть задачу'}" aria-label="Открыть">${ico('fwd')}</button>`;
+  if(same && objs.length === 1 && o.type === 'frame') h += `<button type="button" class="bd-ib" data-bdfx="1" title="Сохранить область рамки как изображение" aria-label="Сохранить область рамки как изображение">${ico('dl')}</button>`;
   if(same && objs.length === 1 && o.type === 'link') h += `<button type="button" class="bd-ib" data-bdlke="1" title="Изменить ссылку" aria-label="Изменить ссылку">${ico('edit')}</button>`;
   if(h) h += sep;
   return h + `<button type="button" class="bd-ib bd-del" data-bddel="1" title="${o.type === 'file' || o.type === 'task' ? 'Убрать с холста (Delete)' : 'Удалить (Delete)'}" aria-label="Удалить">${ico('trash')}</button>`;
@@ -4280,6 +4289,7 @@ function bdPbClick(e){
   } else if(t.closest('[data-bdrst]')){ objs.forEach(o => { if(o.type === 'arrow'){ o.route = null; bdSvgFor(o); } });
   } else if(t.closest('[data-bdlbl]')){ bdLabelEdit(objs[0]); return;
   } else if(t.closest('[data-bdo2]')){ const o = objs[0]; if(o.type === 'file') nav('#/d/' + o.ref); else if(o.type === 'tbl') tbModal(o.ref, {ro: false}); else { const k = bdTaskRec(o); if(k) openTaskForm({task: k}); } return;
+  } else if(t.closest('[data-bdfx]')){ bdExportFrame(objs[0]); return;
   } else if(t.closest('[data-bdlke]')){ bdLinkDlg(objs[0]); return;
   } else if(t.closest('[data-bddel]')){ bdDelete(bd.sel.slice()); return;
   } else return;
@@ -4515,9 +4525,10 @@ function bdDup(){
 }
 document.addEventListener('keydown', e => {
   if(view !== 'board') return;
-  const t = e.target, typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
-  if(e.code === 'Space' && !typing && !document.querySelector('.np-modal')){
-    e.preventDefault(); if(!e.repeat){ bd.space = true; bdV().classList.add('space'); } return;
+  const t = e.target, typing = t && ((t.isContentEditable && t.getAttribute('contenteditable') !== 'false') || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || (t.tagName === 'INPUT' && !t.readOnly && !t.disabled && !/^(button|checkbox|radio|range|color|file|submit)$/i.test(t.type)));
+  const modalOpen = [...document.querySelectorAll('.np-modal,.tm-ov,.tb-mo')].some(m => m.getClientRects().length);
+  if(e.code === 'Space' && !typing && !modalOpen && !e.metaKey && !e.ctrlKey){
+    e.preventDefault(); if(t && t.tagName === 'BUTTON') t.blur(); if(!e.repeat){ bd.space = true; bdV().classList.add('space'); } return;
   }
   if(e.key === 'Escape'){
     if(document.querySelector('.np-modal') || pop) return;
@@ -4555,7 +4566,9 @@ document.addEventListener('keydown', e => {
   if(tool){ e.preventDefault(); bdTool(tool[0]); }
 });
 document.addEventListener('keyup', e => { if(e.code === 'Space' && bd.space){ bd.space = false; const v = bdV(); v && v.classList.remove('space'); } });
-window.addEventListener('blur', () => { bd.space = false; const v = bdV(); v && v.classList.remove('space'); });
+const bdSpaceOff = () => { bd.space = false; const v = bdV(); v && v.classList.remove('space'); };
+window.addEventListener('blur', bdSpaceOff); document.addEventListener('visibilitychange', () => { if(document.hidden) bdSpaceOff(); });
+document.addEventListener('keydown', e => { if(bd.space && (e.metaKey || e.ctrlKey)) bdSpaceOff(); }, true);
 document.addEventListener('paste', e => {
   if(view !== 'board') return;
   const t = e.target; if(t && (t.isContentEditable || /^(INPUT|TEXTAREA)$/.test(t.tagName))) return;
@@ -4625,6 +4638,8 @@ async function bdRender(box, scale, opts){
   const imgs = new Map();
   await Promise.all(BD.objs.filter(o => o.type === 'image').map(o => new Promise(res => { const i = new Image(); i.onload = () => { imgs.set(o.id, i); res(); }; i.onerror = res; i.src = o.src; })));
   await Promise.all(BD.objs.filter(o => o.type === 'link' && o.icon).map(o => new Promise(res => { const i = new Image(); i.onload = () => { imgs.set('i' + o.id, i); res(); }; i.onerror = res; i.src = o.icon; })));
+  const doms = new Map();
+  await Promise.all(BD.objs.filter(o => o.type === 'file' || o.type === 'tbl').map(async o => { try{ doms.set(o.id, await bdDomImg(o, Math.max(1, scale))); }catch(e){} }));
   const cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(box.w * scale)); cv.height = Math.max(1, Math.round(box.h * scale));
   const ctx = cv.getContext('2d'); ctx.scale(scale, scale); ctx.translate(-box.x, -box.y);
   const cs = getComputedStyle(document.documentElement), V = n => cs.getPropertyValue(n).trim();
@@ -4656,11 +4671,15 @@ async function bdRender(box, scale, opts){
     } else if(o.type === 'file'){
       const r = DR[o.ref];
       ctx.shadowColor = 'rgba(0,0,0,.16)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6; bdRR(ctx, o.x, o.y, o.w, o.h, 14); ctx.fillStyle = elev; ctx.fill(); ctx.shadowColor = 'transparent'; ctx.lineWidth = 1; ctx.strokeStyle = line; ctx.stroke(); ctx.clip();
-      if(r){
+      if(doms.has(o.id)) ctx.drawImage(doms.get(o.id), o.x, o.y, o.w, o.h);
+      else if(r){
         ctx.font = `600 14px ${fam}`; ctx.fillStyle = tx; ctx.fillText((r.title || 'Без названия').slice(0, 60), o.x + 14, o.y + 27);
         ctx.fillStyle = line; ctx.fillRect(o.x, o.y + 40, o.w, 1);
         const lay = bdLayout(ctx, bdBlocks(r.html), o.w - 28, 13.5, fam); bdPaintText(ctx, lay, o.x + 14, o.y + 48, o.w - 28, tx);
       }
+    } else if(o.type === 'tbl'){
+      ctx.shadowColor = 'rgba(0,0,0,.16)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6; bdRR(ctx, o.x, o.y, o.w, o.h, 16); ctx.fillStyle = elev; ctx.fill(); ctx.shadowColor = 'transparent'; ctx.clip();
+      if(doms.has(o.id)) ctx.drawImage(doms.get(o.id), o.x, o.y, o.w, o.h);
     } else if(o.type === 'task'){
       const t = bdTaskRec(o);
       ctx.shadowColor = 'rgba(0,0,0,.16)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6; bdRR(ctx, o.x, o.y, o.w, o.h, 14); ctx.fillStyle = elev; ctx.fill(); ctx.shadowColor = 'transparent'; ctx.lineWidth = 1; ctx.strokeStyle = line; ctx.stroke(); ctx.clip();
@@ -5366,7 +5385,7 @@ const tblEnd = e => {
 ed.addEventListener('pointerup', tblEnd); ed.addEventListener('pointercancel', tblEnd);
 
 /* операции со строками/столбцами сохраняют ширины колонок */
-function tableOp(op){
+function tableOpCore(op){
   const cell = up(/^T[DH]$/);
   if(!cell) return tableOpBase(op);
   const table = cell.closest('table'), ci = cell.cellIndex;
@@ -7312,7 +7331,7 @@ const TOOLS = [
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
   '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить вложенность (Shift+Tab)'],['indent',svg('indent'),'Вложенный пункт (Tab)'],
   '|',['quote',svg('quote'),'Цитата / акцентный блок'],['code',svg('code'),'Блок кода или формулы'],['hr',svg('hr'),'Разделитель'],
-  '|',['table',svg('table'),'Таблица'],['tbl',svg('tbl'),'Таблица из раздела «Таблицы» (обновляется сама)'],['image',svg('image'),'Изображение'],['link',svg('link'),'Ссылка (Ctrl+K)'],['task',svg('task'),'Задача в тексте (дедлайн, приоритет, теги)'],['attach','<svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.5 17.2a1.7 1.7 0 0 1-2.4-2.4L14.5 7.5"/></svg>','Прикрепить файл (до 15 МБ)'],['fx','<svg viewBox="0 0 24 24"><path d="M17.500 5.500H7l5.500 6.500L7 18.500h10.500"/></svg>','Формулы: визуальный конструктор'],['chart','<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg>','Диаграммы'],
+  '|',['table',svg('table'),'Таблица'],['tbl',svg('tbl'),'Таблица из раздела «Таблицы» (обновляется сама)'],['image',svg('image'),'Изображение'],['link',svg('link'),'Ссылка (Ctrl+K)'],['linkcard','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8" width="19" height="8" rx="4"/><circle cx="7.5" cy="12" r="1.5"/><path d="M12 12h6"/></svg>','Ссылка-плашка'],['task',svg('task'),'Задача в тексте (дедлайн, приоритет, теги)'],['attach','<svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.5 17.2a1.7 1.7 0 0 1-2.4-2.4L14.5 7.5"/></svg>','Прикрепить файл (до 15 МБ)'],['fx','<svg viewBox="0 0 24 24"><path d="M17.500 5.500H7l5.500 6.500L7 18.500h10.500"/></svg>','Формулы: визуальный конструктор'],['chart','<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg>','Диаграммы'],
   '|',['clear',svg('eraser'),'Убрать форматирование'],['undo',svg('undo'),'Отменить'],['redo',svg('redo'),'Повторить'],
   '|',['page',svg('page'),'Параметры страницы: A5, A4, A3'],['view','Aa','Вид: шрифт, размер, ширина']
 ];
@@ -7488,8 +7507,9 @@ function run(c, b){
     case 'tbl': return addTblToText();
     case 'image': restore(); return fileImg.click();
     case 'link': return popLink(b);
-    case 'undo': return ex('undo');
-    case 'redo': return ex('redo');
+    case 'linkcard': return addLinkCard();
+    case 'undo': return edHist('undo') || ex('undo');
+    case 'redo': return edHist('redo') || ex('redo');
     default: if(c === 'capt') return capTable(); if(/^(row|col|tbl)-/.test(c)) return tableOp(c);
   }
 }
@@ -7531,7 +7551,7 @@ window.addEventListener('scroll', () => { closePop(); bubble.classList.contains(
 /* ================= drafts: state, save, load ================= */
 const TPL = [
   {k:'blank', t:'Пустой черновик', d:'Чистый лист — просто пишите', i:'blank', title:() => '', html:() => '<p><br></p>'},
-  {k:'todo', t:'Список дел', d:'Задачи на день с отметками ☐', i:'todo', title:() => 'Список дел — ' + todayRu(),
+  {k:'todo', t:'Список дел', d:'Задачи на день с отметками', i:'todo', title:() => 'Список дел — ' + todayRu(),
     html:() => '<h2>Сегодня</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>На неделе</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>Когда-нибудь</h2><p>☐&nbsp;</p>'},
   {k:'meet', t:'Заметки встречи', d:'Повестка, решения и задачи', i:'users', title:() => 'Встреча — ' + todayRu(),
     html:() => '<h2>Повестка</h2><ul><li><br></li></ul><h2>Участники</h2><ul><li><br></li></ul><h2>Решения</h2><ol><li><br></li></ol><h2>Задачи</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><blockquote><p>Следующая встреча: </p></blockquote>'},
@@ -7782,7 +7802,7 @@ async function download(name, text, mime){
 const slug = s => (String(s || '').trim() || 'Без названия').replace(/[\\/:*?"<>|\r\n]+/g, '-').slice(0, 80);
 const recOut = r => ({id: r.id, title: r.title || '', created: r.created, updated: r.updated, pinned: !!r.pinned, folder: r.folder || null, date: r.date || null, tags: r.tags || [], page: r.page || null, html: sanitize(r.html), kind: r.kind === 'deck' ? 'deck' : undefined, deck: r.kind === 'deck' ? r.deck : undefined});
 const mdOne = r => `# ${r.title || 'Без названия'}\n\n${htmlToMd(r.html)}\n`;
-function exHtml(h){ const d = document.createElement('div'); d.innerHTML = sanitize(h); tkPre(d); d.querySelectorAll('[data-tk]').forEach(p => { p.removeAttribute('data-tk'); p.removeAttribute('contenteditable'); }); return d.innerHTML; }
+function exHtml(h){ const d = document.createElement('div'); d.innerHTML = sanitize(h); tkPre(d); d.querySelectorAll('[data-tk]').forEach(p => { p.removeAttribute('data-tk'); p.removeAttribute('contenteditable'); }); d.querySelectorAll('[data-lk]').forEach(p => { p.removeAttribute('data-lk'); p.removeAttribute('data-lt'); p.removeAttribute('contenteditable'); }); return d.innerHTML; }
 function docHtml(r){
   return `<!DOCTYPE html>\n<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(r.title || 'Без названия')}</title>
 <style>body{max-width:760px;margin:40px auto;padding:0 20px;font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#1d1d1f}h1,h2,h3{line-height:1.25;letter-spacing:-.015em}blockquote{border-left:4px solid #0066cc;background:rgba(0,102,204,.09);margin:0 0 1em;padding:.6em 1em;border-radius:0 12px 12px 0}pre{background:#1d1d1f;color:#f5f5f7;padding:12px 14px;border-radius:12px;white-space:pre-wrap}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d2d2d7;padding:7px 10px;text-align:left}th{background:#f5f5f7}img{max-width:100%;height:auto;border-radius:12px}img[data-al=c]{display:block;margin:.6em auto}img[data-al=l]{float:left;margin:.3em 1em .6em 0}img[data-al=r]{float:right;margin:.3em 0 .6em 1em}a{color:#0066cc}${PAGES[r.page] ? `@page{size:${PAGES[r.page].w}mm ${PAGES[r.page].h}mm;margin:15mm}` : ''}tr,img,pre,blockquote{break-inside:avoid}</style></head>
@@ -8469,6 +8489,7 @@ function tbPdf(){
   const land = w > 680, W = land ? 297 : 210, H = land ? 210 : 297, avail = (W - 2 * m) * 96 / 25.4, z = Math.min(1, avail / w);
   let h = '<div style="font:700 20px Arial,sans-serif;margin:0 0 10px">' + esc(t.title) + '</div><table style="border-collapse:collapse;table-layout:fixed;width:' + w + 'px;zoom:' + z + ';font:13px/1.35 Arial,sans-serif;color:#000"><colgroup>' + cols.map(c => '<col style="width:' + (t.cw[c] || 96) + 'px">').join('') + '</colgroup>';
   rows.forEach(r => { h += '<tr style="height:' + (t.rh[r] || 26) + 'px">' + cols.map(c => { const x = t.cells[r + '_' + c] || {}; return '<td style="border:1px solid #999;padding:2px 6px;overflow:hidden;' + tbStyle(x, val(r, c)) + '">' + esc(tbText(t, val, r, c)) + '</td>'; }).join('') + '</tr>'; });
+  if(TG){ (async () => { toast('Создаём PDF…'); try{ const holder = document.createElement('div'); holder.innerHTML = h + '</table>'; const blob = await pdfBuild(holder, W, H, m); await yngSave(blob, (t.title || 'Таблица').replace(/[\\/:*?"<>|]+/g, '_') + '.pdf'); }catch(e){ toast('Не удалось создать PDF на этом устройстве'); } })(); return; }
   const sp = '<div style="height:' + m + 'mm"></div>', root = document.createElement('div'); root.id = 'prRoot';
   root.innerHTML = '<table class="pr-t"><thead><tr><td>' + sp + '</td></tr></thead><tbody><tr><td class="pr-b">' + h + '</table></td></tr></tbody><tfoot><tr><td>' + sp + '</td></tr></tfoot></table>';
   const st = document.createElement('style'); st.id = 'prSt';
@@ -8778,6 +8799,134 @@ function selEnhance(sel){
 }
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if(n.nodeType === 1){ if(n.matches && n.matches('select')) selEnhance(n); if(n.querySelectorAll) n.querySelectorAll('select').forEach(selEnhance); } }))).observe(document.body, {childList: true, subtree: true});
 document.querySelectorAll('select').forEach(selEnhance);
+/* ===== v3: ссылка-плашка, отмена операций с таблицей в тексте, PDF для Telegram, экспорт холста ===== */
+const LK_GLOBE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>';
+function lkFill(p){
+  const u = p.getAttribute('data-lk'), host = (() => { try{ return new URL(u).hostname.replace(/^www\./, ''); }catch(e){ return u; } })(), t = p.getAttribute('data-lt') || host;
+  p.className = 'lkc'; p.setAttribute('contenteditable', 'false');
+  p.innerHTML = '<a class="lkc-a" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer" draggable="false" style="display:inline-flex;align-items:center;gap:10px;max-width:100%;padding:8px 18px 8px 8px;border-radius:999px;border:1px solid rgba(128,128,128,.38);background:rgba(128,128,128,.08);box-shadow:0 2px 10px rgba(0,0,0,.08);text-decoration:none;color:inherit;box-sizing:border-box">' +
+    '<span style="display:inline-flex;flex:none;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,132,255,.16);color:#0a84ff">' + LK_GLOBE + '</span>' +
+    '<span style="display:inline-flex;flex-direction:column;min-width:0"><b style="font-size:14.5px;line-height:1.25;font-weight:600;color:#0a84ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46ch">' + esc(t) + '</b><small style="font-size:12px;line-height:1.3;opacity:.62;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46ch">' + esc(host) + '</small></span></a>';
+}
+function lkDlg(){
+  return new Promise(res => {
+    const ov = tmDlg('<h3>Ссылка-плашка</h3><label>Адрес<input id="lkU" placeholder="https://example.com" autocomplete="off"></label><label>Название (необязательно)<input id="lkT" maxlength="120" autocomplete="off"></label><button class="btn small" type="button" id="lkOk">Вставить</button> <button class="btn small neutral" type="button" id="lkNo">Отмена</button>');
+    const u = ov.querySelector('#lkU'); u.focus();
+    const go = () => { const url = normUrl(u.value.trim()); if(!url){ toast('Введите корректный адрес'); return; } ov.remove(); res({u: url, t: ov.querySelector('#lkT').value.trim()}); };
+    ov.querySelector('#lkOk').onclick = go; ov.querySelector('#lkNo').onclick = () => { ov.remove(); res(null); };
+    ov.addEventListener('keydown', e => { if(e.key === 'Enter') go(); else if(e.key === 'Escape'){ ov.remove(); res(null); } });
+  });
+}
+async function addLinkCard(){
+  if(!cur) return; restore(); const v = await lkDlg(); if(!v) return;
+  restore(); const p = document.createElement('p'); p.setAttribute('data-lk', v.u); if(v.t) p.setAttribute('data-lt', v.t); lkFill(p); insertBlockHere(p);
+}
+ed.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('p.lkc a'); if(!a || !ed.contains(a)) return; e.preventDefault();
+  const u = a.getAttribute('href'); if(TG && TG.openLink) TG.openLink(u); else window.open(u, '_blank', 'noopener');
+});
+/* --- отмена операций над таблицей в тексте (удаление строк/столбцов идёт мимо истории браузера) --- */
+const ED_OPS = [], ED_REDO = [];
+const edNorm = () => sanitize(ed.innerHTML);
+function edRecordOp(fn){
+  const before = edNorm(), c = up(/^T[DH]$/), doc = cur && cur.id;
+  const pos = c ? {ti: [...ed.querySelectorAll('table')].indexOf(c.closest('table')), r: c.parentNode.rowIndex, c: c.cellIndex} : null;
+  fn(); const after = edNorm(); if(after === before) return;
+  ED_OPS.push({before, after, pos, doc}); if(ED_OPS.length > 30) ED_OPS.shift(); ED_REDO.length = 0;
+}
+function edSet(html, pos){
+  ed.innerHTML = html; refreshInline(); ed.classList.toggle('is-empty', isEmptyEl(ed));
+  if(pos){ const t = ed.querySelectorAll('table')[pos.ti], row = t && t.rows[Math.min(pos.r, t.rows.length - 1)], cell = row && row.cells[Math.min(pos.c, row.cells.length - 1)]; if(cell){ try{ caretIn(cell, true); }catch(e){} } }
+  counter(); changed();
+}
+function edHist(kind){
+  const doc = cur && cur.id, now = edNorm();
+  if(kind === 'undo'){ const op = ED_OPS[ED_OPS.length - 1]; if(op && op.doc === doc && now === op.after){ ED_OPS.pop(); ED_REDO.push(op); edSet(op.before, op.pos); return true; } }
+  else { const op = ED_REDO[ED_REDO.length - 1]; if(op && op.doc === doc && now === op.before){ ED_REDO.pop(); ED_OPS.push(op); edSet(op.after, op.pos); return true; } }
+  return false;
+}
+ed.addEventListener('beforeinput', e => { if(e.inputType === 'historyUndo' || e.inputType === 'historyRedo'){ if(edHist(e.inputType === 'historyUndo' ? 'undo' : 'redo')) e.preventDefault(); } });
+function tableOp(op){ edRecordOp(() => tableOpCore(op)); }
+/* --- DOM → картинка (SVG foreignObject): одинаковый вид на холсте, в экспорте и в PDF --- */
+let bdCssMem = null;
+function bdCssText(){
+  if(bdCssMem) return bdCssMem; let t = '';
+  for(const sh of document.styleSheets){ let rs; try{ rs = sh.cssRules; }catch(e){ continue; } for(const r of rs) if(r.type === 1) t += r.cssText + '\n'; }
+  return bdCssMem = t.replace(/]]>/g, ']] >');
+}
+const xhtmlOf = el => new XMLSerializer().serializeToString(el);
+function svgLoad(wOut, hOut, vw, vh, theme, inner){
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + wOut + '" height="' + hOut + '" viewBox="0 0 ' + vw + ' ' + vh + '" data-theme="' + theme + '"><foreignObject x="0" y="0" width="' + vw + '" height="' + vh + '"><div xmlns="http://www.w3.org/1999/xhtml" style="width:' + vw + 'px;height:' + vh + 'px;overflow:hidden;position:relative"><style><![CDATA[' + bdCssText() + ']]></style>' + inner + '</div></foreignObject></svg>';
+  const src = svg.length > 1500000 ? URL.createObjectURL(new Blob([svg], {type: 'image/svg+xml'})) : 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('svg')); i.src = src; });
+}
+async function bdDomImg(o, sc){
+  const el = document.createElement('div'); el.className = 'bd-obj bd-' + o.type;
+  el.setAttribute('style', 'position:absolute;left:0;top:0;margin:0;transform:none;width:' + o.w + 'px;height:' + o.h + 'px');
+  el.innerHTML = o.type === 'file' ? bdFileHtml(o) : bdTblHtml(o);
+  return svgLoad(Math.round(o.w * sc), Math.round(o.h * sc), o.w, o.h, hsTh(), xhtmlOf(el));
+}
+async function bdExportFrame(o){
+  toast('Готовим изображение…');
+  try{
+    const s = Math.min(3, Math.max(1, 3000 / Math.max(o.w, o.h)));
+    const cv = await bdRender({x: o.x, y: o.y, w: o.w, h: o.h}, s, {grid: false});
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    await yngSave(blob, ((o.title || 'Рамка').replace(/[\\/:*?"<>|]+/g, '_')) + '.png');
+  }catch(e){ toast('Не удалось создать изображение'); }
+}
+/* --- PDF без системной печати (для Telegram на iPhone и Mac) --- */
+const pdfBytes = d => { const b = atob(d.split(',')[1]), u = new Uint8Array(b.length); for(let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+function pdfPages(pages, pw, ph){
+  const enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+  const add = s => { const b = typeof s === 'string' ? enc.encode(s) : s; parts.push(b); len += b.length; };
+  const obj = (n, body) => { offs[n] = len; add(n + ' 0 obj\n' + body + '\nendobj\n'); };
+  const N = pages.length, total = 3 + N * 3; add('%PDF-1.4\n');
+  obj(1, '<</Type/Catalog/Pages 2 0 R>>');
+  obj(2, '<</Type/Pages/Kids[' + pages.map((_, i) => (3 + i * 3) + ' 0 R').join(' ') + ']/Count ' + N + '>>');
+  pages.forEach((p, i) => {
+    const pn = 3 + i * 3, im = pn + 1, ct = pn + 2, cnt = 'q ' + pw.toFixed(2) + ' 0 0 ' + ph.toFixed(2) + ' 0 0 cm /Im0 Do Q';
+    obj(pn, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + pw.toFixed(2) + ' ' + ph.toFixed(2) + ']/Resources<</XObject<</Im0 ' + im + ' 0 R>>>>/Contents ' + ct + ' 0 R>>');
+    offs[im] = len; add(im + ' 0 obj\n<</Type/XObject/Subtype/Image/Width ' + p.w + '/Height ' + p.h + '/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ' + p.jpg.length + '>>\nstream\n'); add(p.jpg); add('\nendstream\nendobj\n');
+    obj(ct, '<</Length ' + cnt.length + '>>\nstream\n' + cnt + '\nendstream');
+  });
+  const xr = len; add('xref\n0 ' + total + '\n0000000000 65535 f \n');
+  for(let i = 1; i < total; i++) add(String(offs[i]).padStart(10, '0') + ' 00000 n \n');
+  add('trailer\n<</Size ' + total + '/Root 1 0 R>>\nstartxref\n' + xr + '\n%%EOF'); return new Blob(parts, {type: 'application/pdf'});
+}
+async function pdfBuild(el, Wmm, Hmm, mmm){
+  const k = 96 / 25.4, PW = Wmm * k, PH = Hmm * k, m = mmm * k, cw = Math.round(PW - 2 * m), chh = Math.floor(PH - 2 * m), sc = 2;
+  const wrap = document.createElement('div'); wrap.style.cssText = 'position:fixed;left:-100000px;top:0;width:' + cw + 'px;background:#fff;color:#000'; wrap.appendChild(el); document.body.appendChild(wrap);
+  await new Promise(r => requestAnimationFrame(() => r())); await new Promise(r => setTimeout(r, 80));
+  try{
+    const total = Math.ceil(wrap.scrollHeight), top0 = wrap.getBoundingClientRect().top, cuts = new Set();
+    wrap.querySelectorAll('.nb > *, tr, :scope > *').forEach(n => cuts.add(Math.round(n.getBoundingClientRect().bottom - top0)));
+    const ys = [...cuts].filter(y => y > 0).sort((a, b) => a - b), spans = []; let y0 = 0;
+    while(y0 < total - 1){ let y1 = y0 + chh; if(y1 >= total) y1 = total; else { const fit = ys.filter(y => y > y0 + chh * .35 && y <= y1); if(fit.length) y1 = fit[fit.length - 1]; } spans.push([y0, y1]); y0 = y1; }
+    const cs = getComputedStyle(document.body), ff = cs.fontFamily.replace(/"/g, "'"), inner = xhtmlOf(el), pages = [];
+    for(const [a, b] of spans){
+      const hh = b - a, img = await svgLoad(cw * sc, hh * sc, cw, hh, 'light', '<div style="position:relative;top:' + (-a) + 'px;width:' + cw + 'px;color:#000;font-family:' + ff + ';font-size:' + cs.fontSize + ';line-height:' + cs.lineHeight + '">' + inner + '</div>');
+      const cv = document.createElement('canvas'); cv.width = Math.round(PW * sc); cv.height = Math.round(PH * sc); const cx = cv.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, m * sc, m * sc, cw * sc, hh * sc);
+      pages.push({jpg: pdfBytes(cv.toDataURL('image/jpeg', .9)), w: cv.width, h: cv.height});
+    }
+    return pdfPages(pages, Wmm / 25.4 * 72, Hmm / 25.4 * 72);
+  } finally { wrap.remove(); }
+}
+async function docPdf(){
+  toast('Создаём PDF…');
+  try{
+    const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : PAGES.a4, clone = ed.cloneNode(true);
+    ['id', 'contenteditable', 'data-ph', 'role', 'aria-label', 'spellcheck'].forEach(a => clone.removeAttribute(a)); clone.classList.remove('is-empty');
+    clone.setAttribute('style', 'min-height:0;padding:0;margin:0;outline:none;border:0;box-shadow:none;background:transparent');
+    clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id')); clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable')); clone.querySelectorAll('.pg-lines').forEach(n => n.remove());
+    const box = document.createElement('div'), title = (cur && cur.title) || '';
+    if(title){ const h = document.createElement('div'); h.setAttribute('style', 'font:700 28px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;margin:0 0 14px;color:#000'); h.textContent = title; box.appendChild(h); }
+    box.appendChild(clone);
+    const blob = await pdfBuild(box, pg.w, pg.h, typeof PGM === 'number' ? PGM : 15);
+    await yngSave(blob, (title || 'Документ').replace(/[\\/:*?"<>|]+/g, '_') + '.pdf');
+  }catch(e){ toast('Не удалось создать PDF на этом устройстве'); }
+}
 async function tbOpen(id){
   const t = (await tbAll()).find(x => x.id === id); if(!t){ nav('#/tables'); toast('Таблица не найдена'); return; }
   TB.t = t; TB.cur = {r: 0, c: 0}; TB.end = {r: 0, c: 0}; TB.undo = []; TB.redo = []; TB.range = false;
