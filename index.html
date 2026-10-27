@@ -7551,7 +7551,7 @@ window.addEventListener('scroll', () => { closePop(); bubble.classList.contains(
 /* ================= drafts: state, save, load ================= */
 const TPL = [
   {k:'blank', t:'Пустой черновик', d:'Чистый лист — просто пишите', i:'blank', title:() => '', html:() => '<p><br></p>'},
-  {k:'todo', t:'Список дел', d:'Задачи на день с отметками', i:'todo', title:() => 'Список дел — ' + todayRu(),
+  {k:'todo', t:'Список дел', d:'Задачи на день с отметками ☐', i:'todo', title:() => 'Список дел — ' + todayRu(),
     html:() => '<h2>Сегодня</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>На неделе</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>Когда-нибудь</h2><p>☐&nbsp;</p>'},
   {k:'meet', t:'Заметки встречи', d:'Повестка, решения и задачи', i:'users', title:() => 'Встреча — ' + todayRu(),
     html:() => '<h2>Повестка</h2><ul><li><br></li></ul><h2>Участники</h2><ul><li><br></li></ul><h2>Решения</h2><ol><li><br></li></ol><h2>Задачи</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><blockquote><p>Следующая встреча: </p></blockquote>'},
@@ -8845,6 +8845,7 @@ function edHist(kind){
   else { const op = ED_REDO[ED_REDO.length - 1]; if(op && op.doc === doc && now === op.before){ ED_REDO.pop(); ED_OPS.push(op); edSet(op.after, op.pos); return true; } }
   return false;
 }
+ed.addEventListener('keydown', e => { if(!(e.ctrlKey || e.metaKey) || e.altKey) return; const k = e.key.toLowerCase(); if(k !== 'z' && k !== 'y') return; if(edHist(k === 'y' || e.shiftKey ? 'redo' : 'undo')) e.preventDefault(); });
 ed.addEventListener('beforeinput', e => { if(e.inputType === 'historyUndo' || e.inputType === 'historyRedo'){ if(edHist(e.inputType === 'historyUndo' ? 'undo' : 'redo')) e.preventDefault(); } });
 function tableOp(op){ edRecordOp(() => tableOpCore(op)); }
 /* --- DOM → картинка (SVG foreignObject): одинаковый вид на холсте, в экспорте и в PDF --- */
@@ -8855,8 +8856,9 @@ function bdCssText(){
   return bdCssMem = t.replace(/]]>/g, ']] >');
 }
 const xhtmlOf = el => new XMLSerializer().serializeToString(el);
+const bdBase = {get ff(){ return getComputedStyle(document.body).fontFamily.replace(/"/g, "'"); }, get fs(){ return getComputedStyle(document.body).fontSize; }, get lh(){ return getComputedStyle(document.body).lineHeight; }};
 function svgLoad(wOut, hOut, vw, vh, theme, inner){
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + wOut + '" height="' + hOut + '" viewBox="0 0 ' + vw + ' ' + vh + '" data-theme="' + theme + '"><foreignObject x="0" y="0" width="' + vw + '" height="' + vh + '"><div xmlns="http://www.w3.org/1999/xhtml" style="width:' + vw + 'px;height:' + vh + 'px;overflow:hidden;position:relative"><style><![CDATA[' + bdCssText() + ']]></style>' + inner + '</div></foreignObject></svg>';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + wOut + '" height="' + hOut + '" viewBox="0 0 ' + vw + ' ' + vh + '" data-theme="' + theme + '"><foreignObject x="0" y="0" width="' + vw + '" height="' + vh + '"><div xmlns="http://www.w3.org/1999/xhtml" style="width:' + vw + 'px;height:' + vh + 'px;overflow:hidden;position:relative;font-family:' + bdBase.ff + ';font-size:' + bdBase.fs + ';line-height:' + bdBase.lh + ';color:var(--text)"><style><![CDATA[' + bdCssText() + ']]></style>' + inner + '</div></foreignObject></svg>';
   const src = svg.length > 1500000 ? URL.createObjectURL(new Blob([svg], {type: 'image/svg+xml'})) : 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('svg')); i.src = src; });
 }
