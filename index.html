@@ -132,6 +132,13 @@ mark{background:var(--mark);color:inherit;border-radius:4px;padding:0 2px}
 .nb th{background:var(--bg-alt);font-weight:600}
 .nb tr>*:last-child{border-right:0}
 .nb tr:last-child>*{border-bottom:0}
+.nb table:has([colspan],[rowspan]){border-right-width:0;border-bottom-width:0}
+.nb table:has([colspan],[rowspan]) tr>*:last-child{border-right:1px solid var(--line)}
+.nb table:has([colspan],[rowspan]) tr:last-child>*{border-bottom:1px solid var(--line)}
+.tc-layer{position:fixed;inset:0;pointer-events:none;z-index:50}
+.tc-layer i{position:fixed;background:rgba(10,132,255,.2);outline:1px solid rgba(10,132,255,.6);outline-offset:-1px}
+.tc-selecting,.tc-selecting *{user-select:none!important;-webkit-user-select:none!important}
+@media print{.tc-layer{display:none!important}}
 .nb hr{border:0;border-top:1px solid var(--line-2);margin:1em 0}
 
 
@@ -1425,6 +1432,7 @@ cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' widt
 .tb-g th.rh{left:0;top:auto;z-index:1}.tb-g th.corner{left:0;top:0;z-index:3}
 .tb-g td{border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:0 6px;white-space:nowrap;overflow:hidden;cursor:cell;color:var(--text)}
 .tb-g td.sel{box-shadow:inset 0 0 0 999px rgba(10,132,255,.16)}.tb-g td.cur{outline:2px solid #0a84ff;outline-offset:-2px}
+.tb-g td[data-m]{white-space:normal;vertical-align:middle;overflow-wrap:anywhere}
 .tb-in{width:100%;height:100%;box-sizing:border-box;border:0;outline:0;background:var(--bg-elev);color:var(--text);font:inherit;padding:0}
 .tb-rz{position:absolute;right:-4px;top:0;width:10px;height:100%;cursor:col-resize;touch-action:none;z-index:4}.tb-rzr{position:absolute;left:0;bottom:-4px;height:10px;width:100%;cursor:row-resize;touch-action:none;z-index:4}
 .tb-ca{display:inline-block;margin-top:6px}.tb-card{cursor:pointer}
@@ -5282,22 +5290,23 @@ function tblHitTest(e){
   const T = e.pointerType === 'touch' ? 10 : 5;
   let el = document.elementFromPoint(e.clientX, e.clientY);
   if(!el || !ed.contains(el)) return null;
-  const tb = el.closest('table'); if(!tb || !tblSimple(tb)) return null;
+  const tb = el.closest('table'); if(!tb || !tb.rows.length) return null;
   let cell = el.closest('td,th');
   const x = e.clientX, y = e.clientY;
   if(!cell){
     /* курсор на внешней рамке самой таблицы */
     const tr = tb.getBoundingClientRect();
-    const lastRow = tb.rows[tb.rows.length - 1], lc = lastRow.cells[lastRow.cells.length - 1], fc = tb.rows[0].cells[0];
-    if(Math.abs(x - tr.right) <= T) return {tb, kind: 'col', i: tb.rows[0].cells.length - 1, at: tr.right};
+    if(Math.abs(x - tr.right) <= T) return {tb, kind: 'col', i: tblMap(tb).W - 1, at: tr.right};
     if(Math.abs(y - tr.bottom) <= T) return {tb, kind: 'row', i: tb.rows.length - 1, at: tr.bottom};
     return null;
   }
-  const r = cell.getBoundingClientRect(), ci = cell.cellIndex, ri = cell.parentNode.rowIndex;
-  if(Math.abs(x - r.right) <= T) return {tb, kind: 'col', i: ci, at: r.right};
-  if(ci > 0 && Math.abs(x - r.left) <= T) return {tb, kind: 'col', i: ci - 1, at: r.left};
-  if(Math.abs(y - r.bottom) <= T) return {tb, kind: 'row', i: ri, at: r.bottom};
-  if(ri > 0 && Math.abs(y - r.top) <= T) return {tb, kind: 'row', i: ri - 1, at: r.top};
+  const r = cell.getBoundingClientRect();
+  if(Math.abs(x - r.right) > T && Math.abs(x - r.left) > T && Math.abs(y - r.bottom) > T && Math.abs(y - r.top) > T) return null;
+  const p = tblMap(tb).pos.get(cell); if(!p) return null;
+  if(Math.abs(x - r.right) <= T) return {tb, kind: 'col', i: p.c + p.cs - 1, at: r.right};
+  if(p.c > 0 && Math.abs(x - r.left) <= T) return {tb, kind: 'col', i: p.c - 1, at: r.left};
+  if(Math.abs(y - r.bottom) <= T) return {tb, kind: 'row', i: p.r + p.rs - 1, at: r.bottom};
+  if(p.r > 0 && Math.abs(y - r.top) <= T) return {tb, kind: 'row', i: p.r - 1, at: r.top};
   return null;
 }
 function tblGuideShow(h){
@@ -5309,10 +5318,10 @@ function tblGuideShow(h){
 }
 /* колонки хранятся в <colgroup> в процентах от ширины таблицы, сама таблица — в % от ширины страницы */
 function tblCols(tb){
-  const n = tb.rows[0].cells.length;
+  const mp = tblMap(tb), n = mp.W;
   let cg = tb.querySelector(':scope > colgroup');
   if(cg && cg.children.length === n && Array.from(cg.children).every(c => /%/.test(c.style.width))) return cg;
-  const px = Array.from(tb.rows[0].cells).map(c => c.getBoundingClientRect().width), sum = px.reduce((a, b) => a + b, 0) || 1;
+  const px = tblColPx(tb, mp), sum = px.reduce((a, b) => a + b, 0) || 1;
   if(!cg){ cg = document.createElement('colgroup'); tb.insertBefore(cg, tb.firstChild); }
   cg.innerHTML = '';
   px.forEach(w => { const c = document.createElement('col'); c.style.width = (w / sum * 100).toFixed(3) + '%'; cg.appendChild(c); });
@@ -5326,7 +5335,7 @@ function tblSetWidths(tb, px){
 }
 function tblRenorm(tb){
   const cg = tb.querySelector(':scope > colgroup'); if(!cg) return;
-  const n = tb.rows[0].cells.length;
+  const n = tblMap(tb).W;
   while(cg.children.length < n) cg.appendChild(document.createElement('col'));
   while(cg.children.length > n) cg.lastChild.remove();
   const w = Array.from(cg.children).map(c => parseFloat(c.style.width) || 0), have = w.filter(x => x > 0), avg = have.length ? have.reduce((a, b) => a + b, 0) / have.length : 100 / n;
@@ -5349,8 +5358,9 @@ ed.addEventListener('pointerdown', e => {
   if(h.kind === 'col'){
     tblCols(tb);
     const cw = Math.max(100, tb.parentNode.clientWidth || ed.clientWidth);
-    const px = Array.from(tb.rows[0].cells).map(c => c.getBoundingClientRect().width);
-    tblDrag = {h, tb, px0: px, x0: e.clientX, cw, id: e.pointerId};
+    const cgx = tb.querySelector(':scope > colgroup'), twp = tb.getBoundingClientRect().width;
+    const px = Array.from(cgx.children).map(c => (parseFloat(c.style.width) || 0) / 100 * twp);
+    tblDrag = {h, tb, px0: px, x0: e.clientX, cw, id: e.pointerId, at0: h.at};
   } else {
     const tr = tb.rows[h.i];
     tblDrag = {h, tb, tr, y0: e.clientY, h0: tr.getBoundingClientRect().height, id: e.pointerId};
@@ -5368,7 +5378,7 @@ ed.addEventListener('pointermove', e => {
     const over = px.reduce((a, b) => a + b, 0) - d.cw;
     if(over > 0) px[i] = Math.max(MIN, px[i] - over);
     tblSetWidths(d.tb, px);
-    const r = d.tb.rows[0].cells[i].getBoundingClientRect(); d.h.at = r.right;
+    d.h.at = d.at0 + (px[i] - d.px0[i]);
   } else {
     d.tr.style.height = Math.round(Math.max(24, d.h0 + (e.clientY - d.y0))) + 'px';
     d.h.at = d.tr.getBoundingClientRect().bottom;
@@ -5384,21 +5394,249 @@ const tblEnd = e => {
 };
 ed.addEventListener('pointerup', tblEnd); ed.addEventListener('pointercancel', tblEnd);
 
-/* операции со строками/столбцами сохраняют ширины колонок */
+/* операции со строками/столбцами сохраняют ширины колонок и понимают объединённые ячейки */
 function tableOpCore(op){
   const cell = up(/^T[DH]$/);
   if(!cell) return tableOpBase(op);
-  const table = cell.closest('table'), ci = cell.cellIndex;
-  if(op === 'tbl-del'){ capRemove(table, 't'); return tableOpBase(op); }
+  const table = cell.closest('table');
+  if(op === 'tbl-del'){ capRemove(table, 't'); tcSel = null; tcPaint(); return tableOpBase(op); }
+  const mp = tblMap(table), p = mp.pos.get(cell) || {r: cell.parentNode.rowIndex, c: cell.cellIndex, rs: 1, cs: 1};
+  const sel = tcOf(table), rect = sel ? tcRect(sel) : null;
+  const complex = !!rect || !!table.querySelector('[colspan],[rowspan]');
   const cg = table.querySelector(':scope > colgroup');
-  tableOpBase(op);
-  if(cg && table.isConnected && table.rows.length){
-    if(op === 'col-left' || op === 'col-right'){
-      const nc = document.createElement('col'), at = op === 'col-left' ? ci : ci + 1;
-      cg.insertBefore(nc, cg.children[at] || null);
-    } else if(op === 'col-del'){ if(cg.children[ci]) cg.children[ci].remove(); }
+  let info = null;
+  if(complex){
+    const res = tblSpanOp(op, table, mp, p, rect);
+    if(res && res.del === 'tbl'){ capRemove(table, 't'); tcSel = null; tcPaint(); return tableOpBase('tbl-del'); }
+    info = res && res.info;
+    if(res && res.focus) caretIn(res.focus, true);
+    changed(); updateUI();
+  } else {
+    tableOpBase(op);
+    if(op === 'col-left') info = {kind: 'ins', at: p.c, n: 1};
+    else if(op === 'col-right') info = {kind: 'ins', at: p.c + 1, n: 1};
+    else if(op === 'col-del') info = {kind: 'del', at: p.c, n: 1};
+  }
+  tcSel = null; tcPaint();
+  if(cg && info && table.isConnected && table.rows.length){
+    if(info.kind === 'ins') for(let k = 0; k < info.n; k++) cg.insertBefore(document.createElement('col'), cg.children[info.at] || null);
+    else for(let k = 0; k < info.n; k++) if(cg.children[info.at]) cg.children[info.at].remove();
     tblRenorm(table);
   }
+}
+
+/* ---------- 1b. объединение ячеек в тексте ---------- */
+let tcSel = null, tcRange = false, tcDrag = null, tcBlock = false;
+const tcLayer = document.createElement('div'); tcLayer.className = 'tc-layer'; document.body.appendChild(tcLayer);
+/* карта таблицы: grid[строка][столбец] -> ячейка, pos: ячейка -> {r, c, rs, cs} */
+function tblMap(tb){
+  const rows = Array.from(tb.rows), grid = rows.map(() => []), pos = new Map();
+  rows.forEach((tr, ri) => {
+    let ci = 0;
+    Array.from(tr.cells).forEach(cell => {
+      while(grid[ri][ci]) ci++;
+      const rs = Math.min(Math.max(1, cell.rowSpan || 1), rows.length - ri), cs = Math.max(1, cell.colSpan || 1);
+      pos.set(cell, {r: ri, c: ci, rs, cs});
+      for(let i = 0; i < rs; i++) for(let j = 0; j < cs; j++) grid[ri + i][ci + j] = cell;
+      ci += cs;
+    });
+  });
+  return {grid, pos, W: grid.reduce((a, r) => Math.max(a, r.length), 0), H: rows.length};
+}
+function tblColPx(tb, mp){
+  const n = mp.W, px = new Array(n).fill(0);
+  mp.pos.forEach((p, cell) => { if(p.cs === 1 && !px[p.c]) px[p.c] = cell.getBoundingClientRect().width; });
+  const have = px.filter(x => x > 0), used = have.reduce((a, b) => a + b, 0), miss = n - have.length;
+  const fill = miss ? Math.max(20, ((tb.getBoundingClientRect().width || 300) - used) / miss) : 0;
+  return px.map(x => x > 0 ? x : fill);
+}
+function tcExpand(m, s){
+  let ch = true;
+  while(ch){ ch = false; m.pos.forEach(p => {
+    if(p.r <= s.r2 && p.r + p.rs - 1 >= s.r1 && p.c <= s.c2 && p.c + p.cs - 1 >= s.c1){
+      const n = {r1: Math.min(s.r1, p.r), r2: Math.max(s.r2, p.r + p.rs - 1), c1: Math.min(s.c1, p.c), c2: Math.max(s.c2, p.c + p.cs - 1)};
+      if(n.r1 !== s.r1 || n.r2 !== s.r2 || n.c1 !== s.c1 || n.c2 !== s.c2){ s = n; ch = true; }
+    } }); }
+  return s;
+}
+function tcRect(sel){
+  const m = tblMap(sel.tb), pa = m.pos.get(sel.a), pb = m.pos.get(sel.b); if(!pa || !pb) return null;
+  return tcExpand(m, {r1: Math.min(pa.r, pb.r), c1: Math.min(pa.c, pb.c), r2: Math.max(pa.r + pa.rs - 1, pb.r + pb.rs - 1), c2: Math.max(pa.c + pa.cs - 1, pb.c + pb.cs - 1)});
+}
+function tcCells(m, s){
+  const out = [], seen = new Set();
+  for(let i = s.r1; i <= s.r2; i++) for(let j = s.c1; j <= s.c2; j++){ const c = m.grid[i] && m.grid[i][j]; if(c && !seen.has(c)){ seen.add(c); out.push(c); } }
+  return out;
+}
+const tcOf = tb => (tcSel && tcSel.tb === tb && tb.isConnected && tcSel.a.isConnected && tcSel.b.isConnected) ? tcSel : null;
+/* подсветка рисуется отдельным слоем, чтобы не попадать в сохранённый текст, PDF и экспорт */
+function tcPaint(){
+  tcLayer.textContent = '';
+  if(!tcSel) return;
+  if(!tcSel.tb.isConnected || !ed.contains(tcSel.tb) || !tcSel.a.isConnected || !tcSel.b.isConnected){ tcSel = null; return; }
+  const s = tcRect(tcSel), cells = s ? tcCells(tblMap(tcSel.tb), s) : [];
+  if(cells.length < 2){ tcSel = null; return; }
+  cells.forEach(c => { const r = c.getBoundingClientRect(), d = document.createElement('i'); d.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px'; tcLayer.appendChild(d); });
+}
+function tcClear(){ if(tcSel){ tcSel = null; tcPaint(); } }
+function tcBase(tb){
+  const cur0 = tcOf(tb); if(cur0) return cur0.a;
+  const c = up(/^T[DH]$/); return c && c.closest('table') === tb ? c : null;
+}
+ed.addEventListener('mousedown', e => { if(tcBlock) e.preventDefault(); });
+ed.addEventListener('pointerdown', e => {
+  if(e.button !== 0 || tblDrag) return;
+  const cell = e.target.closest && e.target.closest('td,th');
+  if(!cell || !ed.contains(cell)){ tcClear(); return; }
+  const tb = cell.closest('table');
+  if(e.shiftKey || tcRange){
+    const base = tcBase(tb);
+    if(base){ tcBlock = true; tcSel = {tb, a: base, b: cell}; tcPaint(); try{ caretIn(base, true); }catch(err){} return; }
+  }
+  tcClear();
+  tcDrag = {tb, a: cell, id: e.pointerId, last: cell, moved: false};
+});
+ed.addEventListener('pointermove', e => {
+  if(!tcDrag || e.pointerId !== tcDrag.id || tblDrag) return;
+  if(e.pointerType === 'mouse' && !e.buttons){ tcDrag = null; ed.classList.remove('tc-selecting'); return; }
+  const el = document.elementFromPoint(e.clientX, e.clientY), c2 = el && el.closest && el.closest('td,th');
+  if(!c2 || c2 === tcDrag.last || c2.closest('table') !== tcDrag.tb) return;
+  if(!tcDrag.moved && c2 === tcDrag.a) return;
+  tcDrag.moved = true; tcDrag.last = c2; ed.classList.add('tc-selecting');
+  tcSel = {tb: tcDrag.tb, a: tcDrag.a, b: c2}; tcPaint();
+  try{ caretIn(tcDrag.a, true); }catch(err){}
+});
+const tcEnd = () => {
+  tcBlock = false; if(!tcDrag) return;
+  const d = tcDrag; tcDrag = null; ed.classList.remove('tc-selecting');
+  if(d.moved){ try{ caretIn(d.a, true); }catch(err){} updateUI(); }
+};
+addEventListener('pointerup', tcEnd); addEventListener('pointercancel', tcEnd);
+addEventListener('scroll', () => { if(tcSel) tcPaint(); }, true);
+addEventListener('resize', () => { if(tcSel) tcPaint(); });
+ed.addEventListener('input', tcClear);
+ed.addEventListener('keydown', e => {
+  if(!tcSel || /^(Shift|Control|Alt|Meta|CapsLock)$/.test(e.key)) return;
+  if((e.ctrlKey || e.metaKey) && /^[ca]$/i.test(e.key)) return;
+  if(e.key === 'Delete' || e.key === 'Backspace'){
+    const s = tcRect(tcSel); if(!s){ tcClear(); return; }
+    e.preventDefault(); e.stopPropagation();
+    const cells = tcCells(tblMap(tcSel.tb), s);
+    edRecordOp(() => { cells.forEach(c => { c.innerHTML = '<br>'; }); changed(); });
+    return;
+  }
+  tcClear();
+}, true);
+
+function cellOp(op){
+  if(op === 'cell-range'){
+    tcRange = !tcRange;
+    document.querySelectorAll('#edTbl [data-c="cell-range"]').forEach(b => b.classList.toggle('on', tcRange));
+    toast(tcRange ? 'Режим выделения: нажмите на конечную ячейку' : 'Режим выделения выключен');
+    return;
+  }
+  edRecordOp(() => cellOpCore(op));
+}
+function cellOpCore(op){
+  const cell = up(/^T[DH]$/); if(!cell) return;
+  const tb = cell.closest('table'), m = tblMap(tb), sel = tcOf(tb);
+  if(op === 'cell-merge'){
+    const s = sel && tcRect(sel), cells = s ? tcCells(m, s) : [];
+    if(cells.length < 2){ toast('Выделите несколько ячеек: протяните мышью, Shift+клик или кнопка «Диапазон»'); return; }
+    const anchor = m.grid[s.r1][s.c1], full = c => !!(c.textContent.trim() || c.querySelector('img'));
+    cells.forEach(c => { if(c === anchor || !full(c)) return; if(full(anchor)) anchor.insertAdjacentHTML('beforeend', '<br>' + c.innerHTML); else anchor.innerHTML = c.innerHTML; });
+    cells.forEach(c => { if(c !== anchor) c.remove(); });
+    const rs = s.r2 - s.r1 + 1, cs = s.c2 - s.c1 + 1;
+    if(rs > 1) anchor.setAttribute('rowspan', rs); else anchor.removeAttribute('rowspan');
+    if(cs > 1) anchor.setAttribute('colspan', cs); else anchor.removeAttribute('colspan');
+    tcSel = null; tcPaint(); caretIn(anchor, true); changed(); updateUI();
+  } else if(op === 'cell-split'){
+    let targets = [];
+    const s = sel && tcRect(sel);
+    if(s) targets = tcCells(m, s); else targets = [cell];
+    targets = targets.filter(c => { const p = m.pos.get(c); return p && (p.rs > 1 || p.cs > 1); });
+    if(!targets.length){ toast('Эта ячейка не объединена'); return; }
+    targets.sort((a, b) => m.pos.get(a).c - m.pos.get(b).c);
+    const rows = Array.from(tb.rows);
+    targets.forEach(c => {
+      const p = m.pos.get(c); c.removeAttribute('rowspan'); c.removeAttribute('colspan');
+      for(let i = 0; i < p.rs; i++){
+        const tr = rows[p.r + i];
+        for(let j = (i === 0 ? 1 : 0); j < p.cs; j++){
+          const nc = document.createElement(p.r + i === 0 ? 'th' : 'td'); nc.appendChild(document.createElement('br'));
+          const ref = Array.from(tr.cells).find(x => { const q = m.pos.get(x); return q && q.c > p.c + j; });
+          if(ref) tr.insertBefore(nc, ref); else tr.appendChild(nc);
+        }
+      }
+    });
+    tcSel = null; tcPaint(); caretIn(targets[0], true); changed(); updateUI();
+  }
+}
+/* вставка/удаление строк и столбцов в таблице с объединёнными ячейками */
+function tblSpanOp(op, tb, mp, p, rect){
+  const rows = Array.from(tb.rows), grid = mp.grid, pos = mp.pos, W = mp.W, H = rows.length;
+  const r1 = rect ? rect.r1 : p.r, r2 = rect ? rect.r2 : p.r + p.rs - 1, c1 = rect ? rect.c1 : p.c, c2 = rect ? rect.c2 : p.c + p.cs - 1;
+  const mk = k => { const d = document.createElement(k); d.appendChild(document.createElement('br')); return d; };
+  const conv = (c, tag) => { const d = document.createElement(tag); Array.from(c.attributes).forEach(a => d.setAttribute(a.name, a.value)); while(c.firstChild) d.appendChild(c.firstChild); c.replaceWith(d); return d; };
+  const setSpan = (c, a, n) => { if(n > 1) c.setAttribute(a, n); else c.removeAttribute(a); };
+  const firstCell = from => {
+    const n = tb.rows.length, k = Math.min(from, n - 1);
+    for(let i = k; i < n; i++) if(tb.rows[i].cells.length) return tb.rows[i].cells[0];
+    for(let i = k - 1; i >= 0; i--) if(tb.rows[i].cells.length) return tb.rows[i].cells[0];
+    return null;
+  };
+  if(op === 'row-up' || op === 'row-down'){
+    const at = op === 'row-up' ? r1 : r2 + 1, nr = document.createElement('tr'), seen = new Set();
+    for(let j = 0; j < W; j++){
+      const above = at > 0 ? grid[at - 1][j] : null, below = at < H ? grid[at][j] : null;
+      if(above && above === below){ if(!seen.has(above)){ seen.add(above); setSpan(above, 'rowspan', pos.get(above).rs + 1); } continue; }
+      nr.appendChild(mk(at === 0 ? 'th' : 'td'));
+    }
+    if(at < H) rows[at].before(nr); else rows[H - 1].after(nr);
+    if(at === 0) Array.from(rows[0].cells).forEach(c => conv(c, 'td'));
+    return {focus: nr.cells[Math.min(p.c, nr.cells.length - 1)] || firstCell(at)};
+  }
+  if(op === 'row-del'){
+    if(r2 - r1 + 1 >= H) return {del: 'tbl'};
+    const seen = new Set(), moved = [];
+    for(let i = r1; i <= r2; i++) for(let j = 0; j < W; j++){
+      const c = grid[i][j]; if(!c || seen.has(c)) continue; seen.add(c);
+      const q = pos.get(c), end = q.r + q.rs - 1;
+      if(q.r < r1) setSpan(c, 'rowspan', q.rs - (Math.min(end, r2) - r1 + 1));
+      else if(end > r2) moved.push([c, q]);
+    }
+    moved.forEach(([c, q]) => {
+      const tr = rows[r2 + 1], ref = Array.from(tr.cells).find(x => { const qq = pos.get(x); return qq && qq.c > q.c; });
+      if(ref) tr.insertBefore(c, ref); else tr.appendChild(c);
+      setSpan(c, 'rowspan', q.r + q.rs - 1 - r2);
+    });
+    for(let i = r1; i <= r2; i++) rows[i].remove();
+    if(r1 === 0 && tb.rows.length) Array.from(tb.rows[0].cells).forEach(c => { if(c.tagName !== 'TH') conv(c, 'th'); });
+    return {focus: firstCell(r1)};
+  }
+  if(op === 'col-left' || op === 'col-right'){
+    const at = op === 'col-left' ? c1 : c2 + 1, seen = new Set(); let focus = null;
+    for(let i = 0; i < H; i++){
+      const left = at > 0 ? grid[i][at - 1] : null, right = at < W ? grid[i][at] : null;
+      if(left && left === right){ if(!seen.has(left)){ seen.add(left); setSpan(left, 'colspan', pos.get(left).cs + 1); } continue; }
+      const nc = mk(i === 0 ? 'th' : 'td'), ref = Array.from(rows[i].cells).find(x => pos.get(x).c >= at);
+      if(ref) rows[i].insertBefore(nc, ref); else rows[i].appendChild(nc);
+      if(i === p.r) focus = nc;
+    }
+    return {info: {kind: 'ins', at, n: 1}, focus: focus || firstCell(0)};
+  }
+  if(op === 'col-del'){
+    if(c2 - c1 + 1 >= W) return {del: 'tbl'};
+    const seen = new Set();
+    for(let j = c1; j <= c2; j++) for(let i = 0; i < H; i++){
+      const c = grid[i][j]; if(!c || seen.has(c)) continue; seen.add(c);
+      const q = pos.get(c), end = q.c + q.cs - 1;
+      if(q.c >= c1 && end <= c2) c.remove();
+      else setSpan(c, 'colspan', q.cs - (Math.min(end, c2) - Math.max(q.c, c1) + 1));
+    }
+    return {info: {kind: 'del', at: c1, n: c2 - c1 + 1}, focus: firstCell(p.r)};
+  }
+  return null;
 }
 
 /* ---------- 2. подписи к таблицам и изображениям ---------- */
@@ -7335,7 +7573,7 @@ const TOOLS = [
   '|',['clear',svg('eraser'),'Убрать форматирование'],['undo',svg('undo'),'Отменить'],['redo',svg('redo'),'Повторить'],
   '|',['page',svg('page'),'Параметры страницы: A5, A4, A3'],['view','Aa','Вид: шрифт, размер, ширина']
 ];
-const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
+const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['cell-merge','Объединить','Объединить выделенные ячейки (выделение: протяните мышью или Shift+клик)'],['cell-split','Разъединить','Разъединить объединённую ячейку'],['cell-range','Диапазон','Выделять ячейки касанием: нажмите здесь, затем на конечную ячейку'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
 const BUB = ['bold','italic','underline','strike','mark','|','h2','quote','code','link'];
 const toolMap = Object.fromEntries(TOOLS.filter(t => t !== '|').map(t => [t[0], t]));
 const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
@@ -7510,7 +7748,7 @@ function run(c, b){
     case 'linkcard': return addLinkCard();
     case 'undo': return edHist('undo') || ex('undo');
     case 'redo': return edHist('redo') || ex('redo');
-    default: if(c === 'capt') return capTable(); if(/^(row|col|tbl)-/.test(c)) return tableOp(c);
+    default: if(c === 'capt') return capTable(); if(/^cell-/.test(c)) return cellOp(c); if(/^(row|col|tbl)-/.test(c)) return tableOp(c);
   }
 }
 
@@ -7678,7 +7916,7 @@ ed.addEventListener('keydown', e => {
     if(cell){
       e.preventDefault(); const cells = Array.from(cell.closest('table').querySelectorAll('th,td')); const i = cells.indexOf(cell) + (e.shiftKey ? -1 : 1);
       if(i >= 0 && i < cells.length) caretIn(cells[i], true);
-      else if(i >= cells.length){ tableOp('row-down'); const t = cell.closest('table'); caretIn(t.rows[t.rows.length - 1].cells[0], true); }
+      else if(i >= cells.length){ tableOp('row-down'); const t = cell.closest('table'); caretIn(t.rows[t.rows.length - 1].cells[0] || cell, true); }
       return;
     }
     if(up(/^LI$/)){ e.preventDefault(); ex(e.shiftKey ? 'outdent' : 'indent'); return; }
@@ -8360,7 +8598,66 @@ const tbCol = s => s.toUpperCase().split('').reduce((a, ch) => a * 26 + ch.charC
 const tbRef = k => { const m = k.match(/^([A-Z]+)(\d+)$/); return [+m[2] - 1, tbCol(m[1])]; };
 const tbNum = s => { const x = String(s).trim().replace(/\s/g, '').replace(',', '.'); return x !== '' && /^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(x) ? parseFloat(x) : null; };
 const tbClr = s => /^(#[0-9a-f]{6}|rgba?\(\d{1,3},\s?\d{1,3},\s?\d{1,3}(,\s?(0|1|0?\.\d+))?\))$/i.test(s || '') ? s : '';
-const tbNew = title => ({id: uid(), title: title || 'Новая таблица', R: 30, C: 10, cells: {}, cw: {}, rh: {}, hr: [], hc: [], hdr: false, fr: false, fc: false, ch: [], filter: null, updated: Date.now()});
+const tbNew = title => ({id: uid(), title: title || 'Новая таблица', R: 30, C: 10, cells: {}, cw: {}, rh: {}, hr: [], hc: [], hdr: false, fr: false, fc: false, ch: [], mg: [], filter: null, updated: Date.now()});
+/* ===== Таблицы: объединение ячеек. Модель: t.mg = [{r, c, rs, cs}] — верхняя левая ячейка и размер ===== */
+const tbMgs = t => (t || TB.t).mg || [];
+function tbMgAt(r, c, t){ const a = tbMgs(t); for(let i = 0; i < a.length; i++){ const m = a[i]; if(r >= m.r && r < m.r + m.rs && c >= m.c && c < m.c + m.cs) return m; } return null; }
+function tbExpand(s, t){
+  const a = tbMgs(t); let ch = true;
+  while(ch){ ch = false; for(const m of a){
+    if(m.r <= s.r2 && m.r + m.rs - 1 >= s.r1 && m.c <= s.c2 && m.c + m.cs - 1 >= s.c1){
+      const n = {r1: Math.min(s.r1, m.r), r2: Math.max(s.r2, m.r + m.rs - 1), c1: Math.min(s.c1, m.c), c2: Math.max(s.c2, m.c + m.cs - 1)};
+      if(n.r1 !== s.r1 || n.r2 !== s.r2 || n.c1 !== s.c1 || n.c2 !== s.c2){ s = n; ch = true; }
+    } } }
+  return s;
+}
+/* какие ячейки пропустить и какие растянуть при выводе (с учётом скрытых строк и столбцов) */
+function tbMgLayout(t, rows, cols){
+  const skip = new Set(), span = {}, mg = t.mg || [];
+  if(!mg.length) return {skip, span};
+  const rs = new Set(rows), cs = new Set(cols);
+  mg.forEach(m => {
+    const vr = [], vc = [];
+    for(let r = m.r; r < m.r + m.rs; r++) if(rs.has(r)) vr.push(r);
+    for(let c = m.c; c < m.c + m.cs; c++) if(cs.has(c)) vc.push(c);
+    if(!vr.length || !vc.length) return;
+    vr.forEach(r => vc.forEach(c => skip.add(r + '_' + c)));
+    skip.delete(vr[0] + '_' + vc[0]);
+    span[vr[0] + '_' + vc[0]] = {rs: vr.length, cs: vc.length, ar: m.r, ac: m.c};
+  });
+  return {skip, span};
+}
+function tbShiftMg(t, axis, at, d){
+  if(!t.mg || !t.mg.length) return;
+  const n = Math.abs(d), out = [];
+  t.mg.forEach(m => {
+    let st = axis ? m.c : m.r, len = axis ? m.cs : m.rs;
+    if(d > 0){ if(at <= st) st += d; else if(at < st + len) len += d; }
+    else { let before = 0, inside = 0; for(let i = at; i < at + n; i++){ if(i < st) before++; else if(i < st + len) inside++; } st -= before; len -= inside; if(len <= 0) return; }
+    const o = axis ? {r: m.r, c: st, rs: m.rs, cs: len} : {r: st, c: m.c, rs: len, cs: m.cs};
+    if(o.rs > 1 || o.cs > 1) out.push(o);
+  });
+  t.mg = out;
+}
+function tbMergeToggle(){
+  if(TB.ro || !TB.t) return;
+  const t = TB.t, s = tbRng(), a = t.mg || [];
+  const same = a.find(m => m.r === s.r1 && m.c === s.c1 && m.r + m.rs - 1 === s.r2 && m.c + m.cs - 1 === s.c2);
+  if(same){ tbMut(() => { t.mg = a.filter(m => m !== same); }); return; }
+  if(s.r1 === s.r2 && s.c1 === s.c2){ toast('Выделите несколько ячеек, чтобы объединить их'); return; }
+  let lost = false;
+  for(let r = s.r1; r <= s.r2 && !lost; r++) for(let c = s.c1; c <= s.c2; c++){
+    if(r === s.r1 && c === s.c1) continue;
+    const x = t.cells[r + '_' + c]; if(x && String(x.v) !== ''){ lost = true; break; }
+  }
+  const go = () => tbMut(() => {
+    t.mg = (t.mg || []).filter(m => !(m.r <= s.r2 && m.r + m.rs - 1 >= s.r1 && m.c <= s.c2 && m.c + m.cs - 1 >= s.c1));
+    t.mg.push({r: s.r1, c: s.c1, rs: s.r2 - s.r1 + 1, cs: s.c2 - s.c1 + 1});
+    for(let r = s.r1; r <= s.r2; r++) for(let c = s.c1; c <= s.c2; c++) if(r !== s.r1 || c !== s.c1) delete t.cells[r + '_' + c];
+  });
+  if(lost) askYN('Объединить ячейки?', 'В объединённой ячейке останется только значение верхней левой ячейки, остальные значения будут стёрты.', 'Объединить').then(ok => { if(ok) go(); });
+  else go();
+}
 const TBF = {SUM: (...a) => a.flat(9).reduce((x, y) => x + y, 0), AVG: (...a) => { a = a.flat(9); return a.length ? TBF.SUM(a) / a.length : 0; }, MIN: (...a) => { a = a.flat(9); return a.length ? Math.min(...a) : 0; }, MAX: (...a) => { a = a.flat(9); return a.length ? Math.max(...a) : 0; }, COUNT: (...a) => a.flat(9).length};
 function tbCalc(src, val){
   const map = {СУММ:'SUM', SUM:'SUM', СРЗНАЧ:'AVG', AVERAGE:'AVG', AVG:'AVG', МИН:'MIN', MIN:'MIN', МАКС:'MAX', MAX:'MAX', СЧЕТ:'COUNT', COUNT:'COUNT'};
@@ -8403,7 +8700,7 @@ function tbMatch(v, txt, f){ const q = String(f.val).toLowerCase(), n = tbNum(f.
   if(vn === null || n === null) return false; return f.op === 'gt' ? vn > n : vn < n; }
 function tbVis(used){
   const t = TB.t, val = tbEval(t), f = t.filter, hr = new Set(t.hr), hc = new Set(t.hc); let R = t.R, C = t.C;
-  if(used){ let lr = 0, lc = 0; for(const k in t.cells) if(String(t.cells[k].v) !== ''){ const [r, c] = k.split('_').map(Number); lr = Math.max(lr, r); lc = Math.max(lc, c); } R = lr + 1; C = lc + 1; }
+  if(used){ let lr = 0, lc = 0; for(const k in t.cells) if(String(t.cells[k].v) !== ''){ const [r, c] = k.split('_').map(Number); lr = Math.max(lr, r); lc = Math.max(lc, c); } (t.mg || []).forEach(m => { lr = Math.max(lr, m.r + m.rs - 1); lc = Math.max(lc, m.c + m.cs - 1); }); R = lr + 1; C = lc + 1; }
   const rows = [], cols = [];
   for(let c = 0; c < C; c++) if(!hc.has(c)) cols.push(c);
   for(let r = 0; r < R; r++){ if(hr.has(r)) continue; if(f && !(t.hdr && r === 0) && !tbMatch(val(r, f.c), tbText(t, val, r, f.c), f)) continue; rows.push(r); }
@@ -8412,25 +8709,31 @@ function tbVis(used){
 function tbRender(){
   const t = TB.t, g = document.getElementById('tbG'); if(!g) return;
   TB.cur.r = Math.min(TB.cur.r, t.R - 1); TB.cur.c = Math.min(TB.cur.c, t.C - 1); TB.end.r = Math.min(TB.end.r, t.R - 1); TB.end.c = Math.min(TB.end.c, t.C - 1);
-  const {rows, cols, val} = tbVis(false); let w = 46;
+  const {rows, cols, val} = tbVis(false); const lay = tbMgLayout(t, rows, cols); let w = 46;
   cols.forEach(c => w += t.cw[c] || 96);
   let h = '<colgroup><col style="width:46px">' + cols.map(c => '<col style="width:' + (t.cw[c] || 96) + 'px">').join('') + '</colgroup><thead><tr><th class="corner"></th>' + cols.map(c => '<th data-c="' + c + '">' + tbName(c) + '<i class="tb-rz" data-rz="c' + c + '"></i></th>').join('') + '</tr></thead><tbody>';
   rows.forEach(r => { h += '<tr style="height:' + (t.rh[r] || 26) + 'px"><th class="rh' + (t.fr && r === rows[0] ? ' fz-r' : '') + '" data-r="' + r + '">' + (r + 1) + '<i class="tb-rzr" data-rz="r' + r + '"></i></th>';
-    cols.forEach(c => { const x = t.cells[r + '_' + c] || {}, fzr = t.fr && r === rows[0], fzc = t.fc && c === cols[0]; let st = tbStyle(x, val(r, c)); if((fzr || fzc) && tbClr(x.f)) st += ';background:linear-gradient(' + x.f + ',' + x.f + '),var(--bg-elev)'; h += '<td data-r="' + r + '" data-c="' + c + '" class="' + (fzr ? 'fz-r ' : '') + (fzc ? 'fz-c' : '') + '" style="' + st + '">' + esc(tbText(t, val, r, c)) + '</td>'; });
+    cols.forEach(c => { const k = r + '_' + c; if(lay.skip.has(k)) return; const sp = lay.span[k], ar = sp ? sp.ar : r, ac = sp ? sp.ac : c, x = t.cells[ar + '_' + ac] || {}, fzr = t.fr && r === rows[0], fzc = t.fc && c === cols[0]; let st = tbStyle(x, val(ar, ac)); if((fzr || fzc) && tbClr(x.f)) st += ';background:linear-gradient(' + x.f + ',' + x.f + '),var(--bg-elev)'; h += '<td data-r="' + ar + '" data-c="' + ac + '"' + (sp ? (sp.rs > 1 ? ' rowspan="' + sp.rs + '"' : '') + (sp.cs > 1 ? ' colspan="' + sp.cs + '"' : '') + ' data-m="1"' : '') + ' class="' + (fzr ? 'fz-r ' : '') + (fzc ? 'fz-c' : '') + '" style="' + st + '">' + esc(tbText(t, val, ar, ac)) + '</td>'; });
     h += '</tr>'; });
   g.style.width = w + 'px'; g.innerHTML = h + '</tbody>'; tbPaint(); tbChartsDraw();
 }
-const tbRng = () => ({r1: Math.min(TB.cur.r, TB.end.r), r2: Math.max(TB.cur.r, TB.end.r), c1: Math.min(TB.cur.c, TB.end.c), c2: Math.max(TB.cur.c, TB.end.c)});
+const tbRng = () => tbExpand({r1: Math.min(TB.cur.r, TB.end.r), r2: Math.max(TB.cur.r, TB.end.r), c1: Math.min(TB.cur.c, TB.end.c), c2: Math.max(TB.cur.c, TB.end.c)});
 function tbPaint(){
   const s = tbRng(), cur = TB.cur, multi = s.r1 !== s.r2 || s.c1 !== s.c2;
-  vTables.querySelectorAll('#tbG td').forEach(td => { const r = +td.dataset.r, c = +td.dataset.c; td.classList.toggle('sel', multi && r >= s.r1 && r <= s.r2 && c >= s.c1 && c <= s.c2); td.classList.toggle('cur', r === cur.r && c === cur.c); td.classList.toggle('fh', !TB.ro && r === s.r2 && c === s.c2); });
+  const mgA = tbMgs();
+  vTables.querySelectorAll('#tbG td').forEach(td => { const r = +td.dataset.r, c = +td.dataset.c, m = mgA.length ? tbMgAt(r, c) : null, r2 = m ? m.r + m.rs - 1 : r, c2 = m ? m.c + m.cs - 1 : c;
+    td.classList.toggle('sel', multi && r <= s.r2 && r2 >= s.r1 && c <= s.c2 && c2 >= s.c1);
+    td.classList.toggle('cur', r <= cur.r && cur.r <= r2 && c <= cur.c && cur.c <= c2);
+    td.classList.toggle('fh', !TB.ro && r <= s.r2 && s.r2 <= r2 && c <= s.c2 && s.c2 <= c2); });
+  { const mb = vTables.querySelector('[data-tb="merge"]'), m0 = tbMgAt(cur.r, cur.c), one = !!(m0 && m0.r === s.r1 && m0.c === s.c1 && m0.r + m0.rs - 1 === s.r2 && m0.c + m0.cs - 1 === s.c2);
+    if(mb){ mb.classList.toggle('on', one); const lb = mb.querySelector('span'); if(lb) lb.textContent = one ? 'Разъединить' : 'Объединить'; } }
   const nm = document.getElementById('tbNm'), fx = document.getElementById('tbFx'), x = TB.t.cells[cur.r + '_' + cur.c];
   if(nm) nm.textContent = tbName(cur.c) + (cur.r + 1);
   const sbs = document.getElementById('tbSbSel'); if(sbs) sbs.textContent = multi ? tbName(s.c1) + (s.r1 + 1) + ':' + tbName(s.c2) + (s.r2 + 1) + ' · ячеек: ' + (s.r2 - s.r1 + 1) * (s.c2 - s.c1 + 1) : 'Ячейка ' + tbName(cur.c) + (cur.r + 1);
   const mt = document.getElementById('tbMeta'); if(mt) mt.innerHTML = '<span>Строк: ' + TB.t.R + '</span><span>Столбцов: ' + TB.t.C + '</span><span>Заполнено: ' + Object.keys(TB.t.cells).length + '</span><span>Изменена: ' + esc(tbShortDate(TB.t.updated)) + '</span>';
   if(fx && document.activeElement !== fx) fx.value = x ? String(x.v) : '';
 }
-function tbSelect(r, c, ext){ if(ext) TB.end = {r, c}; else { TB.cur = {r, c}; TB.end = {r, c}; } }
+function tbSelect(r, c, ext){ if(ext) TB.end = {r, c}; else { const m = tbMgAt(r, c); if(m){ r = m.r; c = m.c; } TB.cur = {r, c}; TB.end = {r, c}; } }
 const tbScroll = () => { const td = vTables.querySelector('#tbG td.cur'); if(td) td.scrollIntoView({block: 'nearest', inline: 'nearest'}); };
 function tbStat(ok){ const e = document.getElementById('tbSv'); if(!e) return; e.className = 'tb-sv ' + (ok ? 'ok' : 'wait'); e.lastChild.textContent = ok ? 'Сохранено' : 'Сохранение…'; }
 function tbSaveNow(){ clearTimeout(TB.timer); TB.timer = 0; if(TB.t){ TB.t.updated = Date.now(); tbPut(TB.t); TBC[TB.t.id] = TB.t; tbRefreshAll(); tbStat(true); } }
@@ -8450,11 +8753,12 @@ function tbShift(axis, at, d){
   const t = TB.t, nc = {}, n = Math.abs(d), mapI = i => d > 0 ? (i >= at ? i + d : i) : (i >= at + n ? i + d : (i >= at ? -1 : i));
   const rs = f => f.replace(/(\$?)([A-Z]{1,3})(\$?)(\d+)/gi, (m, d1, cl, d2, rw) => { const c = tbCol(cl), r = +rw - 1, q = mapI(axis ? c : r); return q < 0 ? '#REF' : d1 + (axis ? tbName(q) : cl.toUpperCase()) + d2 + (axis ? rw : q + 1); });
   for(const k in t.cells){ const [r, c] = k.split('_').map(Number), q = mapI(axis ? c : r); if(q < 0) continue; const x = t.cells[k]; if(String(x.v)[0] === '=') x.v = rs(String(x.v)); nc[(axis ? r : q) + '_' + (axis ? q : c)] = x; }
-  t.cells = nc;
+  t.cells = nc; tbShiftMg(t, axis, at, d);
   const sh = o => { const r = {}; for(const k in o){ const q = mapI(+k); if(q >= 0) r[q] = o[k]; } return r; }, shl = a => (a || []).map(mapI).filter(i => i >= 0);
   if(axis){ t.cw = sh(t.cw); t.hc = shl(t.hc); t.C = Math.min(78, Math.max(1, t.C + d)); if(t.filter) t.filter = null; } else { t.rh = sh(t.rh); t.hr = shl(t.hr); t.R = Math.min(1000, Math.max(1, t.R + d)); }
 }
 function tbSort(dir){
+  if((TB.t.mg || []).length){ toast('Сортировка недоступна: в таблице есть объединённые ячейки'); return; }
   const t = TB.t, c = TB.cur.c, val = tbEval(t), s = t.hdr ? 1 : 0; let last = 0;
   for(const k in t.cells) if(String(t.cells[k].v) !== '') last = Math.max(last, +k.split('_')[0]);
   const idx = []; for(let r = s; r <= last; r++) idx.push(r);
@@ -8488,7 +8792,8 @@ function tbPdf(){
   const t = TB.t, {rows, cols, val} = tbVis(true), m = 12; let w = 0; cols.forEach(c => w += t.cw[c] || 96);
   const land = w > 680, W = land ? 297 : 210, H = land ? 210 : 297, avail = (W - 2 * m) * 96 / 25.4, z = Math.min(1, avail / w);
   let h = '<div style="font:700 20px Arial,sans-serif;margin:0 0 10px">' + esc(t.title) + '</div><table style="border-collapse:collapse;table-layout:fixed;width:' + w + 'px;zoom:' + z + ';font:13px/1.35 Arial,sans-serif;color:#000"><colgroup>' + cols.map(c => '<col style="width:' + (t.cw[c] || 96) + 'px">').join('') + '</colgroup>';
-  rows.forEach(r => { h += '<tr style="height:' + (t.rh[r] || 26) + 'px">' + cols.map(c => { const x = t.cells[r + '_' + c] || {}; return '<td style="border:1px solid #999;padding:2px 6px;overflow:hidden;' + tbStyle(x, val(r, c)) + '">' + esc(tbText(t, val, r, c)) + '</td>'; }).join('') + '</tr>'; });
+  const lay = tbMgLayout(t, rows, cols);
+  rows.forEach(r => { h += '<tr style="height:' + (t.rh[r] || 26) + 'px">' + cols.map(c => { const k = r + '_' + c; if(lay.skip.has(k)) return ''; const m = lay.span[k], ar = m ? m.ar : r, ac = m ? m.ac : c, x = t.cells[ar + '_' + ac] || {}; return '<td' + (m && m.rs > 1 ? ' rowspan="' + m.rs + '"' : '') + (m && m.cs > 1 ? ' colspan="' + m.cs + '"' : '') + ' style="border:1px solid #999;padding:2px 6px;overflow:hidden;' + tbStyle(x, val(ar, ac)) + '">' + esc(tbText(t, val, ar, ac)) + '</td>'; }).join('') + '</tr>'; });
   if(TG){ (async () => { toast('Создаём PDF…'); try{ const holder = document.createElement('div'); holder.innerHTML = h + '</table>'; const blob = await pdfBuild(holder, W, H, m); await yngSave(blob, (t.title || 'Таблица').replace(/[\\/:*?"<>|]+/g, '_') + '.pdf'); }catch(e){ toast('Не удалось создать PDF на этом устройстве'); } })(); return; }
   const sp = '<div style="height:' + m + 'mm"></div>', root = document.createElement('div'); root.id = 'prRoot';
   root.innerHTML = '<table class="pr-t"><thead><tr><td>' + sp + '</td></tr></thead><tbody><tr><td class="pr-b">' + h + '</table></td></tr></tbody><tfoot><tr><td>' + sp + '</td></tr></tfoot></table>';
@@ -8506,6 +8811,11 @@ function tbFix(d){
   for(const k in d.cells){ if(!/^\d+_\d+$/.test(k)) continue; const x = d.cells[k] || {}, y = {v: String(x.v ?? '').slice(0, 2000)}; if(x.b) y.b = 1; if(x.i) y.i = 1; if(tbClr(x.c)) y.c = x.c; if(tbClr(x.f)) y.f = x.f; if(['left', 'center', 'right'].includes(x.al)) y.al = x.al; if(['text', 'num', 'fin', 'date'].includes(x.t)) y.t = x.t; t.cells[k] = y; }
   ['cw', 'rh'].forEach(p => { for(const k in (d[p] || {})) if(/^\d+$/.test(k) && +d[p][k] > 0) t[p][k] = cl(d[p][k], 18, 800); });
   ['hr', 'hc'].forEach(p => { t[p] = (Array.isArray(d[p]) ? d[p] : []).filter(i => Number.isInteger(i) && i >= 0); });
+  { const occ = new Set(); t.mg = [];
+    (Array.isArray(d.mg) ? d.mg : []).slice(0, 2000).forEach(m => { m = m || {}; const r = Math.round(+m.r), c = Math.round(+m.c), rs = Math.round(+m.rs), cs = Math.round(+m.cs);
+      if(!(r >= 0 && c >= 0 && rs >= 1 && cs >= 1 && (rs > 1 || cs > 1) && r + rs <= t.R && c + cs <= t.C && rs * cs <= 20000)) return;
+      const ks = []; for(let i = r; i < r + rs; i++) for(let j = c; j < c + cs; j++) ks.push(i + '_' + j);
+      if(ks.some(k => occ.has(k))) return; ks.forEach(k => occ.add(k)); t.mg.push({r, c, rs, cs}); }); }
   return t;
 }
 async function tbImport(f){
@@ -8568,7 +8878,8 @@ Object.assign(TBI, {
   copy: IC.copy, paste: '<rect x="6" y="5" width="12" height="16" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 12h6M9 16h4"/>',
   range: '<rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 3"/><path d="M9.5 14.5l5-5M10 9.5h4.5V14"/>',
   rows: '<rect x="3.5" y="4.5" width="13" height="15" rx="2"/><path d="M3.5 10h13M3.5 15h13M10 4.5v15M20 8v6M17 11h6"/>',
-  data: '<path d="M4 6h16l-6 7v5l-4 2v-7z"/>', exp: IC.dl
+  data: '<path d="M4 6h16l-6 7v5l-4 2v-7z"/>', exp: IC.dl,
+  mrg: '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M12 5.5v3.2M12 15.3v3.2"/><path d="M7.5 12h9M10 9.8L7.8 12l2.200 2.200M14 9.8l2.200 2.200-2.200 2.200"/>'
 });
 const tbIb = (a, k, ti, v, label) => '<button type="button" class="tb-ib" data-tb="' + a + '"' + (v ? ' data-v="' + v + '"' : '') + ' title="' + ti + '" aria-label="' + ti + '">' + tbIco(k) + (label ? '<span>' + label + '</span>' : '') + '</button>';
 const tbSep = '<i class="tb-sep" aria-hidden="true"></i>';
@@ -8937,7 +9248,7 @@ async function tbOpen(id){
     '<div class="tb-shell"><div class="tb-bar">' +
     tbIb('undo', 'undo', 'Отменить (Ctrl+Z)') + tbIb('redo', 'redo', 'Повторить (Ctrl+Y)') + tbSep + tbIb('b', 'bold', 'Жирный (Ctrl+B)') + tbIb('i', 'italic', 'Курсив (Ctrl+I)') + tbIb('cpick', 'tcol', 'Цвет текста', 'c') + tbIb('cpick', 'fill', 'Заливка ячеек', 'f') + tbIb('nofill', 'clear', 'Убрать цвет и заливку') + tbSep +
     tbIb('al', 'alL', 'По левому краю', 'left') + tbIb('al', 'alC', 'По центру', 'center') + tbIb('al', 'alR', 'По правому краю', 'right') + tbIb('type', 'fmt', 'Тип данных', '', 'Формат') + tbSep +
-    tbIb('copy', 'copy', 'Копировать') + tbIb('paste', 'paste', 'Вставить') + tbIb('range', 'range', 'Выделять несколько ячеек касанием') + tbIb('freeze', 'freeze', 'Закрепить области') + tbSep + tbIb('rows', 'rows', 'Строки и столбцы', '', 'Строки и столбцы') + tbIb('data', 'data', 'Данные: сортировка и фильтр', '', 'Данные') + tbIb('charts', 'tchart', 'Диаграммы по данным таблицы', '', 'Диаграммы') + tbIb('exp', 'exp', 'Экспорт', '', 'Экспорт') +
+    tbIb('copy', 'copy', 'Копировать') + tbIb('paste', 'paste', 'Вставить') + tbIb('range', 'range', 'Выделять несколько ячеек касанием') + tbIb('merge', 'mrg', 'Объединить выделенные ячейки / разъединить объединённую', '', 'Объединить') + tbIb('freeze', 'freeze', 'Закрепить области') + tbSep + tbIb('rows', 'rows', 'Строки и столбцы', '', 'Строки и столбцы') + tbIb('data', 'data', 'Данные: сортировка и фильтр', '', 'Данные') + tbIb('charts', 'tchart', 'Диаграммы по данным таблицы', '', 'Диаграммы') + tbIb('exp', 'exp', 'Экспорт', '', 'Экспорт') +
     '</div><div class="tb-fxr"><span id="tbNm">A1</span><input id="tbFx" autocomplete="off' + (TB.ro ? '" readonly="readonly' : '') + '" placeholder="Значение или формула, например =СУММ(A1:A5)"></div><div class="tb-wrap" id="tbWrap"><table class="tb-g" id="tbG"></table></div><div class="tb-charts" id="tbCh"></div><div class="tb-sb"><span id="tbSbSel">A1</span><span>Формулы начинаются со знака «=»</span></div></div>';
   tbRender(); { const fxe = document.getElementById('tbFx'); if(fxe && !TB.ro) tbAcAttach(fxe); }
 }
@@ -8982,6 +9293,7 @@ vTables.addEventListener('click', async e => {
   else if(a === 'charts') tbChartDlg(null);
   else if(a === 'chedit'){ const c = (TB.t.ch || []).find(x => x.id === b.dataset.id); if(c) tbChartDlg(c); }
   else if(a === 'chdel'){ if(await askYN('Удалить диаграмму?', 'Диаграмма будет удалена, данные ячеек останутся без изменений.', 'Удалить')) tbMut(() => { TB.t.ch = (TB.t.ch || []).filter(x => x.id !== b.dataset.id); }); }
+  else if(a === 'merge') tbMergeToggle();
   else if(a === 'range'){ TB.range = !TB.range; b.classList.toggle('on', TB.range); }
   else if(a === 'copy'){ const t = tbGrab(); try{ await navigator.clipboard.writeText(t); toast('Скопировано'); }catch(err){ toast('Скопировано внутри приложения'); } }
   else if(a === 'paste'){ let t = ''; try{ t = await navigator.clipboard.readText(); }catch(err){} if(t) tbPaste(t); else if(TB.clip) tbPaste(TB.clip.text); else tbDlgFill('<h3>Вставить</h3><p style="color:var(--text-2);font-size:13px">Вставьте скопированные ячейки (из Excel или Google Таблиц) в поле:</p><textarea id="tbP" style="width:100%;height:120px;box-sizing:border-box"></textarea><button class="btn small" type="button" data-x="pasteok">Вставить</button>'); }
@@ -8998,14 +9310,15 @@ vTables.addEventListener('change', e => {
 vTables.addEventListener('keydown', e => { if(e.target.id === 'tbFx'){ if(e.key === 'Enter'){ e.preventDefault(); e.target.blur(); } else if(e.key === 'Escape'){ tbPaint(); e.target.blur(); } } });
 function tbEdit(r, c, init){
   if(TB.ro) return;
+  const mg = tbMgAt(r, c); if(mg){ r = mg.r; c = mg.c; }
   const td = vTables.querySelector('#tbG td[data-r="' + r + '"][data-c="' + c + '"]'); if(!td || td.querySelector('input')) return;
   const x = TB.t.cells[r + '_' + c], old = x ? String(x.v) : '', inp = document.createElement('input'); inp.className = 'tb-in'; inp.value = init !== undefined ? init : old;
   td.textContent = ''; td.appendChild(inp); inp.focus(); if(init === undefined) inp.select(); else inp.setSelectionRange(inp.value.length, inp.value.length);
   tbAcAttach(inp); tbAcShow(inp);
   let done = false; const fin = ok => { if(done) return; done = true; if(ok && inp.value !== old) tbMut(() => tbSet(r, c, inp.value)); else tbRender(); };
   inp.addEventListener('keydown', ev => { ev.stopPropagation();
-    if(ev.key === 'Enter'){ fin(true); tbSelect(Math.min(r + 1, TB.t.R - 1), c, false); tbPaint(); }
-    else if(ev.key === 'Tab'){ ev.preventDefault(); fin(true); tbSelect(r, Math.min(c + 1, TB.t.C - 1), false); tbPaint(); }
+    if(ev.key === 'Enter'){ fin(true); tbSelect(Math.min(r + (mg ? mg.rs : 1), TB.t.R - 1), c, false); tbPaint(); }
+    else if(ev.key === 'Tab'){ ev.preventDefault(); fin(true); tbSelect(r, Math.min(c + (mg ? mg.cs : 1), TB.t.C - 1), false); tbPaint(); }
     else if(ev.key === 'Escape') fin(false); });
   inp.addEventListener('blur', () => fin(true));
 }
@@ -9030,7 +9343,7 @@ addEventListener('pointerup', () => { TB.drag = false; });
 const tbActive = e => (view === 'tables' || TB.modal) && TB.t && !document.querySelector('.tm-ov') && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 document.addEventListener('keydown', e => {
   if(!tbActive(e)) return; const k = e.key, mod = e.ctrlKey || e.metaKey, t = TB.t, lk = k.toLowerCase();
-  const mv = (dr, dc, ext) => { e.preventDefault(); const src = ext ? TB.end : TB.cur; const r = Math.max(0, src.r + dr), c = Math.max(0, src.c + dc); let grow = false;
+  const mv = (dr, dc, ext) => { e.preventDefault(); const src = ext ? TB.end : TB.cur; const m0 = tbMgAt(src.r, src.c); let r0 = src.r + dr, c0 = src.c + dc; if(m0){ if(dr > 0) r0 = m0.r + m0.rs; else if(dr < 0) r0 = m0.r - 1; if(dc > 0) c0 = m0.c + m0.cs; else if(dc < 0) c0 = m0.c - 1; } const r = Math.max(0, r0), c = Math.max(0, c0); let grow = false;
     if(r >= t.R && r < 1000){ t.R = r + 1; grow = true; } if(c >= t.C && c < 78){ t.C = c + 1; grow = true; } if(grow){ tbSave(); tbRender(); }
     tbSelect(Math.min(r, t.R - 1), Math.min(c, t.C - 1), ext); tbPaint(); tbScroll(); };
   if(k === 'ArrowDown') mv(1, 0, e.shiftKey); else if(k === 'ArrowUp') mv(-1, 0, e.shiftKey); else if(k === 'ArrowLeft') mv(0, -1, e.shiftKey); else if(k === 'ArrowRight') mv(0, 1, e.shiftKey);
@@ -9049,7 +9362,7 @@ document.addEventListener('visibilitychange', () => { if(document.hidden && TB.t
 
 /* ===== Таблицы во всех модулях: единый источник данных ===== */
 const TBC = {}, TBS = {};
-const tbEnc = t => btoa(unescape(encodeURIComponent(JSON.stringify({title: t.title, R: t.R, C: t.C, hdr: t.hdr, fr: t.fr, fc: t.fc, ch: t.ch, cells: t.cells, cw: t.cw, rh: t.rh, hr: t.hr, hc: t.hc}))));
+const tbEnc = t => btoa(unescape(encodeURIComponent(JSON.stringify({title: t.title, R: t.R, C: t.C, hdr: t.hdr, fr: t.fr, fc: t.fc, ch: t.ch, cells: t.cells, cw: t.cw, rh: t.rh, hr: t.hr, hc: t.hc, mg: t.mg || []}))));
 const tbDec = s => { try{ if(!/^[A-Za-z0-9+\/=]+$/.test(s) || s.length > 400000) return null; return tbFix(JSON.parse(decodeURIComponent(escape(atob(s))))); }catch(e){ return null; } };
 async function tbLoadCache(quiet){
   try{ const all = await tbAll(); Object.keys(TBC).forEach(k => delete TBC[k]); all.forEach(t => { TBC[t.id] = (TB.t && TB.t.id === t.id) ? TB.t : t; }); }catch(e){}
@@ -9065,12 +9378,20 @@ function tbHtml(id, o = {}){
   const sv = TB.t; TB.t = t; let V; try{ V = tbVis(true); }finally{ TB.t = sv; }
   const {rows, cols, val} = V, bc = tbClr(o.bc) || '#8e8e93', tc = tbClr(o.tc), fs = o.fs || 14; let tw = 0; cols.forEach(c => tw += t.cw[c] || 96);
   const W = c => o.px ? (t.cw[c] || 96) + 'px' : ((t.cw[c] || 96) / tw * 100).toFixed(2) + '%', sp = !!o.spans;
+  const lay = tbMgLayout(t, rows, cols);
+  if(sp && Object.keys(lay.span).length){
+    const ri = {}, ci = {}; rows.forEach((r, i) => { ri[r] = i + 1; }); cols.forEach((c, i) => { ci[c] = i + 1; });
+    let g = '<span style="display:grid;grid-template-columns:' + cols.map(c => 'minmax(0,' + (t.cw[c] || 96) + 'fr)').join(' ') + ';grid-template-rows:' + rows.map(r => 'minmax(' + (t.rh[r] || 26) + 'px,auto)').join(' ') + ';width:100%;box-sizing:border-box;border-left:1px solid ' + bc + ';border-top:1px solid ' + bc + ';font-size:' + fs + 'px;line-height:1.35">';
+    rows.forEach(r => cols.forEach(c => { const k = r + '_' + c; if(lay.skip.has(k)) return; const m = lay.span[k], ar = m ? m.ar : r, ac = m ? m.ac : c, x = t.cells[ar + '_' + ac] || {};
+      g += '<span style="display:block;box-sizing:border-box;grid-row:' + ri[r] + ' / span ' + (m ? m.rs : 1) + ';grid-column:' + ci[c] + ' / span ' + (m ? m.cs : 1) + ';border-right:1px solid ' + bc + ';border-bottom:1px solid ' + bc + ';padding:2px 6px;overflow:hidden;' + tbStyle(x, val(ar, ac)) + '">' + esc(tbText(t, val, ar, ac)) + '</span>'; }));
+    return g + '</span>';
+  }
   let h = sp ? '<span style="display:table;width:100%;table-layout:fixed;border-collapse:collapse;font-size:' + fs + 'px;line-height:1.35">'
     : '<table class="tb-st" style="width:' + (o.px ? tw + 'px' : '100%') + ';table-layout:fixed;border-collapse:collapse;font-size:' + fs + 'px;' + (tc ? 'color:' + tc : '') + '"><colgroup>' + cols.map(c => '<col style="width:' + W(c) + '">').join('') + '</colgroup>';
   rows.forEach(r => {
     h += sp ? '<span style="display:table-row;height:' + (t.rh[r] || 26) + 'px">' : '<tr style="height:' + (t.rh[r] || 26) + 'px">';
-    cols.forEach(c => { const x = t.cells[r + '_' + c] || {}, cs = 'border:1px solid ' + bc + ';padding:2px 6px;overflow:hidden;vertical-align:middle;' + tbStyle(x, val(r, c)), tx = esc(tbText(t, val, r, c));
-      h += sp ? '<span style="display:table-cell;width:' + W(c) + ';' + cs + '">' + tx + '</span>' : '<td style="' + cs + '">' + tx + '</td>'; });
+    cols.forEach(c => { const k = r + '_' + c; if(lay.skip.has(k)) return; const m = lay.span[k], ar = m ? m.ar : r, ac = m ? m.ac : c, x = t.cells[ar + '_' + ac] || {}, cs = 'border:1px solid ' + bc + ';padding:2px 6px;overflow:hidden;vertical-align:middle;' + tbStyle(x, val(ar, ac)), tx = esc(tbText(t, val, ar, ac));
+      h += sp ? '<span style="display:table-cell;width:' + W(c) + ';' + cs + '">' + tx + '</span>' : '<td' + (m && m.rs > 1 ? ' rowspan="' + m.rs + '"' : '') + (m && m.cs > 1 ? ' colspan="' + m.cs + '"' : '') + ' style="' + cs + '">' + tx + '</td>'; });
     h += sp ? '</span>' : '</tr>';
   });
   return h + (sp ? '</span>' : '</table>');
