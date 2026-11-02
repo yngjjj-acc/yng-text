@@ -1471,7 +1471,7 @@ p.tbe{margin:12px 0;overflow-x:auto;cursor:pointer;border-radius:6px}p.tbe:hover
 .tmx-ft{display:flex;flex-direction:column;min-width:0;flex:1}.tmx-ft small{color:var(--text-2);font-size:12px}.tmx-ft b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tmx-k{border:0;background:transparent;color:var(--text-2);font-size:20px;line-height:1;padding:6px;border-radius:8px;cursor:pointer}.tmx-k:hover{background:rgba(128,128,128,.16)}
 .tmx-fadd{justify-content:center;border:1.5px dashed var(--line-2);background:transparent;box-shadow:none;color:var(--text-2);min-height:72px}
-.tmx-nav{display:flex;gap:6px}.tmx-nav button{width:34px;height:34px;border-radius:50%;border:0;background:rgba(128,128,128,.16);color:var(--text);cursor:pointer;font-size:16px}.tmx-nav button:last-child{background:var(--accent,#0a84ff);color:#fff}
+.tmx-nav{display:flex;gap:6px}.tmx-nav button{width:34px;height:34px;border-radius:50%;border:0;background:rgba(128,128,128,.16);color:var(--text);cursor:pointer;font-size:16px}.tmx-nav button:hover:not(:disabled){background:rgba(128,128,128,.28)}.tmx-nav button:disabled{opacity:.35;cursor:default}
 .tmx-car{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.tmx-car::-webkit-scrollbar{display:none}
 .tmx-fc{flex:0 0 min(272px,80vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:22px;background:var(--bg-elev);border:1px solid var(--line-2);min-width:0}
 .tmx-pv{position:relative;height:152px;border-radius:16px;overflow:hidden;background:rgba(128,128,128,.1);cursor:pointer}
@@ -8594,9 +8594,15 @@ function tmDraw(){
   const foot = '<div class="np-bar" style="margin-top:26px">' + (own ? '<button class="btn small" type="button" data-tm="del">Удалить команду</button>' : '<button class="btn small" type="button" data-tm="leave">Выйти из команды</button>') + '</div>';
   const car = document.getElementById('tmxCar'), sl = car ? car.scrollLeft : 0;
   vTeams.innerHTML = '<a class="tmx-back" href="#/teams">← Все команды</a>' + hero + key + folders + files + tasks + members + foot;
-  const nc = document.getElementById('tmxCar'); if(nc) nc.scrollLeft = sl;
+  const nc = document.getElementById('tmxCar'); if(nc){ nc.scrollLeft = sl; nc.addEventListener('scroll', tmCarNav, {passive: true}); tmCarNav(); }
   const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ io.unobserve(en.target); tmPvFill(en.target); } }), {rootMargin: '300px'}) : null;
   vTeams.querySelectorAll('.tmx-pv[data-fid]').forEach(el => io ? io.observe(el) : tmPvFill(el));
+}
+function tmCarNav(){
+  const c = document.getElementById('tmxCar'); if(!c) return;
+  const l = vTeams.querySelector('[data-tm="xcar"][data-d="-1"]'), r = vTeams.querySelector('[data-tm="xcar"][data-d="1"]');
+  if(l) l.disabled = c.scrollLeft <= 2;
+  if(r) r.disabled = c.scrollLeft + c.clientWidth >= c.scrollWidth - 2;
 }
 async function tmTeam(id){
   const d = await tmApi('team.get', {id}); tmData = d;
