@@ -616,10 +616,58 @@ footer a{color:var(--text-2)}
 .np-pop .mi.pg small{display:block}
 /* page borders in editor */
 .ed-area{position:relative}
-.pg-lines{position:absolute;inset:0;pointer-events:none;z-index:2}
-.pg-ln{position:absolute;left:0;right:0;border-top:2px dashed var(--accent);opacity:.55;height:0}
-.pg-ln span{position:absolute;right:12px;top:4px;font-size:11.5px;color:var(--accent);background:var(--bg-elev);padding:0 6px;border-radius:6px}
-.ed-card[data-pg]:not([data-pg=""]){box-shadow:var(--shadow)}
+
+/* ---------- помощь ИИ ---------- */
+.tb.ai{gap:5px;display:inline-flex;align-items:center;color:var(--accent);font-weight:600}
+.tb.ai svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.np-dlg.ai{width:min(620px,100%)}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
+.ai-head h3{margin:0!important}
+.ai-gear{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:rgba(120,120,128,.14);color:var(--text-2);display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.ai-gear:hover{background:var(--accent-soft);color:var(--accent)}
+.ai-gear svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ai-opt{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;border:1.5px solid var(--line);background:transparent;border-radius:14px;padding:12px 14px;margin:0 0 8px;cursor:pointer;color:var(--text);font:inherit}
+.ai-opt b{font-size:15px}.ai-opt small{font-size:12.5px;color:var(--text-3);line-height:1.35}
+.ai-opt:hover{border-color:var(--accent)}
+.ai-opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.ai-pst{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 0;font-size:13.5px;color:var(--text-2)}
+.ai-hint{font-size:12.5px;color:var(--text-3);margin:0 0 6px}
+#aiPM{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev);color:var(--text);font:inherit}
+.ai-seg{display:flex;gap:4px;padding:3px;border-radius:12px;background:rgba(120,120,128,.14);margin:0 0 6px}
+.ai-seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:8px 10px;font-size:13.5px;color:var(--text-2);transition:background .2s}
+.ai-seg button.on{background:var(--bg-elev);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.15);font-weight:600}
+.ai-seg button:disabled{opacity:.4}
+.ai-prev{margin:0 0 14px;padding:8px 12px;border-radius:10px;background:var(--accent-soft);color:var(--text-2);font-size:13px;line-height:1.45;max-height:4.4em;overflow:hidden;text-overflow:ellipsis}
+.ai-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 14px}
+.ai-pat{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line);background:transparent;border-radius:12px;padding:10px 12px;color:var(--text);transition:background .2s,border-color .2s}
+.ai-pat:hover{background:var(--accent-soft);border-color:var(--accent)}
+.ai-pat b{font-size:14px;font-weight:600}.ai-pat small{font-size:12px;color:var(--text-3);line-height:1.3}
+.ai-tr b{white-space:nowrap}
+.ai-tr{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px;cursor:default}
+.ai-tr:hover{background:transparent;border-color:var(--line)}
+.ai-tr select{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg-elev);color:var(--text);border-radius:9px;padding:7px 8px;font-size:13.5px}
+.ai-tr .btn{flex:none}
+.ai-cust{display:flex;gap:8px;align-items:flex-end}
+.ai-cust textarea{flex:1;min-height:44px;max-height:140px;resize:vertical;border:1px solid var(--line);background:var(--bg-elev);color:var(--text);border-radius:12px;padding:10px 12px;font:inherit;font-size:14.5px}
+.ai-cust textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.ai-lab{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-3);margin:0 0 6px}
+.ai-res{border:1px solid var(--line);border-radius:12px;padding:12px 14px;max-height:46vh;overflow:auto;font-size:15px;line-height:1.55;margin:0 0 14px}
+.ai-res p{margin:0 0 .7em}.ai-res p:last-child{margin:0}.ai-res h1,.ai-res h2,.ai-res h3{margin:.6em 0 .3em;font-size:1.1em}.ai-res ul,.ai-res ol{margin:0 0 .7em;padding-left:1.3em}
+.ai-load{display:flex;align-items:center;gap:12px;padding:26px 4px;color:var(--text-2)}
+.ai-load i{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);animation:aiSpin .8s linear infinite;flex:none}
+@keyframes aiSpin{to{transform:rotate(360deg)}}
+.ai-err{color:#d70015;font-size:14.5px;line-height:1.5;margin:0 0 14px}
+.pg-lines{position:absolute;inset:0;pointer-events:none;z-index:0}
+.pg-lines.pg-cov{z-index:2}
+/* листы как в Word: настоящий размер, тень, серый промежуток между листами */
+.pg-sheet{position:absolute;left:0;right:0;background:var(--bg-elev);box-shadow:0 0 0 1px var(--line-2),0 6px 22px rgba(0,0,0,.14);border-radius:2px}
+.pg-erase{position:absolute;left:0;right:0;background:var(--bg-elev)}
+.pg-num{position:absolute;left:0;right:0;text-align:center;font-size:11px;line-height:1;color:var(--text-3);font-variant-numeric:tabular-nums}
+.ed-card[data-pg]:not([data-pg=""]){background:transparent;border:0;box-shadow:none;border-radius:0}
+.ed-card[data-pg]:not([data-pg=""]) .ed-area{background:transparent;overflow:visible}
+.ed-card[data-pg]:not([data-pg=""]) .ed{z-index:1}
+.ed-card[data-pg]:not([data-pg=""]) .ed-bar{border-radius:var(--r-md);border:1px solid var(--line);margin-bottom:14px}
+.ed [data-pgsp]{display:inline-block}
 /* images */
 .nb img{display:inline-block;vertical-align:bottom;max-width:100%;height:auto;margin:.3em 0;cursor:pointer}
 .nb img[data-al=c]{display:block;margin:.6em auto;clear:both}
@@ -641,7 +689,10 @@ footer a{color:var(--text-2)}
 .nb p.tk.trashed{opacity:.4;text-decoration:line-through}
 @media print{
   .img-ui,.pg-lines,.trash-fab{display:none!important}
-  .ed-card,.ed-card[data-pg]{max-width:none!important;margin:0!important;box-shadow:none!important}
+  .ed-card,.ed-card[data-pg]{max-width:none!important;width:auto!important;margin:0!important;box-shadow:none!important;border:0!important;background:transparent!important}
+  .ed [data-pgsp]{display:none!important}
+  .nb [data-pgp]{padding-top:0!important}.nb td[data-pgp],.nb th[data-pgp]{padding-top:7px!important}.nb pre[data-pgp]{padding-top:12px!important}
+  .ed{min-height:0!important}
   .ed-area{padding:0!important;min-height:0!important;max-width:none!important}
   .page,#vEd{max-width:none!important;padding:0!important}
   .nb p,.nb li{orphans:3;widows:3}
@@ -1011,12 +1062,11 @@ body.tbl-resizing,body.tbl-resizing *{user-select:none!important;-webkit-user-se
   .ed-card,.ed-area{overflow:visible!important}
   .nb,.ed{color:#1d1d1f!important;overflow:visible!important}
   /* таблицы: фиксированная сетка, рамки и ширины как на экране, разрыв между строками */
-  .nb table{table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important;border:1px solid rgba(0,0,0,.14)!important;border-radius:12px!important;overflow:visible!important;break-inside:auto!important;page-break-inside:auto!important}
+  .nb table{table-layout:fixed!important;border-collapse:collapse!important;border-spacing:0!important;border:0!important;border-radius:0!important;overflow:visible!important;break-inside:auto!important;page-break-inside:auto!important}
   .nb thead{display:table-header-group}
   .nb tr{break-inside:avoid!important;page-break-inside:avoid!important}
-  .nb td,.nb th{border-right:1px solid rgba(0,0,0,.08)!important;border-bottom:1px solid rgba(0,0,0,.08)!important;padding:7px 10px!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+  .nb td,.nb th{border:1px solid rgba(0,0,0,.14)!important;padding:7px 10px!important;overflow-wrap:anywhere!important;word-break:break-word!important}
   .nb th{background:#f5f5f7!important;font-weight:600!important}
-  .nb tr>*:last-child{border-right:0!important}.nb tr:last-child>*{border-bottom:0!important}
   /* код: фон, цвет и текст целиком, переносится по страницам */
   .nb pre{display:block!important;visibility:visible!important;background:#f5f5f7!important;color:#1d1d1f!important;border-radius:12px!important;padding:12px 14px!important;white-space:pre-wrap!important;word-break:break-word!important;overflow:visible!important;break-inside:auto!important;page-break-inside:auto!important;font-family:var(--mono)!important;font-size:13.5px!important;line-height:1.55!important}
   .nb pre code{display:block!important;color:#1d1d1f!important;background:none!important;font:inherit!important;white-space:pre-wrap!important}
@@ -2350,6 +2400,220 @@ function modal({title, text, buttons}){
   return dialog(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts">${buttons.map(b => `<button type="button" class="btn small ${b.cls || ''}" data-v="${b.v}"${b.v === 'no' ? ' data-focus' : ''}>${esc(b.t)}</button>`).join('')}</div>`);
 }
 
+
+/* ================= Помощь ИИ в редакторе ================= */
+const AI_SYS = 'Ты — встроенный помощник текстового редактора. Выполни инструкцию над текстом пользователя. Отвечай ТОЛЬКО готовым результатом: без вступлений, пояснений, комментариев и обрамляющих кавычек. Язык результата — язык исходного текста, если инструкция не требует другого. Сохраняй смысл, факты, имена и числа, не выдумывай данных. Абзацы разделяй пустой строкой. Если в тексте были заголовки, списки или выделение — сохрани их простой разметкой Markdown (#, ##, -, 1., **жирный**); иначе пиши обычным текстом без разметки.';
+const AI_PAT = [
+  ['improve', 'Улучшить текст', 'Яснее, живее и грамотнее', 'Улучши текст: сделай его яснее, живее и грамотнее, исправь ошибки, сохранив смысл, структуру и авторский стиль.', 'rep'],
+  ['fix', 'Исправить ошибки', 'Орфография, пунктуация, грамматика', 'Исправь только орфографические, пунктуационные и грамматические ошибки. Ничего не переписывай и не меняй стиль.', 'rep'],
+  ['simple', 'Сделать проще', 'Понятным языком', 'Перепиши текст проще: короткие предложения, понятные слова, без канцелярита и сложных терминов. Смысл сохрани.', 'rep'],
+  ['complex', 'Сделать сложнее', 'Академичный, насыщенный стиль', 'Перепиши текст в более сложном, академичном стиле: развитые конструкции, богатая лексика, точная терминология. Смысл сохрани.', 'rep'],
+  ['short', 'Сократить', 'Оставить главное', 'Сократи текст примерно вдвое, оставив главные мысли и факты.', 'rep'],
+  ['long', 'Расширить', 'Добавить деталей и пояснений', 'Расширь текст: добавь пояснения, детали и связки, но не выдумывай новых фактов.', 'rep'],
+  ['formal', 'Деловой стиль', 'Официально и сдержанно', 'Перепиши текст в деловом, официальном стиле.', 'rep'],
+  ['friendly', 'Дружеский тон', 'Тепло и неформально', 'Перепиши текст в тёплом, дружелюбном, разговорном тоне.', 'rep'],
+  ['summary', 'Краткое содержание', 'Главное в нескольких пунктах', 'Сделай краткое содержание текста: 3–7 ключевых пунктов списком.', 'ins'],
+  ['plan', 'Составить план', 'Структура по тексту', 'Составь структурированный план этого текста: заголовки и подпункты списком.', 'ins'],
+  ['cont', 'Продолжить текст', 'Написать следующий фрагмент', 'Продолжи текст в том же стиле и тоне: напиши следующий логичный фрагмент (1–3 абзаца). Выведи только продолжение, исходный текст не повторяй.', 'ins'],
+  ['title', 'Придумать заголовок', '5 вариантов заголовка', 'Предложи 5 вариантов заголовка для этого текста, списком.', 'ins']
+];
+const AI_LANG = ['английский', 'русский', 'немецкий', 'французский', 'испанский', 'итальянский', 'португальский', 'китайский', 'японский', 'корейский', 'турецкий', 'украинский', 'польский', 'арабский'];
+async function aiCallBuilt(prompt, signal){
+  if(!YNG_SEND_URL || !(TG && TG.initData)) throw new Error('no_tg');
+  let r, j; try{ r = await fetch(YNG_SEND_URL, {method: 'POST', headers: {'Content-Type': 'application/json'}, signal, body: JSON.stringify({action: 'ai', initData: TG.initData, system: AI_SYS, prompt})}); j = await r.json(); }
+  catch(e){ if(e && e.name === 'AbortError') throw e; throw new Error('network'); }
+  if(!j.ok || !j.text) throw new Error(j.error || 'server');
+  return String(j.text);
+}
+const AI_ERR = {no_tg: 'ИИ работает только внутри Telegram: откройте приложение через бота.', network: 'Нет связи с сервером. Проверьте интернет и повторите.', auth: 'Не удалось подтвердить Telegram-аккаунт.', too_big: 'Текст слишком большой для одного запроса. Выделите фрагмент поменьше.', ai_limit: 'Достигнут лимит запросов к ИИ. Попробуйте чуть позже.', ai_fail: 'ИИ не смог ответить. Повторите попытку.', ai_blocked: 'ИИ отказался обрабатывать этот текст.', no_key: 'На сервере не настроен ключ ИИ.', server: 'Ошибка сервера. Повторите попытку.'};
+Object.assign(AI_ERR, {puter_load: 'Не удалось загрузить Puter. Проверьте интернет или выберите «Встроенный».', puter_auth: 'Вход в Puter не выполнен. Попробуйте ещё раз и разрешите всплывающее окно.', puter_limit: 'Бесплатный лимит вашего аккаунта Puter закончился.', puter_fail: 'Puter не смог ответить. Повторите попытку.'});
+/* ---- источник ИИ: «Встроенный» (сервер приложения) или «Через мой аккаунт Puter» (лимит самого пользователя) ---- */
+const AI_PUTER_MODELS = [['gemini-2.5-flash', 'Gemini 2.5 Flash'], ['gemini-3.5-flash-lite', 'Gemini 3.5 Flash-Lite (быстрее)'], ['gemini-3.8-flash', 'Gemini 3.8 Flash']];
+const aiSrc = () => store.get('yng_ai_src', 'built') === 'puter' ? 'puter' : 'built';
+const aiPuterModel = () => { const m = store.get('yng_ai_pm', ''); return AI_PUTER_MODELS.some(x => x[0] === m) ? m : AI_PUTER_MODELS[0][0]; };
+let puterP = null;
+function puterLoad(){   /* сторонний скрипт грузим только тогда, когда пользователь сам выбрал Puter */
+  if(window.puter && window.puter.ai) return Promise.resolve(window.puter);
+  if(puterP) return puterP;
+  puterP = new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = 'https://js.puter.com/v2/'; sc.async = true;
+    sc.onload = () => window.puter ? res(window.puter) : (puterP = null, rej(new Error('puter_load')));
+    sc.onerror = () => { puterP = null; sc.remove(); rej(new Error('puter_load')); };
+    document.head.appendChild(sc);
+  });
+  return puterP;
+}
+async function puterSignedIn(){ try{ const p = await puterLoad(); return !!(await p.auth.isSignedIn()); }catch(_){ return false; } }
+async function puterSignIn(){
+  let p; try{ p = await puterLoad(); }catch(_){ throw new Error('puter_load'); }
+  try{ if(!(await p.auth.isSignedIn())) await p.auth.signIn(); }catch(_){ throw new Error('puter_auth'); }
+  if(!(await p.auth.isSignedIn())) throw new Error('puter_auth');
+  return p;
+}
+function puterText(r){
+  if(typeof r === 'string') return r;
+  if(!r) return '';
+  const m = r.message || r; let c = m.content !== undefined ? m.content : (r.text !== undefined ? r.text : '');
+  if(Array.isArray(c)) c = c.map(x => typeof x === 'string' ? x : (x && x.text) || '').join('');
+  return typeof c === 'string' ? c : '';
+}
+function puterErr(e){
+  const t = (e && (e.code || (e.error && (e.error.code || e.error.message)) || e.message) || '').toString().toLowerCase();
+  if(/fund|credit|limit|quota|usage|balance|payment/.test(t)) return 'puter_limit';
+  if(/auth|sign|login|token|unauthor/.test(t)) return 'puter_auth';
+  return 'puter_fail';
+}
+async function aiCallPuter(prompt, signal){
+  let p; try{ p = await puterLoad(); }catch(_){ throw new Error('puter_load'); }
+  let ok = false; try{ ok = !!(await p.auth.isSignedIn()); }catch(_){}
+  if(!ok) throw new Error('puter_signin');
+  let r; try{ r = await p.ai.chat([{role: 'system', content: AI_SYS}, {role: 'user', content: prompt}], {model: aiPuterModel()}); }
+  catch(e){ throw new Error(puterErr(e)); }
+  if(signal && signal.aborted){ const a = new Error('abort'); a.name = 'AbortError'; throw a; }
+  const t = puterText(r).trim(); if(!t) throw new Error('puter_fail');
+  return t;
+}
+const aiCall = (prompt, signal) => aiSrc() === 'puter' ? aiCallPuter(prompt, signal) : aiCallBuilt(prompt, signal);
+/* Markdown от модели -> безопасный HTML редактора */
+function aiToHtml(md){
+  const inl = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, '$1<i>$2</i>');
+  const lines = String(md).replace(/\r/g, '').replace(/^```\w*\n?|\n?```$/g, '').split('\n'); let out = '', para = [], list = null;
+  const fp = () => { if(para.length){ out += '<p>' + para.map(inl).join('<br>') + '</p>'; para = []; } };
+  const fl = () => { if(list){ out += '<' + list.t + '>' + list.i.map(x => '<li>' + inl(x) + '</li>').join('') + '</' + list.t + '>'; list = null; } };
+  for(const raw of lines){
+    const ln = raw.replace(/\s+$/, ''); let m;
+    if(!ln.trim()){ fp(); fl(); }
+    else if((m = ln.match(/^(#{1,6})\s+(.*)$/))){ fp(); fl(); out += '<h' + Math.min(3, Math.max(1, m[1].length)) + '>' + inl(m[2]) + '</h' + Math.min(3, Math.max(1, m[1].length)) + '>'; }
+    else if((m = ln.match(/^\s*[-*•]\s+(.*)$/))){ fp(); if(!list || list.t !== 'ul'){ fl(); list = {t: 'ul', i: []}; } list.i.push(m[1]); }
+    else if((m = ln.match(/^\s*\d+[.)]\s+(.*)$/))){ fp(); if(!list || list.t !== 'ol'){ fl(); list = {t: 'ol', i: []}; } list.i.push(m[1]); }
+    else { fl(); para.push(ln.trim()); }
+  }
+  fp(); fl(); return sanitize(out);
+}
+function aiScopeText(range){
+  if(range){ const d = document.createElement('div'); d.appendChild(range.cloneContents()); return htmlToText(d.innerHTML).trim(); }
+  return htmlToText(edHtml()).trim();
+}
+function openAI(){
+  restore();
+  const sel = getSelection(); let range = null;
+  if(sel.rangeCount && ed.contains(sel.anchorNode) && !sel.isCollapsed) range = sel.getRangeAt(0).cloneRange();
+  else if(saved && ed.contains(saved.commonAncestorContainer) && !saved.collapsed) range = saved.cloneRange();
+  const hasSel = !!(range && aiScopeText(range));
+  let scope = hasSel ? 'sel' : 'doc', ctl = null, last = null;
+  const MAXC = 24000;
+  dialog('', 'wide ai', (m, done) => {
+    const dlg = m.querySelector('.np-dlg');
+    const getText = () => scope === 'sel' ? aiScopeText(range) : aiScopeText(null);
+    const close = () => { if(ctl) ctl.abort(); done(null); };
+    const viewMain = (keepCustom) => {
+      const txt = getText(), prev = txt.replace(/\s+/g, ' ').slice(0, 160);
+      dlg.innerHTML = `<div class="ai-head"><h3>Помощь ИИ</h3><button type="button" class="ai-gear" data-set="1" title="Настройки ИИ: источник" aria-label="Настройки ИИ"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
+        <div class="ai-seg"><button type="button" data-sc="sel"${hasSel ? '' : ' disabled'}>Выделенный текст</button><button type="button" data-sc="doc">Весь документ</button></div>
+        <div class="ai-prev">${txt ? esc(prev) + (txt.length > 160 ? '…' : '') + ' <span style="opacity:.7">(' + txt.length.toLocaleString('ru-RU') + ' симв.)</span>' : 'Документ пуст. Можно попросить ИИ написать текст с нуля.'}</div>
+        <div class="ai-lab">Быстрые действия</div>
+        <div class="ai-grid">${AI_PAT.map(p => `<button type="button" class="ai-pat" data-p="${p[0]}"><b>${p[1]}</b><small>${p[2]}</small></button>`).join('')}
+          <div class="ai-pat ai-tr"><b>Перевести на</b><select id="aiLang">${AI_LANG.map((l, i) => `<option value="${l}"${i === 0 ? ' selected' : ''}>${l}</option>`).join('')}</select><button type="button" class="btn small" data-p="tr">Перевести</button></div></div>
+        <div class="ai-lab">Свой запрос</div>
+        <div class="ai-cust"><textarea id="aiCust" rows="2" maxlength="1500" placeholder="Например: перепиши как письмо клиенту, добавь примеры, объясни как школьнику…"></textarea><button type="button" class="btn small" data-p="custom">Отправить</button></div>
+        <div class="acts l" style="margin-top:14px"><button type="button" class="btn small neutral" data-x="1">Закрыть</button></div>`;
+      dlg.querySelectorAll('[data-sc]').forEach(b => b.classList.toggle('on', b.dataset.sc === scope));
+      const ta = dlg.querySelector('#aiCust'); if(keepCustom) ta.value = keepCustom;
+    };
+    const run = async (instr, mode) => {
+      const txt = getText();
+      if(!instr) return;
+      if(txt.length > MAXC){ return viewErr('too_big'); }
+      const body = txt ? `Инструкция: ${instr}\n\nТекст:\n"""\n${txt}\n"""` : `Инструкция: ${instr}\n\n(Исходного текста нет — напиши текст по инструкции.)`;
+      last = {instr, mode};
+      dlg.innerHTML = '<h3>Помощь ИИ</h3><div class="ai-load"><i></i><span>ИИ работает над текстом…</span></div><div class="acts l"><button type="button" class="btn small neutral" data-x="1">Отмена</button></div>';
+      ctl = new AbortController();
+      try{ const out = await aiCall(body, ctl.signal); ctl = null; viewRes(out, mode); }
+      catch(e){ if(e && e.name === 'AbortError') return; ctl = null; if(e.message === 'puter_signin') viewLogin(); else viewErr(e.message); }
+    };
+    const viewErr = code => {
+      const src = aiSrc();
+      const toPuter = src === 'built' && ['ai_limit', 'no_tg', 'network', 'ai_fail', 'server', 'no_key', 'auth'].includes(code);
+      const toBuilt = src === 'puter' && ['puter_limit', 'puter_fail', 'puter_load'].includes(code);
+      const again = last && code !== 'too_big' && code !== 'no_tg' && code !== 'puter_limit';
+      dlg.innerHTML = `<h3>Помощь ИИ</h3><p class="ai-err">${esc(AI_ERR[code] || ('Ошибка: ' + code))}</p>${toPuter ? '<p class="ai-hint">Можно продолжить через свой аккаунт Puter: у него свой бесплатный лимит.</p>' : ''}${code === 'puter_limit' ? '<p class="ai-hint">Можно вернуться ко встроенному ИИ или пополнить лимит в аккаунте Puter.</p>' : ''}<div class="acts"><button type="button" class="btn small neutral" data-back="1">Назад</button>${again ? '<button type="button" class="btn small neutral" data-again="1">Повторить</button>' : ''}${toBuilt ? '<button type="button" class="btn small neutral" data-srcgo="built">Встроенный ИИ</button>' : ''}${toPuter ? '<button type="button" class="btn small" data-srcgo="puter">Через Puter</button>' : ''}</div>`;
+    };
+    const viewLogin = () => {
+      dlg.innerHTML = `<h3>Вход в Puter</h3><p>Чтобы использовать ИИ через свой аккаунт, войдите в Puter: откроется окно puter.com. После входа запрос выполнится сам.</p><p class="ai-hint">Тексты отправляются сервису Puter и далее модели Google.</p><div class="acts"><button type="button" class="btn small neutral" data-back="1">Назад</button><button type="button" class="btn small" data-psign="1">Войти в Puter</button></div>`;
+      puterLoad().catch(() => {});   /* заранее, чтобы окно входа открылось по нажатию без задержки */
+    };
+    const viewSet = async () => {
+      const src = aiSrc(), pm = aiPuterModel();
+      dlg.innerHTML = `<div class="ai-head"><h3>Настройки ИИ</h3></div><div class="ai-lab">Источник ИИ</div>
+        <button type="button" class="ai-opt${src === 'built' ? ' on' : ''}" data-src="built"><b>Встроенный</b><small>Работает через сервер приложения, входить никуда не нужно. Бывает дневной лимит запросов.</small></button>
+        <button type="button" class="ai-opt${src === 'puter' ? ' on' : ''}" data-src="puter"><b>Через мой аккаунт Puter</b><small>Расходуется бесплатный лимит вашего аккаунта Puter, нужен вход. Тексты отправляются сервису Puter и модели Google.</small></button>
+        ${src === 'puter' ? `<div class="ai-lab">Модель</div><select id="aiPM">${AI_PUTER_MODELS.map(m => `<option value="${m[0]}"${m[0] === pm ? ' selected' : ''}>${m[1]}</option>`).join('')}</select><div class="ai-pst" id="aiPSt">Проверяю вход…</div>` : ''}
+        <div class="acts l" style="margin-top:14px"><button type="button" class="btn small neutral" data-back="1">Назад</button></div>`;
+      if(src === 'puter'){
+        let ok = false, fail = false; try{ await puterLoad(); ok = await puterSignedIn(); }catch(_){ fail = true; }
+        const st = dlg.querySelector('#aiPSt'); if(!st) return;
+        st.innerHTML = fail ? 'Не удалось загрузить Puter. Проверьте интернет.' : ok ? 'Вы вошли в Puter. <button type="button" class="btn small neutral" data-pout="1">Выйти</button>' : 'Вы не вошли в Puter. <button type="button" class="btn small" data-psign="1">Войти</button>';
+      }
+    };
+    const viewRes = (out, mode) => {
+      const html = aiToHtml(out), plain = out.replace(/\*\*/g, '').trim();
+      const canRep = mode === 'rep';
+      dlg.innerHTML = `<h3>Результат</h3><div class="ai-res">${html}</div>
+        <div class="acts"><button type="button" class="btn small neutral" data-back="1">Назад</button><button type="button" class="btn small neutral" data-again="1">Ещё раз</button><button type="button" class="btn small neutral" data-copy="1">Копировать</button>
+        <span class="grow"></span>${scope === 'sel' ? '<button type="button" class="btn small ' + (canRep ? 'neutral' : '') + '" data-ins="1">Вставить после</button>' : '<button type="button" class="btn small ' + (canRep ? 'neutral' : '') + '" data-ins="1">В конец документа</button>'}${canRep ? '<button type="button" class="btn small" data-rep="1">Заменить</button>' : ''}</div>`;
+      dlg._res = {html, plain};
+    };
+    const focusRange = r => { ed.focus({preventScroll: true}); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    const apply = kind => {
+      const {html, plain} = dlg._res, single = !/<(h\d|ul|ol)\b/.test(html) && (html.match(/<p>/g) || []).length <= 1;
+      if(kind === 'rep'){
+        let r; if(scope === 'sel') r = range; else { r = document.createRange(); r.selectNodeContents(ed); }
+        focusRange(r);
+        if(scope === 'sel' && single) document.execCommand('insertText', false, plain.replace(/\s*\n+\s*/g, ' '));
+        else document.execCommand('insertHTML', false, html);
+      } else {
+        let blk = null;
+        if(scope === 'sel'){ blk = range.endContainer; while(blk && blk.parentNode !== ed) blk = blk.parentNode; }
+        const tmp = document.createElement('div'); tmp.innerHTML = html;
+        if(blk) { let ref = blk; Array.from(tmp.children).forEach(n => { ref.after(n); ref = n; }); }
+        else Array.from(tmp.children).forEach(n => ed.appendChild(n));
+        ensureTail(ed); changed();
+      }
+      done(null); toast('Готово');
+    };
+    dlg.addEventListener('click', async e => {
+      const t = e.target;
+      if(t.closest('[data-x]')) return close();
+      if(t.closest('[data-set]')) return viewSet();
+      const so = t.closest('[data-src]'); if(so){ store.set('yng_ai_src', so.dataset.src); if(so.dataset.src === 'puter') puterLoad().catch(() => {}); return viewSet(); }
+      const sg = t.closest('[data-srcgo]'); if(sg){ store.set('yng_ai_src', sg.dataset.srcgo); return last ? run(last.instr, last.mode) : viewMain(); }
+      const ps = t.closest('[data-psign]'); if(ps){
+        ps.disabled = true;
+        try{ await puterSignIn(); }catch(er){ return viewErr(er.message); }
+        return last && dlg.querySelector('[data-psign]') && !dlg.querySelector('#aiPSt') ? run(last.instr, last.mode) : viewSet();
+      }
+      if(t.closest('[data-pout]')){ try{ const p = await puterLoad(); await p.auth.signOut(); }catch(_){} return viewSet(); }
+      const sc = t.closest('[data-sc]'); if(sc && !sc.disabled){ scope = sc.dataset.sc; return viewMain(dlg.querySelector('#aiCust') && dlg.querySelector('#aiCust').value); }
+      const p = t.closest('[data-p]');
+      if(p){
+        const id = p.dataset.p;
+        if(id === 'custom'){ const v = (dlg.querySelector('#aiCust').value || '').trim(); if(!v){ dlg.querySelector('#aiCust').focus(); return; } return run(v, /\b(напиши|придумай|продолж|составь|добавь|сделай (план|список)|кратко|резюм)/i.test(v) && !/перепиш|исправ|улучш|сократ|переведи|упрост/i.test(v) ? 'ins' : 'rep'); }
+        if(id === 'tr'){ const l = dlg.querySelector('#aiLang').value; return run(`Переведи текст на ${l} язык. Сохрани смысл, тон и форматирование.`, 'rep'); }
+        const pat = AI_PAT.find(x => x[0] === id); if(pat) return run(pat[3], pat[4]);
+      }
+      if(t.closest('[data-back]')) return viewMain();
+      if(t.closest('[data-again]') && last) return run(last.instr, last.mode);
+      if(t.closest('[data-copy]')){ try{ await navigator.clipboard.writeText(dlg._res.plain); toast('Скопировано'); }catch(_){ toast('Не удалось скопировать'); } return; }
+      if(t.closest('[data-rep]')) return apply('rep');
+      if(t.closest('[data-ins]')) return apply('ins');
+    });
+    dlg.addEventListener('change', e => { if(e.target.id === 'aiPM') store.set('yng_ai_pm', e.target.value); });
+    dlg.addEventListener('keydown', e => { if(e.target.id === 'aiCust' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); dlg.querySelector('[data-p="custom"]').click(); } });
+    m.addEventListener('click', e => { if(e.target === m && ctl) ctl.abort(); });
+    viewMain();
+  });
+}
+
 /* ================= v2 core: meta store, tasks, folders, trash ================= */
 const FIC = {
   study:['Учёба','<path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.8V16c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8v-4.2M21.5 9.5V15"/>'],
@@ -3441,7 +3705,7 @@ const pgIcon = (w, h) => `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="$
 function popPage(anchor){
   const k = cur && (PAGES[cur.page] || cur.page === 'music') ? cur.page : 'def';
   const items = [['a5', 'A5', '148 × 210 мм', pgIcon(10, 14)], ['a4', 'A4', '210 × 297 мм', pgIcon(12, 17)], ['a3', 'A3', '297 × 420 мм', pgIcon(15, 21)], ['def', 'По умолчанию', 'как в редакторе сейчас', pgIcon(18, 12)]];
-  openPop(anchor, '<div class="mh">Параметры страницы</div>' + items.map(([id, n, d, i]) => `<button class="mi col pg${k === id ? ' cur' : ''}" data-pg="${id}"><span class="pgi">${i}</span><span><b>${n}</b><small>${d}</small></span></button>`).join('') + '<hr><button class="mi col pg' + (k === 'music' ? ' cur' : '') + '" data-pg="music"><span class="pgi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 11h18M3 14h18M3 17h18"/><circle cx="9" cy="15.500" r="1.900"/><path d="M10.900 15.500V6.500l4 1.500"/></svg></span><span><b>Нотная тетрадь</b><small>нотный стан, ввод и воспроизведение</small></span></button>' + '<div class="mh" style="text-transform:none;letter-spacing:0">Границы страниц показаны пунктиром. Размер применяется и при печати / сохранении в PDF.</div>', p => {
+  openPop(anchor, '<div class="mh">Параметры страницы</div>' + items.map(([id, n, d, i]) => `<button class="mi col pg${k === id ? ' cur' : ''}" data-pg="${id}"><span class="pgi">${i}</span><span><b>${n}</b><small>${d}</small></span></button>`).join('') + '<hr><button class="mi col pg' + (k === 'music' ? ' cur' : '') + '" data-pg="music"><span class="pgi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 11h18M3 14h18M3 17h18"/><circle cx="9" cy="15.500" r="1.900"/><path d="M10.900 15.500V6.500l4 1.500"/></svg></span><span><b>Нотная тетрадь</b><small>нотный стан, ввод и воспроизведение</small></span></button>' + '<div class="mh" style="text-transform:none;letter-spacing:0">Листы показаны в реальном размере. Размер применяется и при печати / сохранении в PDF.</div>', p => {
     p.addEventListener('click', e => { const b = e.target.closest('[data-pg]'); if(!b || !cur) return; closePop(); setPage(b.dataset.pg); });
   });
 }
@@ -3456,13 +3720,13 @@ function applyPage(){
   const card = $('.ed-card'), area = $('#edArea'), pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null;
   card.dataset.pg = pg ? cur.page : '';
   if(!pg){
-    card.style.maxWidth = ''; card.style.margin = ''; area.style.padding = ''; area.style.minHeight = ''; vEd.style.maxWidth = '';
-    const l = $('#pgLines'); if(l) l.remove();
+    card.style.maxWidth = ''; card.style.width = ''; card.style.margin = ''; area.style.padding = ''; area.style.minHeight = ''; area.style.boxSizing = ''; vEd.style.maxWidth = ''; ed.style.minHeight = ''; ed.style.clipPath = '';
+    pgClear(); const l = $('#pgLines'); if(l) l.remove(); const c = $('#pgCov'); if(c) c.remove();
     pgStyle(null); return;
   }
   const w = Math.round(pg.w * MMPX);
   vEd.style.maxWidth = Math.max(980, w + 48) + 'px';
-  card.style.maxWidth = w + 'px'; card.style.margin = '0 auto';
+  card.style.maxWidth = 'none'; card.style.margin = '0 auto';
   pgStyle(pg); updatePageLines();
 }
 function pgStyle(pg){
@@ -3470,21 +3734,148 @@ function pgStyle(pg){
   if(!st){ st = document.createElement('style'); st.id = 'pgStyle'; document.head.appendChild(st); }
   st.textContent = pg ? `@page{size:${pg.w}mm ${pg.h}mm;margin:${PGM}mm}` : '';
 }
-function updatePageLines(){
-  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null, area = $('#edArea');
-  if(!pg || view !== 'ed') return;
-  const aw = area.getBoundingClientRect().width; if(!aw) return;
-  const sc = aw / pg.w, m = PGM * sc, P = (pg.h - 2 * PGM) * sc;
-  area.style.padding = m + 'px';
-  const pages = Math.max(1, Math.ceil(ed.offsetHeight / P));
-  area.style.minHeight = Math.round(pages * P + 2 * m) + 'px';
-  let l = $('#pgLines');
-  if(!l){ l = document.createElement('div'); l.id = 'pgLines'; l.className = 'pg-lines'; l.setAttribute('aria-hidden', 'true'); area.appendChild(l); }
-  let h = '';
-  for(let k = 1; k <= pages; k++) h += `<div class="pg-ln" style="top:${Math.round(m + k * P)}px"><span>${k < pages ? 'Страница ' + (k + 1) : 'Конец страницы ' + k}</span></div>`;
-  l.innerHTML = h;
+/* ---------- лист как в Word: настоящий размер, поля, промежуток между листами ---------- */
+const PG_GAP = 28;
+/* служебные отступы, которыми экранная вёрстка «переносит» блоки на следующий лист; в текст и PDF не попадают */
+function pgStrip(root){
+  root.querySelectorAll('[data-pgsp]').forEach(n => n.remove());
+  root.querySelectorAll('[data-pgp]').forEach(n => { n.style.removeProperty('padding-top'); if(!n.getAttribute('style')) n.removeAttribute('style'); n.removeAttribute('data-pgp'); n.removeAttribute('data-pgo'); });
+  return root;
 }
-if(window.ResizeObserver) new ResizeObserver(() => updatePageLines()).observe(ed);
+function pgClear(){ if(ed.querySelector('[data-pgp],[data-pgsp]')) pgStrip(ed); }
+function edHtml(){
+  if(!ed.querySelector('[data-pgp],[data-pgsp]')) return ed.innerHTML;
+  const c = ed.cloneNode(true); pgStrip(c); return c.innerHTML;
+}
+/* элементы, которые можно переносить целиком или построчно */
+function pgUnits(root, out){
+  for(const el of Array.from(root.children)){
+    const t = el.tagName;
+    if(el.hasAttribute('data-pgsp')) continue;
+    if(t === 'TABLE'){ el.querySelectorAll(':scope > thead > tr, :scope > tbody > tr, :scope > tfoot > tr, :scope > tr').forEach(tr => out.push({el: tr, kind: 'row'})); }
+    else if(t === 'UL' || t === 'OL'){ pgUnits(el, out); }
+    else if(t === 'LI'){
+      const sub = Array.from(el.children).filter(c => /^(UL|OL)$/.test(c.tagName));
+      out.push({el, kind: 'text', own: sub.length ? sub[0] : null});
+      sub.forEach(l => pgUnits(l, out));
+    }
+    else if(t === 'DIV' && !el.hasAttribute('data-pgsp') && el.children.length && !/\bimg-ui\b/.test(el.className)){ pgUnits(el, out); }
+    else if(t === 'P' && !Array.from(el.attributes).some(a => /^data-(tk|ch|fx|fw|ms|tb|lk)$/.test(a.name)) && !el.querySelector('img')) out.push({el, kind: 'text'});
+    else if(/^(H1|H2|H3|BLOCKQUOTE)$/.test(t) && !el.querySelector('img,p,ul,ol')) out.push({el, kind: 'text'});
+    else if(t === 'PRE') out.push({el, kind: 'text'});
+    else out.push({el, kind: 'block'});
+  }
+}
+/* первая строка внутри el, которая не помещается над границей limit (координаты окна) */
+function pgSplitAt(el, limit){
+  const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = []; let n;
+  while((n = tw.nextNode())) if(n.nodeValue.trim() && !(n.parentElement && n.parentElement.closest('[data-pgsp]'))) nodes.push(n);
+  if(!nodes.length) return null;
+  const r = document.createRange(), LH = parseFloat(getComputedStyle(el).lineHeight) || (parseFloat(getComputedStyle(el).fontSize) * 1.5);
+  const probe = (node, i) => { r.setStart(node, i); r.setEnd(node, i + 1); const b = r.getBoundingClientRect(); return b.height ? {over: b.top + b.height / 2 + LH / 2 > limit, top: b.top + b.height / 2 - LH / 2} : null; };
+  for(const node of nodes){
+    const len = node.nodeValue.length; let last = null;
+    for(let i = len - 1; i >= 0 && !last; i--) last = probe(node, i);
+    if(!last || !last.over) continue;
+    let lo = 0, hi = len - 1;
+    while(lo < hi){ const mid = (lo + hi) >> 1; let p = null, j = mid; while(j <= hi && !(p = probe(node, j))) j++; if(p && p.over) hi = mid; else lo = mid + 1; }
+    let p = probe(node, lo); if(!p){ for(let j = lo; j < len && !p; j++) p = probe(node, j); }
+    return {node, i: lo, top: p ? p.top : null, LH};
+  }
+  return null;
+}
+let pgBusy = false, pgTimer = 0;
+function pgSched(){ clearTimeout(pgTimer); pgTimer = setTimeout(updatePageLines, 50); }
+function updatePageLines(){
+  clearTimeout(pgTimer);
+  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null, area = $('#edArea'), card = $('.ed-card');
+  if(!pg || view !== 'ed' || pgBusy) return;
+  const cs = getComputedStyle(vEd), avail = vEd.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  if(avail <= 0) return;
+  pgBusy = true;
+  try{
+    const W0 = pg.w * MMPX, f = Math.min(1, avail / W0), Wc = Math.round(W0 * f), Hc = pg.h * MMPX * f, m = PGM * MMPX * f, S = Hc + PG_GAP, P = Hc - 2 * m;
+    card.style.width = Wc + 'px'; card.style.maxWidth = 'none';
+    area.style.boxSizing = 'border-box'; area.style.padding = m + 'px'; ed.style.minHeight = Math.max(40, P - 6) + 'px';
+    pgClear();
+    const top = () => ed.getBoundingClientRect().top;
+    const limitOf = k => k * S + Hc - m, nextTop = k => (k + 1) * S + m;
+    for(let iter = 0; iter < 5; iter++){
+      const units = []; pgUnits(ed, units);
+      const t0 = top(), rows = units.map(u => {
+        const rc = u.el.getBoundingClientRect(); let b = rc.bottom;
+        if(u.own){ b = u.own.getBoundingClientRect().top; }
+        let pp = 0; const pe = u.kind === 'row' ? u.el.querySelector(':scope > td[data-pgp], :scope > th[data-pgp]') : u.el;
+        if(pe && pe.hasAttribute('data-pgp')) pp = parseFloat(pe.getAttribute('data-pgp')) || 0;
+        return {u, t: rc.top - t0 + m + pp, b: b - t0 + m, rc, done: !!(u.el.querySelector && u.el.querySelector(':scope > [data-pgsp], :scope > * > [data-pgsp]')) || u.el.querySelector('[data-pgsp]') !== null};
+      });
+      let shift = 0, did = false;
+      for(const x of rows){
+        const u = x.u; let t = x.t + shift, b = x.b + shift;
+        if(b - t < 1 || x.done) continue;
+        const k = Math.max(0, Math.floor(t / S)), lim = limitOf(k);
+        if(b <= lim + 0.5 && t < lim) continue;                 /* помещается */
+        if(t >= nextTop(k) - 0.5 && t < limitOf(k + 1)) continue;  /* уже на следующем листе */
+        const h = b - t, d0 = nextTop(k) - t;
+        if(t >= lim){ /* начинается в нижнем поле — просто сдвигаем */
+          pgPush(u, d0, x); shift += d0; did = true; continue;
+        }
+        if(u.kind === 'text' && h > 2 * 20){
+          const sp = pgSplitAt(u.el, lim + t0 - m);
+          const LH = sp ? sp.LH : 24;
+          if(sp && sp.top !== null){
+            const lineTop = sp.top - t0 + m, before = (lineTop - t) / LH, after = (b - lineTop) / LH;
+            if(before >= 1.6 && after >= 1.6){
+              const d = nextTop(k) - lineTop;
+              pgSplit(sp, d, x); shift += d; did = true; continue;
+            }
+          }
+        }
+        if(h <= P + 1){ pgPush(u, d0, x); shift += d0; did = true; }
+      }
+      if(!did) break;
+      void ed.offsetHeight;
+    }
+    /* листы и «ластики» под перенесённым содержимым */
+    const t0 = top(), bottom = ed.getBoundingClientRect().bottom - t0 + m;
+    let pages = 1; while(limitOf(pages - 1) < bottom - 0.5 && pages < 400) pages++;
+    area.style.minHeight = Math.round(pages * Hc + (pages - 1) * PG_GAP + 2 * 0) + 'px';
+    let sh = $('#pgLines'); if(!sh){ sh = document.createElement('div'); sh.id = 'pgLines'; sh.className = 'pg-lines'; sh.setAttribute('aria-hidden', 'true'); area.insertBefore(sh, area.firstChild); }
+    let cv = $('#pgCov'); if(!cv){ cv = document.createElement('div'); cv.id = 'pgCov'; cv.className = 'pg-lines pg-cov'; cv.setAttribute('aria-hidden', 'true'); area.appendChild(cv); }
+    const ar = area.getBoundingClientRect().top; let hs = '', hc = '';
+    for(let k = 0; k < pages; k++){
+      hs += `<div class="pg-sheet" style="top:${Math.round(k * S)}px;height:${Math.round(Hc)}px"></div>`;
+      hc += `<div class="pg-num" style="top:${Math.round(k * S + Hc - m * 0.62)}px">${k + 1}</div>`;
+    }
+    ed.querySelectorAll('[data-pgp],[data-pgsp]').forEach(el => {
+      const y = el.getBoundingClientRect().top - ar, k = Math.max(0, Math.floor(y / S)), end = k * S + Hc;
+      if(end > y) hc += `<div class="pg-erase" style="top:${Math.round(y)}px;height:${Math.ceil(end - y)}px"></div>`;
+      if(end > y) hc += `<div class="pg-erase" style="top:${Math.round(end + PG_GAP)}px;height:${Math.ceil(m)}px"></div>`;
+    });
+    sh.innerHTML = hs; cv.innerHTML = hc;
+    /* перенесённое содержимое не рисуется в серых промежутках между листами */
+    const cw = Math.round(Wc), clip = []; for(let k = 0; k < pages; k++) clip.push(`M-4000 ${Math.round(k * S - m)}H${cw + 4000}V${Math.round(k * S + Hc - m)}H-4000Z`);
+    ed.style.clipPath = 'path("' + clip.join(' ') + '")';
+  } finally { pgBusy = false; }
+}
+function pgPush(u, d, x){
+  const el = u.el;
+  if(u.kind === 'row'){ el.querySelectorAll(':scope > td, :scope > th').forEach(c => pgPad(c, d)); }
+  else pgPad(el, d);
+}
+function pgPad(el, d){
+  const cur0 = parseFloat(el.getAttribute('data-pgp') || '0'), base = el.hasAttribute('data-pgo') ? parseFloat(el.getAttribute('data-pgo')) : parseFloat(getComputedStyle(el).paddingTop) || 0;
+  el.setAttribute('data-pgo', base); el.setAttribute('data-pgp', cur0 + d); el.style.setProperty('padding-top', (base + cur0 + d) + 'px');
+}
+function pgSplit(sp, d, x){
+  const tail = sp.i > 0 ? sp.node.splitText(sp.i) : sp.node, span = document.createElement('span');
+  span.setAttribute('data-pgsp', ''); span.setAttribute('contenteditable', 'false');
+  span.style.cssText = 'display:inline-block;width:100%;height:' + Math.max(1, d) + 'px;vertical-align:top;margin:0;padding:0;border:0;line-height:0;font-size:0;pointer-events:none;user-select:none';
+  tail.parentNode.insertBefore(span, tail);
+}
+if(window.ResizeObserver) new ResizeObserver(() => pgSched()).observe(ed);
+ed.addEventListener('input', pgSched);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => pgSched());
 window.addEventListener('resize', () => { if(view === 'ed') applyPage(); positionImgUi(); });
 
 /* ===== Нотная тетрадь ===== */
@@ -4280,19 +4671,24 @@ function msStandalone(W, sp){
   return {L, body: L.html.replace(/<line id="msPh"[^>]*>/, '')};
 }
 const msSvgWrap = (body, vb, w, h) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" width="' + w + '" height="' + h + '" style="color:#000" fill="currentColor"><rect x="' + vb.split(' ')[0] + '" y="' + vb.split(' ')[1] + '" width="100%" height="100%" fill="#fff"/>' + msDefs + body + '</svg>';
-function msPages(){
+function msPages(long){
   const M = msM(), W = 680, H = 1010, out = [], sp = 7.4;
+  if(long){
+    let body = '', h = 0; if(msHasNotes(M)){ const r = msStandalone(W, sp); body = r.body; h = r.L.height; }
+    const lb = msLyrBody(M, W, 13, '#000'); if(lb.h){ body += '<g transform="translate(0,' + f2(h) + ')">' + lb.html + '</g>'; h += lb.h; }
+    h = Math.ceil(h + 20); return [{svg: msSvgWrap(body, '0 0 ' + W + ' ' + h, W, h), h}];
+  }
   if(msHasNotes(M)){
     const {L, body} = msStandalone(W, sp), pages = []; let start = 0;
     L.rows.forEach((r, k) => { const bot = r.bottom + 11 * sp; if(k > 0 && bot - start > H){ pages.push([start, H]); start = r.top[0] - 6 * sp; } });
-    pages.push([start, H]); pages.forEach(([y0, h]) => out.push(msSvgWrap(body, '0 ' + f2(y0) + ' ' + W + ' ' + h, W, h)));
+    pages.push([start, H]); pages.forEach(([y0, h]) => out.push({svg: msSvgWrap(body, '0 ' + f2(y0) + ' ' + W + ' ' + h, W, h), h}));
   }
   const lb = msLyrBody(M, W, 13, '#000');
-  if(lb.rowsY.length){ const st = [0]; let c = 0; lb.rowsY.forEach(([a, b]) => { if(b - c > H && a > c){ st.push(a); c = a; } }); st.forEach(y0 => out.push(msSvgWrap(lb.html, '0 ' + f2(y0) + ' ' + W + ' ' + H, W, H))); }
+  if(lb.rowsY.length){ const st = [0]; let c = 0; lb.rowsY.forEach(([a, b]) => { if(b - c > H && a > c){ st.push(a); c = a; } }); st.forEach(y0 => out.push({svg: msSvgWrap(lb.html, '0 ' + f2(y0) + ' ' + W + ' ' + H, W, H), h: H})); }
   return out;
 }
 const msSvgPng = (svg, w, h, sc) => new Promise((ok, no) => { const u = URL.createObjectURL(new Blob([svg], {type: 'image/svg+xml'})), im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = Math.round(w * sc); c.height = Math.round(h * sc); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); c.toBlob(b => b ? ok(b) : no(new Error('png')), 'image/png'); }; im.onerror = () => { URL.revokeObjectURL(u); no(new Error('img')); }; im.src = u; });
-async function msExport(kind){
+async function msExport(kind, mode){
   const M = msM(); if(!M || !msHas(M)){ toast('Сначала запишите ноты'); return; }
   try{
     if(kind === 'midi' && !msHasNotes(M)){ toast('Для MIDI нужны ноты на нотоносце'); return; }
@@ -4300,11 +4696,14 @@ async function msExport(kind){
     if(kind === 'midi'){ await yngSave(new Blob([msMidiFile(M)], {type: 'audio/midi'}), msName() + '.mid'); }
     else if(kind === 'png'){ toast('Готовим PNG…'); let body = '', w = 1100, h = 0; if(msHasNotes(M)){ const r = msStandalone(1100, 10); body = r.body; w = r.L.width; h = r.L.height; } const lb = msLyrBody(M, w, 20, '#000'); if(lb.h){ body += '<g transform="translate(0,' + f2(h) + ')">' + lb.html + '</g>'; h += lb.h; } const svg = msSvgWrap(body, '0 0 ' + f2(w) + ' ' + f2(h), f2(w), f2(h)); const b = await msSvgPng(svg, w, h, 2); await yngSave(b, msName() + '.png'); }
     else if(kind === 'pdf'){
-      const pages = msPages();
-      if(typeof TG !== 'undefined' && TG){ toast('Создаём PDF…'); const box = document.createElement('div'); for(const s of pages){ const b = await msSvgPng(s, 680, 1010, 2), url = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); const im = document.createElement('img'); im.src = url; im.style.cssText = 'display:block;width:100%;height:auto'; box.appendChild(im); }
-        const blob = await pdfBuild(box, 210, 297, 15); await yngSave(blob, msName() + '.pdf'); return; }
-      const root = msEl('div'); root.id = 'msPr'; root.innerHTML = pages.map(s => '<div class="ms-pg">' + s + '</div>').join('');
-      const st = msEl('style'); st.id = 'msPrSt'; st.textContent = '@page{size:210mm 297mm;margin:0}@media print{body>*:not(#msPr):not(#msPrSt){display:none!important}#msPr{display:block!important}.ms-pg{width:210mm;height:297mm;padding:15mm;box-sizing:border-box;page-break-after:always;overflow:hidden}.ms-pg svg{width:180mm;height:auto;display:block}}@media screen{#msPr{display:none}}';
+      if(mode === undefined){ mode = await pdfFormatChoice(); if(!mode) return; }
+      let long = mode === 'long', pages = msPages(long);
+      if(long && pages[0].h * 180 / 680 + 30 > PDF_LONG_MAX_MM){ toast('Слишком длинная партитура для одного листа — разбиваем по листам'); long = false; pages = msPages(false); }
+      if(typeof TG !== 'undefined' && TG){ toast('Создаём PDF…'); const box = document.createElement('div'); for(const p of pages){ const b = await msSvgPng(p.svg, 680, p.h, Math.min(2, 14000 / p.h)), url = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); const im = document.createElement('img'); im.src = url; im.style.cssText = 'display:block;width:100%;height:auto'; box.appendChild(im); }
+        const blob = await pdfBuild(box, 210, 297, 15, long ? {long: true} : undefined); await yngSave(blob, msName() + '.pdf'); return; }
+      const hmm = long ? +(pages[0].h * 180 / 680 + 30 + 2).toFixed(2) : 297;
+      const root = msEl('div'); root.id = 'msPr'; root.innerHTML = pages.map(p => '<div class="ms-pg"' + (long ? ' style="height:' + hmm + 'mm"' : '') + '>' + p.svg + '</div>').join('');
+      const st = msEl('style'); st.id = 'msPrSt'; st.textContent = '@page{size:210mm ' + hmm + 'mm;margin:0}@media print{body>*:not(#msPr):not(#msPrSt){display:none!important}#msPr{display:block!important}.ms-pg{width:210mm;height:297mm;padding:15mm;box-sizing:border-box;page-break-after:always;overflow:hidden}.ms-pg:last-child{page-break-after:auto}.ms-pg svg{width:180mm;height:auto;display:block}}@media screen{#msPr{display:none}}';
       document.head.appendChild(st); document.body.appendChild(root); const t = document.title; document.title = msName();
       const back = () => { root.remove(); st.remove(); document.title = t; window.removeEventListener('afterprint', back); setDocTitle(); };
       window.addEventListener('afterprint', back); try{ window.print(); }catch(e){ toast('Печать недоступна в этом окне'); back(); }
@@ -4364,7 +4763,7 @@ function msEnter(){
   cur.music = cur.music ? msFix(cur.music) : msDef();
   if(MS.rid !== cur.id){ if(MS.play) msStopPlay(false); MS.rid = cur.id; MS.hist = []; MS.redo = []; MS.cur = {st: 0, m: 0, i: 0}; MS.sel = null; MS.voice = 0; MS.resume = null; MS.ghost = MS_BASE[cur.music.st[0].clef] + 4; }
   const card = document.querySelector('.ed-card'), area = document.getElementById('edArea');
-  card.dataset.pg = ''; card.style.maxWidth = ''; card.style.margin = ''; area.style.padding = ''; area.style.minHeight = ''; vEd.style.maxWidth = ''; const l = document.getElementById('pgLines'); if(l) l.remove(); pgStyle(null);
+  card.dataset.pg = ''; card.style.maxWidth = ''; card.style.width = ''; card.style.margin = ''; pgClear(); const cv0 = document.getElementById('pgCov'); if(cv0) cv0.remove(); ed.style.minHeight = ''; ed.style.clipPath = ''; area.style.padding = ''; area.style.minHeight = ''; vEd.style.maxWidth = ''; const l = document.getElementById('pgLines'); if(l) l.remove(); pgStyle(null);
   MS.on = true; msBuildTop(); msVis(); msInpSync(); msRender();
 }
 function msLeave(){ if(!MS.on) return; MS.on = false; if(MS.play) msStopPlay(false); msVis(); }
@@ -4452,30 +4851,71 @@ ed.addEventListener('click', e => { const p = e.target.closest && e.target.close
 
 
 /* печать без колонтитулов браузера: @page{margin:0}, а поля делаем разделителями thead/tfoot (повторяются на каждой странице) */
-function pdfPrepare(){
-  const card = $('.ed-card'); if(!card) return () => {};
-  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null, W = pg ? pg.w : 210, H = pg ? pg.h : 297, m = PGM;
-  const clone = card.cloneNode(true);
+/* ===== PDF: по листам или одной длинной страницей ===== */
+const PDF_LONG_MAX_MM = 4900;   /* предел размера страницы PDF — около 200 дюймов */
+async function pdfFormatChoice(){
+  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : PAGES.a4, nm = cur && cur.page === 'music' ? 'A4' : ((pg && pg.n) || 'A4');
+  return await dialog(`<h3>Скачать PDF</h3><p class="sub">Как разложить документ? Внешний вид и качество в обоих вариантах одинаковые.</p>
+    <div class="tpl-grid"><button type="button" class="tpl" data-v="pages" data-focus><span class="fico">${ico('copy')}</span><span><b>По листам ${esc(nm)}</b><small>Страницы с разрывами — как сейчас</small></span></button>
+    <button type="button" class="tpl" data-v="long"><span class="fico">${ico('file')}</span><span><b>Одним длинным листом</b><small>Без разрывов на страницы: весь документ на одном листе</small></span></button></div>
+    <div class="acts"><button type="button" class="btn small neutral" data-v="">Отмена</button></div>`, 'wide');
+}
+async function pdfFormatDlg(){ const v = await pdfFormatChoice(); if(v) return printDoc(v); }
+/* копия документа для печати: без служебных элементов, заголовок отдельным блоком */
+function prParts(){
+  const card = $('.ed-card'); if(!card) return null;
+  const clone = card.cloneNode(true); pgStrip(clone);
+  clone.style.width = clone.style.maxWidth = ''; clone.querySelectorAll('.ed-area,.ed').forEach(n => { n.style.minHeight = ''; n.style.padding = ''; });
   clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
   clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable'));
   clone.querySelectorAll('.pg-lines').forEach(n => n.remove());
   clone.querySelectorAll('input.ed-title,textarea.ed-title').forEach(n => { const d = document.createElement('div'); d.className = n.className; d.textContent = titleEl.value || ''; if(!titleEl.value) d.style.display = 'none'; n.replaceWith(d); });
   clone.querySelectorAll('.is-empty').forEach(n => n.classList.remove('is-empty'));
+  let head = null; if(titleEl.value.trim()){ head = document.createElement('div'); head.textContent = titleEl.value; head.style.cssText = 'font:700 30px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;color:#000;margin:0 0 14px'; }
+  return {clone, head};
+}
+/* правила @media print, которые влияют на вёрстку текста, — для точного измерения высоты */
+function prScopedCss(scope){
+  let out = ''; const keep = /^(\.(nb|ed|ed-card|ed-area|ed-title|ed-bar|ed-meta|ed-acts|img-ui|pg-lines|tbe-open|mse-open|tbl-guide)\b|p\.(ch|mse|tk|cap|fx|fw)\b)/;
+  for(const sh of document.styleSheets){ let rs; try{ rs = sh.cssRules; }catch(e){ continue; }
+    for(const r of rs){ if(r.type !== CSSRule.MEDIA_RULE || !/\bprint\b/.test(r.media.mediaText)) continue;
+      for(const q of r.cssRules){ if(q.type !== 1) continue; const sel = q.selectorText.split(',').map(x => x.trim()).filter(x => keep.test(x)); if(sel.length) out += sel.map(x => scope + ' ' + x).join(',') + '{' + q.style.cssText + '}\n'; } } }
+  return out;
+}
+/* высота страницы (мм) для «одного длинного листа»: измеряем документ в печатной вёрстке */
+async function prLongH(){
+  const parts = prParts(); if(!parts) return 0;
+  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null, W = pg ? pg.w : 210, m = PGM;
+  const st = document.createElement('style'), box = document.createElement('div'); st.textContent = prScopedCss('#prMeas');
+  box.id = 'prMeas'; box.style.cssText = 'position:fixed;left:-100000px;top:0;width:' + (W - 2 * m) + 'mm;box-sizing:border-box;visibility:hidden;background:#fff';
+  if(parts.head) box.appendChild(parts.head); box.appendChild(parts.clone); document.head.appendChild(st); document.body.appendChild(box);
+  try{
+    await Promise.all(Array.from(box.querySelectorAll('img')).map(im => im.decode ? im.decode().catch(() => {}) : null));
+    await new Promise(r => requestAnimationFrame(() => r())); await new Promise(r => setTimeout(r, 80));
+    const mm = box.getBoundingClientRect().height / MMPX;
+    return mm + 2 * m + 4 + mm * 0.004;
+  } finally { box.remove(); st.remove(); }
+}
+function pdfPrepare(Hov){
+  const parts = prParts(); if(!parts) return () => {};
+  const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : null, W = pg ? pg.w : 210, H = Hov ? Math.min(PDF_LONG_MAX_MM, Hov) : (pg ? pg.h : 297), m = PGM;
   const sp = '<div style="height:' + m + 'mm"></div>', root = document.createElement('div'); root.id = 'prRoot';
   root.innerHTML = '<table class="pr-t"><thead><tr><td>' + sp + '</td></tr></thead><tbody><tr><td class="pr-b"></td></tr></tbody><tfoot><tr><td>' + sp + '</td></tr></tfoot></table>';
-  if(titleEl.value.trim()){ const h = document.createElement('div'); h.textContent = titleEl.value; h.style.cssText = 'font:700 30px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;color:#000;margin:0 0 14px'; root.querySelector('.pr-b').appendChild(h); }
-  root.querySelector('.pr-b').appendChild(clone);
+  if(parts.head) root.querySelector('.pr-b').appendChild(parts.head);
+  root.querySelector('.pr-b').appendChild(parts.clone);
   const st = document.createElement('style'); st.id = 'prSt';
-  st.textContent = '@page{size:' + W + 'mm ' + H + 'mm;margin:0}@media print{body>*:not(#prRoot):not(#prSt){display:none!important}#prRoot{display:block!important}.pr-t{width:100%;border-collapse:collapse}.pr-t td{padding:0}.pr-b{padding:0 ' + m + 'mm!important}}@media screen{#prRoot{display:none}}';
+  st.textContent = '@page{size:' + W + 'mm ' + (+H.toFixed(2)) + 'mm;margin:0}@media print{body>*:not(#prRoot):not(#prSt){display:none!important}#prRoot{display:block!important}.pr-t{width:100%;border-collapse:collapse}.pr-t td{padding:0}.pr-b{padding:0 ' + m + 'mm!important}}@media screen{#prRoot{display:none}}';
   document.head.appendChild(st); document.body.appendChild(root);
   return () => { root.remove(); st.remove(); };
 }
-async function printDoc(){
+async function printDoc(mode){
   await flush(); deselImg();
-  if(cur && cur.page === 'music') return msExport('pdf');
-  if(TG) return docPdf();
+  if(cur && cur.page === 'music') return msExport('pdf', mode === 'long' ? 'long' : 'pages');
+  if(TG) return docPdf(mode === 'long');
+  let Hov = 0;
+  if(mode === 'long'){ try{ Hov = await prLongH(); if(Hov > PDF_LONG_MAX_MM) toast('Документ длиннее 4,9 м — он будет разбит на несколько длинных листов'); }catch(err){ Hov = 0; toast('Не удалось измерить документ — сохраняем по листам'); } }
   const t = document.title; document.title = (cur && cur.title) || 'Без названия';
-  const undo = pdfPrepare();
+  const undo = pdfPrepare(Hov);
   const back = () => { undo(); document.title = t; window.removeEventListener('afterprint', back); setDocTitle(); };
   window.addEventListener('afterprint', back);
   try{ window.print(); }catch(err){ toast('Печать недоступна в этом окне'); back(); }
@@ -8641,10 +9081,12 @@ const SV = {
   alL:'<path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>', alC:'<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>', alR:'<path d="M4 6h16M10 10h10M4 14h16M10 18h10"/>', alJ:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>',
   tbl:'<rect x="3" y="8" width="13.500" height="12" rx="2"/><path d="M3 13h13.500M9.500 13v7"/><path d="M7 4.500h11a2.500 2.500 0 0 1 2.500 2.500v9"/>',
   page:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
-  eraser: IC.eraser
+  eraser: IC.eraser,
+  ai:'<path d="M10.5 3.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6L3 11l5.600-1.9zM18.500 15l.9 2.600 2.600.9-2.600.9-.9 2.600-.9-2.600-2.600-.9 2.600-.9z"/>'
 };
 const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${SV[k]}</svg>`;
 const TOOLS = [
+  ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],'|',
   ['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
   '|',['h1','H1','Заголовок 1'],['h2','H2','Заголовок 2'],['h3','H3','Заголовок 3'],
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
@@ -8655,9 +9097,9 @@ const TOOLS = [
   '|',['page',svg('page'),'Параметры страницы: A5, A4, A3'],['view','Aa','Вид: шрифт, размер, ширина']
 ];
 const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['cell-merge','Объединить','Объединить выделенные ячейки (выделение: протяните мышью или Shift+клик)'],['cell-split','Разъединить','Разъединить объединённую ячейку'],['cell-range','Диапазон','Выделять ячейки касанием: нажмите здесь, затем на конечную ячейку'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
-const BUB = ['bold','italic','underline','strike','mark','|','h2','quote','code','link'];
+const BUB = ['ai','|','bold','italic','underline','strike','mark','|','h2','quote','code','link'];
 const toolMap = Object.fromEntries(TOOLS.filter(t => t !== '|').map(t => [t[0], t]));
-const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
+const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' : t[0] === 'ai' ? ' txt ai' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
 $('#edTools').innerHTML = TOOLS.map(btn).join('');
 $('#edTbl').innerHTML = TBL.map(t => `<button type="button" class="tb txt" data-c="${t[0]}" title="${t[2]}">${t[1]}</button>`).join('');
 bubble.innerHTML = BUB.map(k => k === '|' ? btn('|') : btn(toolMap[k])).join('');
@@ -8810,6 +9252,7 @@ function run(c, b){
     case 'alignC': return alignBlocks('center');
     case 'alignR': return alignBlocks('right');
     case 'alignJ': return alignBlocks('justify');
+    case 'ai': return openAI();
     case 'page': return popPage(b);
     case 'view': return popView(b);
     case 'table': {
@@ -8871,7 +9314,7 @@ window.addEventListener('scroll', () => { closePop(); bubble.classList.contains(
 /* ================= drafts: state, save, load ================= */
 const TPL = [
   {k:'blank', t:'Пустой черновик', d:'Чистый лист — просто пишите', i:'blank', title:() => '', html:() => '<p><br></p>'},
-  {k:'todo', t:'Список дел', d:'Задачи на день с отметками ☐', i:'todo', title:() => 'Список дел — ' + todayRu(),
+  {k:'todo', t:'Список дел', d:'Задачи на день с отметками', i:'todo', title:() => 'Список дел — ' + todayRu(),
     html:() => '<h2>Сегодня</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>На неделе</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><h2>Когда-нибудь</h2><p>☐&nbsp;</p>'},
   {k:'meet', t:'Заметки встречи', d:'Повестка, решения и задачи', i:'users', title:() => 'Встреча — ' + todayRu(),
     html:() => '<h2>Повестка</h2><ul><li><br></li></ul><h2>Участники</h2><ul><li><br></li></ul><h2>Решения</h2><ol><li><br></li></ol><h2>Задачи</h2><p>☐&nbsp;</p><p>☐&nbsp;</p><blockquote><p>Следующая встреча: </p></blockquote>'},
@@ -8879,7 +9322,7 @@ const TPL = [
     html:() => '<h1>Тема</h1><p>Коротко: о чём это и зачем.</p><h2>Главное</h2><ul><li><br></li></ul><h2>Термины</h2><ul><li><br></li></ul><h2>Вопросы</h2><ul><li><br></li></ul><h2>Выводы</h2><p><br></p>'},
   {k:'cmp', t:'Сравнение', d:'Таблица «вариант — плюсы — минусы»', i:'table', title:() => 'Сравнение вариантов',
     html:() => '<p>Что сравниваем и зачем:</p><table><tbody><tr><th>Вариант</th><th>Плюсы</th><th>Минусы</th></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table><h3>Решение</h3><p><br></p>'},
-  {k:'music', t:'Нотная тетрадь', d:'нотный стан, ввод и воспроизведение', i:'music', title:() => 'Нотная тетрадь', html:() => '<p><br></p>', page:'music'}
+  {k:'music', t:'Нотная тетрадь', d:'Нотный стан, ввод и воспроизведение', i:'music', title:() => 'Нотная тетрадь', html:() => '<p><br></p>', page:'music'}
 ];
 const blank = () => ({id: uid(), title: '', html: '<p><br></p>', created: Date.now(), updated: Date.now(), pinned: false, hist: [], transient: true});
 const newest = () => Object.values(DR).filter(r => !isDeck(r)).sort((a, b) => b.updated - a.updated)[0] || null;
@@ -8906,7 +9349,7 @@ async function commit(){
   clearTimeout(timer); timer = null;
   if(!dirty || !cur) return;
   dirty = false;
-  const rec = cur, html = ed.innerHTML, title = titleEl.value.trim().slice(0, 160), empty = isEmptyEl(ed) && !title && !(rec.music && msHas(rec.music));
+  const rec = cur, html = edHtml(), title = titleEl.value.trim().slice(0, 160), empty = isEmptyEl(ed) && !title && !(rec.music && msHas(rec.music));
   try{
     if(empty){
       if(DR[rec.id]){ delete DR[rec.id]; await dbDel(rec.id); }
@@ -9073,7 +9516,7 @@ async function clearText(){
   if(!cur || (isEmptyEl(ed) && !titleEl.value.trim())) return;
   const v = await modal({title: 'Очистить черновик?', text: 'Весь текст этого черновика будет удалён. Название останется.', buttons: [{t:'Отмена', v:'no', cls:'neutral'}, {t:'Очистить текст', v:'yes', cls:'danger'}]});
   if(v !== 'yes') return;
-  const id = cur.id, backup = ed.innerHTML;
+  const id = cur.id, backup = edHtml();
   ed.innerHTML = '<p><br></p>'; dirty = true; ed.classList.add('is-empty'); counter(); await commit();
   toast('Текст очищен', 'Отменить', () => { if(cur && cur.id === id){ ed.innerHTML = backup; dirty = true; ed.classList.toggle('is-empty', isEmptyEl(ed)); counter(); commit(); } });
 }
@@ -9083,7 +9526,7 @@ async function openHistory(){
   if(!cur) return;
   await flush();
   const rec = cur;
-  const vers = [{t: rec.transient ? Date.now() : rec.updated, html: ed.innerHTML, now: true}].concat((rec.hist || []).slice().reverse());
+  const vers = [{t: rec.transient ? Date.now() : rec.updated, html: edHtml(), now: true}].concat((rec.hist || []).slice().reverse());
   if(vers.length < 2){ toast('Пока нет сохранённых версий — они появляются по мере редактирования'); return; }
   const wc = h => { const t = plain(h); return t ? t.split(/\s+/).length : 0; };
   const v = await dialog(`<h3>История версий</h3><p class="sub">Версии сохраняются автоматически во время работы (до 10 последних).</p>
@@ -9098,7 +9541,7 @@ async function openHistory(){
   if(!v || !v.startsWith('restore:')) return;
   const pick = vers[+v.split(':')[1]];
   if(!pick || pick.now){ return; }
-  if(!isEmptyEl(ed) && rec.html.length < 600000){ rec.hist = (rec.hist || []).concat({t: Date.now(), html: ed.innerHTML}).slice(-10); }
+  if(!isEmptyEl(ed) && rec.html.length < 600000){ rec.hist = (rec.hist || []).concat({t: Date.now(), html: edHtml()}).slice(-10); }
   ed.innerHTML = sanitize(pick.html); ed.classList.toggle('is-empty', isEmptyEl(ed)); counter(); dirty = true; await commit();
   toast('Версия восстановлена');
 }
@@ -9228,7 +9671,7 @@ $('#btnMenu').addEventListener('click', e => {
     <button class="mi" data-a="dl-json">${ico('dl')}Резервная копия<span class="k">.json</span></button><hr>
     <button class="mi" data-a="copy-md">${ico('copy')}Копировать как Markdown</button>
     <button class="mi" data-a="copy-txt">${ico('copy')}Копировать как текст</button>
-    <button class="mi" data-a="pdf">${ico('dl')}Скачать PDF (по параметрам страницы)</button>
+    <button class="mi" data-a="pdf">${ico('dl')}Скачать PDF…</button>
     <button class="mi" data-a="print">${ico('print')}Печать</button><hr>
     <button class="mi" data-a="task">${ico('tasks')}Задача в тексте…</button>
     <button class="mi" data-a="mv">${ico('move')}В папку…</button>
@@ -9246,8 +9689,9 @@ $('#btnMenu').addEventListener('click', e => {
       if(a === 'files') return;
       if(a.startsWith('dl-')) return exportOne(cur, a.slice(3));
       if(a === 'copy-md'){ await flush(); return copyText(mdOne(cur), 'Markdown скопирован'); }
-      if(a === 'copy-txt'){ await flush(); return copyText(htmlToText(ed.innerHTML), 'Текст скопирован'); }
-      if(a === 'print' || a === 'pdf') return printDoc();
+      if(a === 'copy-txt'){ await flush(); return copyText(htmlToText(edHtml()), 'Текст скопирован'); }
+      if(a === 'print') return printDoc();
+      if(a === 'pdf') return pdfFormatDlg();
       if(a === 'hist') return openHistory();
       if(a === 'task') return addInlineTask();
       if(a === 'mv'){ await flush(); if(cur.transient){ toast('Сначала напишите что-нибудь — пустой черновик не сохраняется'); return; } return pickFolder(cur); }
@@ -10374,7 +10818,7 @@ ed.addEventListener('click', e => {
 });
 /* --- отмена операций над таблицей в тексте (удаление строк/столбцов идёт мимо истории браузера) --- */
 const ED_OPS = [], ED_REDO = [];
-const edNorm = () => sanitize(ed.innerHTML);
+const edNorm = () => sanitize(edHtml());
 function edRecordOp(fn){
   const before = edNorm(), c = up(/^T[DH]$/), doc = cur && cur.id;
   const pos = c ? {ti: [...ed.querySelectorAll('table')].indexOf(c.closest('table')), r: c.parentNode.rowIndex, c: c.cellIndex} : null;
@@ -10443,7 +10887,24 @@ function pdfPages(pages, pw, ph){
   for(let i = 1; i < total; i++) add(String(offs[i]).padStart(10, '0') + ' 00000 n \n');
   add('trailer\n<</Size ' + total + '/Root 1 0 R>>\nstartxref\n' + xr + '\n%%EOF'); return new Blob(parts, {type: 'application/pdf'});
 }
-async function pdfBuild(el, Wmm, Hmm, mmm){
+/* PDF «одним листом»: страница = вся высота документа, картинка режется на полосы с запасом в 1 px, чтобы не было швов */
+function pdfStripsDoc(pages){
+  const enc = new TextEncoder(), parts = [], offs = []; let len = 0, next = 3;
+  const add = x => { const b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; };
+  const obj = (n, body) => { offs[n] = len; add(n + ' 0 obj\n' + body + '\nendobj\n'); };
+  const ids = pages.map(p => { const pid = next++, cid = next++, iids = p.strips.map(() => next++); return {pid, cid, iids}; }), total = next, K = 0.75;
+  add('%PDF-1.4\n'); obj(1, '<</Type/Catalog/Pages 2 0 R>>'); obj(2, '<</Type/Pages/Kids[' + ids.map(i => i.pid + ' 0 R').join(' ') + ']/Count ' + pages.length + '>>');
+  pages.forEach((p, i) => {
+    const {pid, cid, iids} = ids[i], res = iids.map((id, j) => '/Im' + j + ' ' + id + ' 0 R').join(' ');
+    const cnt = p.strips.map((s, j) => 'q ' + (s.wc * K).toFixed(3) + ' 0 0 ' + (s.hc * K).toFixed(3) + ' ' + (s.x * K).toFixed(3) + ' ' + ((p.h - s.y - s.hc) * K).toFixed(3) + ' cm /Im' + j + ' Do Q').join('\n');
+    obj(pid, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + (p.w * K).toFixed(2) + ' ' + (p.h * K).toFixed(2) + ']/Resources<</XObject<<' + res + '>>>>/Contents ' + cid + ' 0 R>>');
+    obj(cid, '<</Length ' + cnt.length + '>>\nstream\n' + cnt + '\nendstream');
+    p.strips.forEach((s, j) => { offs[iids[j]] = len; add(iids[j] + ' 0 obj\n<</Type/XObject/Subtype/Image/Width ' + s.w + '/Height ' + s.h + '/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ' + s.jpg.length + '>>\nstream\n'); add(s.jpg); add('\nendstream\nendobj\n'); });
+  });
+  const xr = len; add('xref\n0 ' + total + '\n0000000000 65535 f \n'); for(let i = 1; i < total; i++) add(String(offs[i]).padStart(10, '0') + ' 00000 n \n');
+  add('trailer\n<</Size ' + total + '/Root 1 0 R>>\nstartxref\n' + xr + '\n%%EOF'); return new Blob(parts, {type: 'application/pdf'});
+}
+async function pdfBuild(el, Wmm, Hmm, mmm, opt){
   const k = 96 / 25.4, PW = Wmm * k, PH = Hmm * k, m = mmm * k, cw = Math.round(PW - 2 * m), chh = Math.floor(PH - 2 * m), sc = 2;
   const wrap = document.createElement('div'); wrap.style.cssText = 'position:fixed;left:-100000px;top:0;width:' + cw + 'px;background:#fff;color:#000'; wrap.appendChild(el); document.body.appendChild(wrap);
   await new Promise(r => requestAnimationFrame(() => r())); await new Promise(r => setTimeout(r, 80));
@@ -10451,10 +10912,25 @@ async function pdfBuild(el, Wmm, Hmm, mmm){
     const total = Math.ceil(wrap.scrollHeight), top0 = wrap.getBoundingClientRect().top, cuts = new Set();
     wrap.querySelectorAll('.nb > *, tr, :scope > *').forEach(n => cuts.add(Math.round(n.getBoundingClientRect().bottom - top0)));
     const ys = [...cuts].filter(y => y > 0).sort((a, b) => a - b), spans = []; let y0 = 0;
-    while(y0 < total - 1){ let y1 = y0 + chh; if(y1 >= total) y1 = total; else { const fit = ys.filter(y => y > y0 + chh * .35 && y <= y1); if(fit.length) y1 = fit[fit.length - 1]; } spans.push([y0, y1]); y0 = y1; }
     const cs = getComputedStyle(document.body), ff = cs.fontFamily.replace(/"/g, "'"), inner = xhtmlOf(el), pages = [];
+    const frame = (a, hh) => '<div style="position:relative;top:' + (-a) + 'px;width:' + cw + 'px;color:#000;font-family:' + ff + ';font-size:' + cs.fontSize + ';line-height:' + cs.lineHeight + '">' + inner + '</div>';
+    if(opt && opt.long){
+      /* одна страница по высоте документа (если длиннее ~4,9 м — несколько длинных страниц) */
+      const maxC = Math.floor(PDF_LONG_MAX_MM * k) - 2 * m, STRIP = 2400, pgs = []; let a0 = 0;
+      while(a0 < total - 1){ let b0 = a0 + maxC; if(b0 >= total) b0 = total; else { const fit = ys.filter(y => y > a0 + maxC * .5 && y <= b0); if(fit.length) b0 = fit[fit.length - 1]; } pgs.push([a0, b0]); a0 = b0; }
+      for(const [a, b] of pgs){ const strips = [];
+        for(let sa = a; sa < b; sa += STRIP){
+          const sb = Math.min(b, sa + STRIP), hh = sb - sa + (sb < b ? 1 : 0), img = await svgLoad(cw * sc, hh * sc, cw, hh, 'light', frame(sa, hh));
+          const cv = document.createElement('canvas'); cv.width = Math.round(cw * sc); cv.height = Math.round(hh * sc); const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+          strips.push({jpg: pdfBytes(cv.toDataURL('image/jpeg', .9)), w: cv.width, h: cv.height, x: m, y: m + (sa - a), wc: cw, hc: hh});
+        }
+        pages.push({w: PW, h: (b - a) + 2 * m, strips});
+      }
+      return pdfStripsDoc(pages);
+    }
+    while(y0 < total - 1){ let y1 = y0 + chh; if(y1 >= total) y1 = total; else { const fit = ys.filter(y => y > y0 + chh * .35 && y <= y1); if(fit.length) y1 = fit[fit.length - 1]; } spans.push([y0, y1]); y0 = y1; }
     for(const [a, b] of spans){
-      const hh = b - a, img = await svgLoad(cw * sc, hh * sc, cw, hh, 'light', '<div style="position:relative;top:' + (-a) + 'px;width:' + cw + 'px;color:#000;font-family:' + ff + ';font-size:' + cs.fontSize + ';line-height:' + cs.lineHeight + '">' + inner + '</div>');
+      const hh = b - a, img = await svgLoad(cw * sc, hh * sc, cw, hh, 'light', frame(a, hh));
       const cv = document.createElement('canvas'); cv.width = Math.round(PW * sc); cv.height = Math.round(PH * sc); const cx = cv.getContext('2d');
       cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, m * sc, m * sc, cw * sc, hh * sc);
       pages.push({jpg: pdfBytes(cv.toDataURL('image/jpeg', .9)), w: cv.width, h: cv.height});
@@ -10462,17 +10938,17 @@ async function pdfBuild(el, Wmm, Hmm, mmm){
     return pdfPages(pages, Wmm / 25.4 * 72, Hmm / 25.4 * 72);
   } finally { wrap.remove(); }
 }
-async function docPdf(){
+async function docPdf(long){
   toast('Создаём PDF…');
   try{
-    const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : PAGES.a4, clone = ed.cloneNode(true);
+    const pg = cur && PAGES[cur.page] ? PAGES[cur.page] : PAGES.a4, clone = pgStrip(ed.cloneNode(true));
     ['id', 'contenteditable', 'data-ph', 'role', 'aria-label', 'spellcheck'].forEach(a => clone.removeAttribute(a)); clone.classList.remove('is-empty');
     clone.setAttribute('style', 'min-height:0;padding:0;margin:0;outline:none;border:0;box-shadow:none;background:transparent');
     clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id')); clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable')); clone.querySelectorAll('.pg-lines').forEach(n => n.remove());
     const box = document.createElement('div'), title = (cur && cur.title) || '';
     if(title){ const h = document.createElement('div'); h.setAttribute('style', 'font:700 28px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;margin:0 0 14px;color:#000'); h.textContent = title; box.appendChild(h); }
     box.appendChild(clone);
-    const blob = await pdfBuild(box, pg.w, pg.h, typeof PGM === 'number' ? PGM : 15);
+    const blob = await pdfBuild(box, pg.w, pg.h, typeof PGM === 'number' ? PGM : 15, long ? {long: true} : undefined);
     await yngSave(blob, (title || 'Документ').replace(/[\\/:*?"<>|]+/g, '_') + '.pdf');
   }catch(e){ toast('Не удалось создать PDF на этом устройстве'); }
 }
