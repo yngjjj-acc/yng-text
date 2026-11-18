@@ -710,6 +710,27 @@ footer a{color:var(--text-2)}
 @media(prefers-reduced-motion:reduce){.vc-win,.vc-new,.vc-cur{animation:none}}
 ::highlight(gc-err){background-color:rgba(255,69,58,.16);text-decoration:underline wavy #ff453a;text-decoration-thickness:1px}
 ::highlight(gc-cur){background-color:rgba(255,159,10,.4)}
+::highlight(gc-ai){background-color:rgba(10,132,255,.14);text-decoration:underline wavy #0a84ff;text-decoration-thickness:1px}
+.gc-h .gc-x{margin-left:0}
+.gc-h .gc-n{margin-right:auto}
+.gc-ban{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:var(--accent-soft);color:var(--text-2);font-size:13px;line-height:1.4}
+.gc-ban.err{background:rgba(255,69,58,.1);color:#d70015}
+.gc-ban i{width:16px;height:16px;flex:none;border-radius:50%;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
+.gc-ban span{flex:1;min-width:0}
+.gc-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:6px;vertical-align:1px;background:rgba(10,132,255,.14);color:#0a84ff}
+.gc-tag.sp{background:rgba(255,69,58,.12);color:#d70015}
+.gc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.gc-chip{border:1px solid var(--line-2);background:var(--bg-elev);color:var(--text);border-radius:99px;padding:4px 11px;font-size:13.5px;cursor:pointer}
+.gc-chip:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.gc-a .btn{padding-left:10px;padding-right:10px}
+.gc-f{flex-wrap:wrap}
+.sp-add{display:flex;gap:8px;margin:0 0 12px}
+.sp-add input{flex:1;min-width:0;box-sizing:border-box;padding:9px 12px;border:1px solid var(--line-2);border-radius:10px;background:transparent;color:inherit;font:inherit;font-size:15px}
+.sp-list{max-height:40vh;overflow:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}
+.sp-w{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;font-size:14.5px}
+.sp-w+.sp-w{border-top:1px solid var(--line)}
+.sp-w span{flex:1;min-width:0;overflow-wrap:anywhere}
+.sp-w .gc-x{margin-left:0}
 .gc-p{position:fixed;right:16px;bottom:16px;z-index:300;width:min(350px,calc(100vw - 24px));max-height:min(62vh,540px);display:flex;flex-direction:column;background:var(--bg-elev);border:1px solid var(--line-2);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.3);overflow:hidden}
 .gc-h{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
 .gc-h b{font-size:15px}
@@ -9620,7 +9641,7 @@ const SV = {
 };
 const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${SV[k]}</svg>`;
 const TOOLS = [
-  ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],['spell',svg('spell'),'Проверка орфографии и грамматики'],['mic',svg('mic'),'Голосовой ввод: встроенный или Gemini (русский и английский)'],'|',
+  ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],['spell',svg('spell'),'Проверка орфографии (словарь) и грамматики (ИИ)'],['mic',svg('mic'),'Голосовой ввод: встроенный или Gemini (русский и английский)'],'|',
   ['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
   '|',['h1','H1','Заголовок 1'],['h2','H2','Заголовок 2'],['h3','H3','Заголовок 3'],
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
@@ -10039,7 +10060,7 @@ ed.addEventListener('keydown', e => { if(dashUndo && !['Backspace', 'Unidentifie
 const VC_SYS = 'Ты — система диктовки. Дословно расшифруй приложенную аудиозапись. Расставь знаки препинания, заглавные буквы и абзацы по правилам языка речи (русский или английский). Произнесённые команды превращай в знаки: «точка», «запятая», «вопросительный знак», «восклицательный знак», «двоеточие», «точка с запятой», «тире», «многоточие», «открыть/закрыть скобку», «новая строка», «новый абзац» и английские period, comma, question mark, exclamation mark, colon, new line, new paragraph. Слова-паразиты и запинки убирай, ничего не добавляй от себя, не переводи, не комментируй. Верни ТОЛЬКО расшифрованный текст. Если в записи нет речи, верни ровно: [[NO_SPEECH]]';
 const VC_SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const VC_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
-const vc = {st: 'idle', mode: 'ai', win: null, bars: null, cur: [], ctx: null, stream: null, src: null, an: null, fd: null, proc: null, mute: null, chunks: [], rate: 44100, peak: 0, level: 0, t0: 0, iv: 0, raf: 0, ctl: null, rec: null, recGen: 0, viz: 'mic', synth: 0, live: {len: 0, txt: ''}, disp: '', shownLen: 0, lead: '', capNext: false, before: '', fails: 0, closeT: 0, canLive: false};
+const vc = {st: 'idle', mode: 'ai', win: null, bars: null, cur: [], ctx: null, stream: null, src: null, an: null, fd: null, proc: null, mute: null, chunks: [], rate: 44100, peak: 0, level: 0, t0: 0, iv: 0, raf: 0, ctl: null, rec: null, recGen: 0, viz: 'mic', synth: 0, live: {len: 0, txt: ''}, disp: '', shownLen: 0, lead: '', capNext: false, before: '', fails: 0, closeT: 0, canLive: false, sr: {}, hot: 0, forceSynth: false, keep: null};
 const vcMode = () => { const m = store.get('yng_vc_mode', ''); if(m === 'ai') return 'ai'; if(m === 'native' && VC_SR) return 'native'; return VC_SR ? 'native' : 'ai'; };
 const vcLang = () => { const v = store.get('yng_vc_lang', 'auto'); return v === 'ru' || v === 'en' ? v : 'auto'; };
 const vcMark = on => document.querySelectorAll('[data-c="mic"]').forEach(b => b.classList.toggle('rec', on));
@@ -10071,25 +10092,39 @@ function vcPunct(t){
 }
 const vcCap = s => s.replace(/^(\s*)(\p{Ll})/u, (m, a, b) => a + b.toUpperCase());
 /* ---- запись с микрофона: уровень звука для визуализации (+ PCM для Gemini) ---- */
+const VC_KEEP_MS = 180000;   /* сколько держим микрофон включённым после диктовки, чтобы Telegram не спрашивал доступ заново */
 async function vcMicOpen(wantProc){
-  const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}});
+  let k = vc.keep;
+  if(k && (k.ctx.state === 'closed' || !k.stream.getAudioTracks().some(t => t.readyState === 'live'))){ vcRelease(); k = null; }
+  if(!k){
+    const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}});
+    try{ const AC = window.AudioContext || window.webkitAudioContext; k = vc.keep = {stream, ctx: new AC(), t: 0}; }
+    catch(e){ stream.getTracks().forEach(x => x.stop()); throw e; }
+  }
+  clearTimeout(k.t); k.stream.getAudioTracks().forEach(x => { x.enabled = true; });
+  const ctx = k.ctx; if(ctx.state === 'suspended') await ctx.resume().catch(() => {});
   try{
-    const AC = window.AudioContext || window.webkitAudioContext, ctx = new AC();
-    if(ctx.state === 'suspended') await ctx.resume().catch(() => {});
-    const src = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = 0.45; src.connect(an);
-    Object.assign(vc, {ctx, stream, src, an, fd: new Uint8Array(an.frequencyBinCount), rate: ctx.sampleRate, chunks: [], peak: 0, level: 0});
+    const src = ctx.createMediaStreamSource(k.stream), an = ctx.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = 0.45; src.connect(an);
+    Object.assign(vc, {ctx, stream: k.stream, src, an, fd: new Uint8Array(an.frequencyBinCount), rate: ctx.sampleRate, chunks: [], peak: 0, level: 0});
     if(wantProc){
       const proc = ctx.createScriptProcessor(4096, 1, 1), mute = ctx.createGain(); mute.gain.value = 0;
       proc.onaudioprocess = ev => { const d = ev.inputBuffer.getChannelData(0); vc.chunks.push(new Float32Array(d)); let m = 0; for(let i = 0; i < d.length; i++){ const a = d[i] < 0 ? -d[i] : d[i]; if(a > m) m = a; } vc.level = m; if(m > vc.peak) vc.peak = m; };
       src.connect(proc); proc.connect(mute); mute.connect(ctx.destination); vc.proc = proc; vc.mute = mute;
     }
-  }catch(e){ stream.getTracks().forEach(t => t.stop()); throw e; }
+  }catch(e){ vcMicClose(); throw e; }
 }
+/* мягкое закрытие: отключаем обработку, но поток держим (звук не записывается), чтобы не просить доступ повторно */
 function vcMicClose(){
   try{ if(vc.proc){ vc.proc.onaudioprocess = null; vc.proc.disconnect(); } if(vc.src) vc.src.disconnect(); if(vc.mute) vc.mute.disconnect(); }catch(e){}
-  try{ if(vc.stream) vc.stream.getTracks().forEach(t => t.stop()); }catch(e){}
-  try{ if(vc.ctx && vc.ctx.state !== 'closed') vc.ctx.close(); }catch(e){}
-  vc.proc = vc.src = vc.mute = vc.stream = vc.ctx = vc.an = vc.fd = null;
+  vc.proc = vc.src = vc.mute = vc.an = vc.fd = null;
+  const k = vc.keep; if(k){ try{ k.stream.getAudioTracks().forEach(x => { x.enabled = false; }); }catch(e){} clearTimeout(k.t); k.t = setTimeout(vcRelease, VC_KEEP_MS); }
+}
+/* полное освобождение микрофона */
+function vcRelease(){
+  const k = vc.keep; if(!k) return; clearTimeout(k.t); vc.keep = null;
+  try{ k.stream.getTracks().forEach(x => x.stop()); }catch(e){}
+  try{ if(k.ctx.state !== 'closed') k.ctx.close(); }catch(e){}
+  vc.ctx = vc.stream = null;
 }
 const VC_W = [1, .95, .82, .66, .5, .38], VC_BANDS = [[1, 3], [3, 6], [6, 10], [10, 16], [16, 26], [26, 42]];
 function vcLoop(){
@@ -10102,6 +10137,7 @@ function vcLoop(){
   } else if(active && vc.viz === 'synth'){
     const l = vc.synth; vc.synth *= 0.94; for(let k = 0; k < 6; k++) band[k] = l * (1 - k * 0.1);
   }
+  if(active && Math.max(band[0], band[1], band[2], band[3]) > 0.12) vc.hot++;
   for(let i = 0; i < 11; i++){
     const d = Math.abs(i - 5), v = band[d] * VC_W[d] * (band[d] > 0.04 ? (0.88 + 0.12 * Math.sin(now / 95 + i * 1.7)) : 1), tg = 4 + Math.min(1, v) * 104, c = vc.cur[i] || 4;
     vc.cur[i] = c + (tg - c) * (tg > c ? 0.55 : 0.16); vc.bars[i].style.height = vc.cur[i].toFixed(1) + 'px';
@@ -10136,7 +10172,7 @@ function vcBuild(){
     const l = e.target.closest('[data-vl]'); if(l){ store.set('yng_vc_lang', l.dataset.vl); vcPaint(); if(vc.mode === 'native' && vc.st === 'rec') vcNativeRun(); return; }
     const b = e.target.closest('[data-vc]'); if(!b) return;
     const a = b.dataset.vc;
-    if(a === 'stop') vcStop(); else if(a === 'cancel') vcCancel(); else if(a === 'retry') vcBegin(); else if(a === 'toai') vcSwitch('ai');
+    if(a === 'stop') vcStop(); else if(a === 'cancel') vcCancel(); else if(a === 'retry') (vc.st === 'rec' ? vcSwitch(vc.mode, true) : vcBegin()); else if(a === 'novis'){ vc.forceSynth = true; vcSwitch('native', true); } else if(a === 'toai') vcSwitch('ai');
   });
   document.body.appendChild(w); vc.win = w; vc.bars = Array.from(w.querySelectorAll('.vc-viz i')); vc.cur = []; vcLoop();
 }
@@ -10156,6 +10192,11 @@ function vcCancel(){
 function vcFail(msg, acts){ vcClearTimers(); vc.recGen++; if(vc.rec){ const r = vc.rec; vc.rec = null; r.onend = r.onerror = r.onresult = null; try{ r.abort(); }catch(e){} } vcMicClose(); vc.st = 'idle'; vcMark(false); vcPaint(); vcNote(msg, true, acts); }
 function vcTick(){
   const sec = (Date.now() - vc.t0) / 1000, tm = $('#vcTm'); if(tm) tm.textContent = Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
+  if(vc.mode === 'native' && vc.st === 'rec' && !vc.sr.results && !vc.sr.warned){
+    const el = Date.now() - vc.t0, acts = [['toai', 'Использовать Gemini', 1], ['novis', 'Без анимации звука']];
+    if(el > 5000 && vc.sr.started && !vc.sr.audio){ vc.sr.warned = true; vcNote('Браузер не получает звук для распознавания речи.', true, acts); }
+    else if(el > 7000 && vc.hot > 20){ vc.sr.warned = true; vcNote('Звук есть, но браузер не вернул текст. В окне Telegram Web встроенное распознавание может не работать.', true, acts); }
+  }
   if(sec >= (vc.mode === 'ai' ? 180 : 900)) vcStop();
 }
 function vcToggle(){ if(vc.win || vc.st !== 'idle') return vcCancel(); return vcStart(); }
@@ -10164,8 +10205,8 @@ function vcStart(){
   restore(); { const s = getSelection(); if(s.rangeCount && ed.contains(s.anchorNode)) saved = s.getRangeAt(0).cloneRange(); }
   vc.mode = vcMode(); vcBuild(); vcBegin();
 }
-function vcSwitch(mode){
-  if(mode === vc.mode && vc.st === 'rec') return;
+function vcSwitch(mode, force){
+  if(mode === vc.mode && vc.st === 'rec' && !force) return;
   if(mode === 'native' && !VC_SR) return;
   store.set('yng_vc_mode', mode);
   if(vc.rec){ const r = vc.rec; vc.rec = null; vc.recGen++; r.onend = r.onerror = r.onresult = null; try{ r.abort(); }catch(e){} }
@@ -10174,14 +10215,14 @@ function vcSwitch(mode){
 }
 async function vcBegin(){
   if(!vc.win) return;
-  vc.mode = vcMode(); vc.st = 'start'; vc.live = {len: 0, txt: ''}; vc.disp = ''; vc.shownLen = 0; vc.fails = 0; vc.synth = 0; vc.before = vcBefore(); vc.canLive = typeof getSelection().modify === 'function';
+  vc.mode = vcMode(); vc.st = 'start'; vc.live = {len: 0, txt: ''}; vc.disp = ''; vc.shownLen = 0; vc.fails = 0; vc.synth = 0; vc.sr = {}; vc.hot = 0; vc.before = vcBefore(); vc.canLive = typeof getSelection().modify === 'function';
   vcNote(''); vcPaint(); vcShowText('');
   if(vc.mode === 'native') await vcNativeBegin(); else await vcAiBegin();
 }
 const vcMicErr = e => e && (e.name === 'NotAllowedError' || e.name === 'SecurityError') ? 'Нет доступа к микрофону. Разрешите его в настройках Telegram или браузера.' : 'Не удалось включить микрофон.';
 /* ---- встроенное распознавание ---- */
 async function vcNativeBegin(){
-  vc.viz = VC_MOBILE ? 'synth' : 'mic';
+  vc.viz = (VC_MOBILE || vc.forceSynth) ? 'synth' : 'mic';
   if(vc.viz === 'mic'){ try{ await vcMicOpen(false); }catch(e){ vcMicClose(); vc.viz = 'synth'; } }
   if(!vc.win) { vcMicClose(); return; }
   vc.t0 = Date.now(); vc.st = 'rec'; vcMark(true); vcPaint(); vcShowText(''); vcNote('Текст вводится в документ по мере речи. Знаки можно диктовать: «точка», «запятая», «новая строка».');
@@ -10191,11 +10232,15 @@ function vcNativeRun(){
   if(vc.rec){ const o = vc.rec; vc.rec = null; o.onend = o.onerror = o.onresult = null; try{ o.abort(); }catch(e){} }
   const gen = ++vc.recGen, rec = new VC_SR(); vc.rec = rec;
   rec.lang = vcLang() === 'en' ? 'en-US' : 'ru-RU'; rec.interimResults = true; rec.continuous = !/Android/i.test(navigator.userAgent || ''); rec.maxAlternatives = 1;
-  rec.onspeechstart = () => { vc.synth = Math.max(vc.synth, .5); };
+  rec.onspeechstart = () => { vc.synth = Math.max(vc.synth, .5); vc.sr.speech = true; };
+  rec.onstart = () => { vc.sr.started = true; };
+  rec.onaudiostart = () => { vc.sr.audio = true; };
+  rec.onsoundstart = () => { vc.sr.sound = true; };
   rec.onresult = e => {
     if(gen !== vc.recGen) return;
     let fin = '', interim = ''; for(let i = e.resultIndex; i < e.results.length; i++){ const r = e.results[i], t = r[0] ? r[0].transcript : ''; if(r.isFinal) fin += t; else interim += t; }
-    vc.fails = 0; vc.synth = Math.max(vc.synth, .55 + Math.random() * .35);
+    vc.fails = 0; vc.synth = Math.max(vc.synth, .55 + Math.random() * .35); vc.sr.results = (vc.sr.results || 0) + 1;
+    if(vc.sr.warned){ vc.sr.warned = false; vcNote('Текст вводится в документ по мере речи.'); }
     if(fin.trim()) vcApply(fin, true);
     if(interim.trim()) vcApply(interim, false);
   };
@@ -10219,6 +10264,14 @@ function vcNativeRun(){
   try{ rec.start(); }catch(e){ vcFail('Не удалось запустить встроенное распознавание.', [['toai', 'Использовать Gemini', 1]]); }
 }
 /* печатаем текст в документ: прежний «черновой» кусок заменяется новым, пока фраза не станет окончательной */
+function vcType(text){
+  let ok = false; try{ ok = document.execCommand('insertText', false, text); }catch(e){}
+  if(ok) return;
+  const s = getSelection(); if(!s.rangeCount) return;
+  const r = s.getRangeAt(0); if(!ed.contains(r.commonAncestorContainer)) return;
+  r.deleteContents(); if(text){ const tn = document.createTextNode(text); r.insertNode(tn); r.setStartAfter(tn); r.collapse(true); s.removeAllRanges(); s.addRange(r); }
+  ed.dispatchEvent(new Event('input', {bubbles: true}));
+}
 function vcLive(out){
   let sel = getSelection(); if(!sel.rangeCount || !ed.contains(sel.anchorNode)) restore();
   ed.focus({preventScroll: true}); sel = getSelection();
@@ -10227,7 +10280,7 @@ function vcLive(out){
     for(let k = 0; k < vc.live.len; k++) sel.modify('extend', 'backward', 'character');
     if(vcNorm(sel.toString()) !== vcNorm(vc.live.txt)){ sel.collapseToEnd(); vc.live = {len: 0, txt: ''}; }
   }
-  if(out) document.execCommand('insertText', false, out); else if(vc.live.len) document.execCommand('delete');
+  if(out) vcType(out); else if(vc.live.len && !document.execCommand('delete')){ const s2 = getSelection(); if(s2.rangeCount){ s2.getRangeAt(0).deleteContents(); ed.dispatchEvent(new Event('input', {bubbles: true})); } }
   vc.live = out ? {len: vcLen(out), txt: out} : {len: 0, txt: ''};
 }
 function vcApply(raw, final){
@@ -10238,10 +10291,10 @@ function vcApply(raw, final){
   if(vc.capNext) body = vcCap(body); else if(!/^I(?![a-z'’])/.test(body)) body = body.replace(/^([A-Z])([a-z]+)/, (m, a, b) => a.toLowerCase() + b);
   const out = body ? vc.lead + body : '';
   if(!final && !vc.canLive){ vcShowText(vc.disp + out); return; }
-  if(vc.canLive) vcLive(out); else if(out) document.execCommand('insertText', false, out);
+  if(vc.canLive) vcLive(out); else if(out) vcType(out);
   if(final){
     vc.live = {len: 0, txt: ''}; vc.disp += out;
-    for(let k = 1; k < parts.length; k++){ document.execCommand('insertParagraph'); const x = vcCap(parts[k].trim()); if(x){ document.execCommand('insertText', false, x); vc.disp += ' ' + x; } }
+    for(let k = 1; k < parts.length; k++){ document.execCommand('insertParagraph'); const x = vcCap(parts[k].trim()); if(x){ vcType(x); vc.disp += ' ' + x; } }
     if(vc.disp.length > 400) vc.disp = vc.disp.slice(-400);
     vcShowText(vc.disp);
   } else vcShowText(vc.disp + out);
@@ -10277,7 +10330,7 @@ function vcInsert(text){
   let lead = '';
   if(s.rangeCount && s.anchorNode && s.anchorNode.nodeType === 3 && s.anchorOffset > 0){ const ch = s.anchorNode.data.charAt(s.anchorOffset - 1); if(ch && !/[\s(«"“\u00a0—-]/.test(ch)) lead = ' '; }
   const parts = text.split(/\n{2,}/).map(x => x.replace(/\s*\n\s*/g, ' ').trim()).filter(Boolean);
-  parts.forEach((x, i) => { if(i) document.execCommand('insertParagraph'); document.execCommand('insertText', false, (i ? '' : lead) + x); });
+  parts.forEach((x, i) => { if(i) document.execCommand('insertParagraph'); vcType((i ? '' : lead) + x); });
 }
 async function vcStop(){
   if(vc.st !== 'rec') return;
@@ -10304,18 +10357,126 @@ async function vcStop(){
 }
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && vc.st !== 'idle'){ e.preventDefault(); vcCancel(); } }, true);
 
-/* ================= Проверка грамматики и орфографии ================= */
-const GC_SYS = 'Ты — корректор русского и английского языков. Найди в тексте явные орфографические, пунктуационные и грамматические ошибки. Стиль не улучшай, текст не переписывай. Не трогай имена, термины, цитаты, адреса и код. Верни ТОЛЬКО JSON-массив без markdown и пояснений. Элемент: {"before": до 20 символов текста сразу ПЕРЕД ошибкой, символ в символ как в тексте (можно пустая строка), "orig": точный фрагмент с ошибкой — слово или короткое словосочетание до 60 символов, без переносов строк, "fix": чем его заменить, "why": причина до 12 слов}. Для пропущенной запятой включи в orig соседнее слово. Если ошибок нет, верни [].';
-const GC = {open: false, busy: false, items: [], ign: new Set(), ctl: null, msg: '', err: '', done: false, cur: '', el: null, tm: 0};
+/* ================= Проверка текста: орфография (встроенный словарь) + грамматика (ИИ) ================= */
+const GC_SYS = 'Ты — корректор русского и английского языков. Найди в тексте явные орфографические, пунктуационные и грамматические ошибки. Стиль не улучшай, текст не переписывай. Не трогай имена, термины, цитаты, адреса и код. Верни ТОЛЬКО JSON-массив без markdown и пояснений. Элемент: {"before": до 20 символов текста сразу ПЕРЕД ошибкой, символ в символ как в тексте (можно пустая строка), "orig": точный фрагмент с ошибкой — слово или короткое словосочетание до 60 символов, без переносов строк, "fix": чем его заменить, "why": причина до 12 слов}. Для пропущенной запятой включи в orig соседнее слово. Символ \\n — граница строки или абзаца, это не ошибка: не предлагай склеивать или менять переносы и пробелы вокруг них. Если ошибок нет, верни [].';
+const GC = {open: false, items: [], ign: new Set(), ctl: null, cur: '', el: null, tm: 0, sgN: 0, sgBusy: false,
+  sp: {busy: false, msg: '', err: '', done: false, run: 0}, ai: {busy: false, msg: '', err: '', done: false}};
 const gcHL = !!(window.CSS && CSS.highlights && window.Highlight);
 const gcLetter = /[\p{L}\p{N}]/u;
 const gcPl = n => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? 'ошибок' : k === 1 ? 'ошибка' : k > 1 && k < 5 ? 'ошибки' : 'ошибок'; };
+
+/* ---- словарь: nspell (Hunspell) работает в отдельном потоке, словари скачиваются один раз и хранятся в кэше устройства ---- */
+function spWorkerMain(){
+  const NS = ['https://cdn.jsdelivr.net/npm/nspell@2.1.5/+esm', 'https://esm.sh/nspell@2.1.5'];
+  const DC = {
+    ru: ['https://cdn.jsdelivr.net/npm/dictionary-ru/', 'https://cdn.jsdelivr.net/gh/wooorm/dictionaries@main/dictionaries/ru/'],
+    en: ['https://cdn.jsdelivr.net/npm/dictionary-en/', 'https://cdn.jsdelivr.net/gh/wooorm/dictionaries@main/dictionaries/en/']
+  };
+  const PART = new Set(['то', 'либо', 'нибудь', 'таки', 'ка', 'же', 'бы', 'де', 'мол', 'кое', 'как']);
+  let ns = null; const eng = {};
+  const getNs = async () => { if(ns) return ns; let err; for(const u of NS){ try{ const m = await import(u); ns = m.default || m; return ns; }catch(e){ err = e; } } throw err; };
+  const getText = async url => {
+    let cache = null; try{ cache = await caches.open('yng-dict-v1'); const hit = await cache.match(url); if(hit) return await hit.text(); }catch(e){}
+    const r = await fetch(url); if(!r.ok) throw new Error('http ' + r.status);
+    const copy = r.clone(), t = await r.text(); try{ if(cache) await cache.put(url, copy); }catch(e){}
+    return t;
+  };
+  const load = async (lang, user) => {
+    if(eng[lang]) return eng[lang];
+    const f = await getNs(); let err;
+    for(const base of DC[lang]){
+      try{ const [aff, dic] = await Promise.all([getText(base + 'index.aff'), getText(base + 'index.dic')]); const e = f(aff, dic); (user || []).forEach(w => e.add(w)); eng[lang] = e; return e; }catch(e){ err = e; }
+    }
+    throw err;
+  };
+  /* «е» вместо «ё» и наоборот ошибкой не считаем */
+  const ok1 = (e, w) => {
+    if(e.correct(w)) return true;
+    if(/[ёЁ]/.test(w) && e.correct(w.replace(/ё/g, 'е').replace(/Ё/g, 'Е'))) return true;
+    const a = Array.from(w), idx = []; a.forEach((c, i) => { if(c === 'е' || c === 'Е') idx.push(i); });
+    if(idx.length && idx.length <= 4) for(let mask = 1; mask < (1 << idx.length); mask++){ const b = a.slice(); idx.forEach((p, k) => { if(mask & (1 << k)) b[p] = b[p] === 'е' ? 'ё' : 'Ё'; }); if(e.correct(b.join(''))) return true; }
+    return false;
+  };
+  const ok = (e, w) => {
+    if(ok1(e, w)) return true;
+    if(w.indexOf('-') > 0){ const ps = w.split('-').filter(Boolean); return ps.length > 1 && ps.every(p => p.length <= 2 || PART.has(p.toLowerCase()) || ok1(e, p)); }
+    return false;
+  };
+  self.onmessage = async ev => {
+    const d = ev.data, id = d.id;
+    try{
+      if(d.op === 'load'){ await load(d.lang, d.user); self.postMessage({id, ok: true}); }
+      else if(d.op === 'check'){ const e = await load(d.lang, d.user); self.postMessage({id, ok: true, bad: d.words.filter(w => !ok(e, w))}); }
+      else if(d.op === 'suggest'){ const e = await load(d.lang); self.postMessage({id, ok: true, list: e.suggest(d.word).slice(0, 5)}); }
+      else if(d.op === 'add' || d.op === 'remove'){ const e = eng[d.lang]; if(e) e[d.op](d.word); self.postMessage({id, ok: true}); }
+      else self.postMessage({id, ok: false, error: 'op'});
+    }catch(err){ self.postMessage({id, ok: false, error: String((err && err.message) || err)}); }
+  };
+}
+const SP = {w: null, id: 0, pend: new Map(), ld: {}, cache: {ru: new Map(), en: new Map()}, sg: new Map()};
+function spCall(msg){
+  return new Promise((res, rej) => {
+    if(!SP.w){
+      try{
+        SP.w = new Worker(URL.createObjectURL(new Blob(['(' + spWorkerMain.toString() + ')()'], {type: 'text/javascript'})));
+        SP.w.onmessage = e => { const p = SP.pend.get(e.data.id); if(p){ SP.pend.delete(e.data.id); if(e.data.ok) p.res(e.data); else p.rej(new Error(e.data.error)); } };
+        SP.w.onerror = () => { SP.pend.forEach(p => p.rej(new Error('worker'))); SP.pend.clear(); SP.w = null; SP.ld = {}; };
+      }catch(e){ SP.w = null; return rej(e); }
+    }
+    const id = ++SP.id; SP.pend.set(id, {res, rej}); SP.w.postMessage(Object.assign({id}, msg));
+  });
+}
+const SP_USER = 'yng_dict_user';
+const spUser = () => { const a = store.get(SP_USER, []); return Array.isArray(a) ? a.filter(x => typeof x === 'string') : []; };
+function spScript(w){ const cy = /[\u0400-\u04FF]/.test(w), la = /[A-Za-z\u00C0-\u024F]/.test(w); return cy && !la ? 'ru' : la && !cy ? 'en' : ''; }
+function spUserAdd(w){
+  w = String(w || '').trim().toLowerCase(); if(!w) return;
+  const a = spUser(); if(!a.includes(w)){ a.push(w); a.sort((x, y) => x.localeCompare(y, 'ru')); store.set(SP_USER, a); }
+  const l = spScript(w); if(l && SP.w) spCall({op: 'add', lang: l, word: w}).catch(() => {});
+}
+function spUserDel(w){
+  store.set(SP_USER, spUser().filter(x => x !== w));
+  const l = spScript(w); if(l){ SP.cache[l].delete(w); SP.cache[l].delete(w.charAt(0).toUpperCase() + w.slice(1)); if(SP.w) spCall({op: 'remove', lang: l, word: w}).catch(() => {}); }
+}
+function spEnsure(lang){
+  if(!SP.ld[lang]) SP.ld[lang] = spCall({op: 'load', lang, user: spUser().filter(w => spScript(w) === lang)}).catch(e => { SP.ld[lang] = null; throw e; });
+  return SP.ld[lang];
+}
+const SP_WORD = /[\p{L}\p{M}][\p{L}\p{M}'’\-]*[\p{L}\p{M}]|[\p{L}\p{M}]/gu;
+function spSentStart(t, i){
+  let k = i - 1;
+  while(k >= 0 && /[\s"“«(\[—–\-]/.test(t.charAt(k))){ if(t.charAt(k) === '\n') return true; k--; }
+  return k < 0 || /[.!?…:]/.test(t.charAt(k));
+}
+/* слова, которые стоит проверять: без аббревиатур, адресов, чисел и (для краткости ложных срабатываний) имён посреди предложения */
+function spTokens(text, user){
+  const out = []; let m; SP_WORD.lastIndex = 0;
+  while((m = SP_WORD.exec(text))){
+    const w = m[0].replace(/’/g, "'"), i = m.index, end = i + m[0].length, lang = spScript(w);
+    if(!lang || w.replace(/[^\p{L}]/gu, '').length < 2) continue;
+    if(w === w.toUpperCase() || /\p{Ll}\p{Lu}/u.test(w)) continue;
+    const pv = text.charAt(i - 1), nx = text.charAt(end);
+    if(/[@\/\\_#0-9]/.test(pv) || /[@\/\\_0-9]/.test(nx)) continue;
+    if(text.substr(end, 3) === '://' || /^(?:https?|ftp|mailto|tel):/i.test(text.substr(i, 8))) continue;
+    if((pv === '.' && /\p{L}/u.test(text.charAt(i - 2))) || (nx === '.' && /\p{L}/u.test(text.charAt(end + 1)))) continue;
+    if(/^\p{Lu}/u.test(w) && !spSentStart(text, i)) continue;
+    if(user.has(w.toLowerCase())) continue;
+    out.push({w, i, lang});
+  }
+  return out;
+}
+
+/* ---- текст документа и поиск фрагментов ---- */
 function gcFlat(){
-  const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentNode && n.parentNode.closest && n.parentNode.closest('[data-pgsp],pre,code,script,style,[contenteditable="false"]') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {acceptNode: n => {
+    if(n.nodeType === 1) return n.tagName === 'BR' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+    return n.parentNode && n.parentNode.closest && n.parentNode.closest('[data-pgsp],pre,code,script,style,[contenteditable="false"]') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+  }});
   const nodes = []; let text = '', last = null, n;
   while((n = w.nextNode())){
+    if(n.nodeType === 1){ if(text && text.slice(-1) !== '\n') text += '\n'; continue; }   /* мягкий перенос строки (Shift+Enter) — граница, а не часть слова */
     const blk = n.parentNode.closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,td,th,div') || ed;
-    if(last && blk !== last) text += '\n';
+    if(last && blk !== last && text.slice(-1) !== '\n') text += '\n';
     nodes.push({n, s: text.length}); text += n.data; last = blk;
   }
   return {text, nodes};
@@ -10324,7 +10485,7 @@ function gcPos(f, p, isEnd){ for(const x of f.nodes){ const e = x.s + x.n.data.l
 function gcLocate(f, it, taken){
   const t = f.text, okAt = i => { const a = t.charAt(i - 1), b = t.charAt(i + it.orig.length); return !(gcLetter.test(it.orig[0]) && a && gcLetter.test(a)) && !(gcLetter.test(it.orig[it.orig.length - 1]) && b && gcLetter.test(b)); };
   let from = 0, i;
-  if(it.before){ const key = it.before + it.orig; while((i = t.indexOf(key, from)) >= 0){ const a = i + it.before.length; if(!taken.has(a)) return [a, a + it.orig.length]; from = i + 1; } }
+  if(it.before){ const key = it.before + it.orig; while((i = t.indexOf(key, from)) >= 0){ const a = i + it.before.length; if(!taken.has(a) && okAt(a)) return [a, a + it.orig.length]; from = i + 1; } }
   from = 0; while((i = t.indexOf(it.orig, from)) >= 0){ if(!taken.has(i) && okAt(i)) return [i, i + it.orig.length]; from = i + 1; }
   return null;
 }
@@ -10339,58 +10500,141 @@ function gcRefresh(){
 }
 function gcPaint(){
   if(!gcHL) return;
-  if(GC.items.length) CSS.highlights.set('gc-err', new Highlight(...GC.items.map(i => i.range))); else CSS.highlights.delete('gc-err');
+  const set = (name, list) => { if(list.length) CSS.highlights.set(name, new Highlight(...list.map(i => i.range))); else CSS.highlights.delete(name); };
+  set('gc-err', GC.items.filter(i => i.kind === 'spell')); set('gc-ai', GC.items.filter(i => i.kind !== 'spell'));
   const c = GC.items.find(i => i.id === GC.cur); if(c) CSS.highlights.set('gc-cur', new Highlight(c.range)); else CSS.highlights.delete('gc-cur');
 }
+const gcAfter = () => { gcRefresh(); gcPaint(); gcRender(); };
+
+/* ---- карточки и панель ---- */
+function gcCardHtml(it){
+  const cur = it.id === GC.cur ? ' cur' : '', ctx = it.before ? '<span class="gc-c">…' + esc(it.before.slice(-14)) + '</span>' : '';
+  if(it.kind === 'spell'){
+    const n = GC.items.filter(x => x.kind === 'spell' && x.orig === it.orig).length;
+    let sg;
+    if(it.sugg === undefined) sg = '<div class="gc-w">Подбираю варианты…</div>';
+    else if(it.sugg === false) sg = '<div class="gc-chips"><button type="button" class="gc-chip" data-gc="more">Показать варианты</button></div>';
+    else if(!it.sugg.length) sg = '<div class="gc-w">Вариантов нет: исправьте вручную или добавьте слово в словарь.</div>';
+    else sg = '<div class="gc-chips">' + it.sugg.map((s, k) => '<button type="button" class="gc-chip" data-gc="sug" data-k="' + k + '">' + esc(s) + '</button>').join('') + '</div>';
+    return '<div class="gc-it' + cur + '" data-id="' + it.id + '"><div class="gc-d">' + ctx + '<s>' + esc(it.orig) + '</s> <span class="gc-tag sp">орфография</span>' + (n > 1 ? ' <span class="gc-c">×' + n + '</span>' : '') + '</div>' + sg + '<div class="gc-a"><button type="button" class="btn small neutral" data-gc="show">В тексте</button><button type="button" class="btn small neutral" data-gc="dict">В словарь</button><button type="button" class="btn small neutral" data-gc="skip">Пропустить</button></div></div>';
+  }
+  return '<div class="gc-it' + cur + '" data-id="' + it.id + '"><div class="gc-d">' + ctx + '<s>' + esc(it.orig) + '</s> → <b>' + esc(it.fix) + '</b> <span class="gc-tag">ИИ</span></div>' + (it.why ? '<div class="gc-w">' + esc(it.why) + '</div>' : '') + '<div class="gc-a"><button type="button" class="btn small" data-gc="fix">Исправить</button><button type="button" class="btn small neutral" data-gc="show">В тексте</button><button type="button" class="btn small neutral" data-gc="skip">Пропустить</button></div></div>';
+}
+function gcCard(it){ const el = GC.el && GC.el.querySelector('.gc-it[data-id="' + it.id + '"]'); if(el) el.outerHTML = gcCardHtml(it); }
 function gcRender(){
   const p = GC.el; if(!p) return;
-  const L = p.querySelector('.gc-l'), n = GC.items.length;
-  p.querySelector('.gc-n').textContent = GC.busy ? 'проверка…' : GC.err ? 'ошибка' : n ? n + ' ' + gcPl(n) : 'всё чисто';
-  p.querySelector('[data-gc="all"]').disabled = GC.busy || !n; p.querySelector('[data-gc="rescan"]').disabled = GC.busy;
-  if(GC.busy) L.innerHTML = '<div class="gc-m"><div class="ai-load" style="justify-content:center;padding:4px"><i></i><span>' + esc(GC.msg) + '</span></div><button type="button" class="btn small neutral" data-gc="stop">Остановить</button></div>';
-  else if(GC.err) L.innerHTML = '<div class="gc-m"><p class="ai-err" style="margin:0">' + esc(GC.err) + '</p><button type="button" class="btn small" data-gc="rescan">Повторить</button></div>';
-  else if(!n) L.innerHTML = '<div class="gc-m">' + (GC.done ? '✓ Ошибок не найдено.' : 'Текст пуст.') + '</div>';
-  else L.innerHTML = GC.items.map(it => '<div class="gc-it' + (it.id === GC.cur ? ' cur' : '') + '" data-id="' + it.id + '"><div class="gc-d">' + (it.before ? '<span class="gc-c">…' + esc(it.before) + '</span>' : '') + '<s>' + esc(it.orig) + '</s> → <b>' + esc(it.fix) + '</b></div>' + (it.why ? '<div class="gc-w">' + esc(it.why) + '</div>' : '') + '<div class="gc-a"><button type="button" class="btn small" data-gc="fix">Исправить</button><button type="button" class="btn small neutral" data-gc="show">В тексте</button><button type="button" class="btn small neutral" data-gc="skip" title="Пропустить">Пропустить</button></div></div>').join('');
+  const L = p.querySelector('.gc-l'), top = L.scrollTop, n = GC.items.length, ai = GC.items.filter(x => x.kind !== 'spell').length, busy = GC.sp.busy || GC.ai.busy;
+  p.querySelector('.gc-n').textContent = busy ? 'проверка…' : n ? n + ' ' + gcPl(n) : (GC.sp.done || GC.ai.done) ? 'всё чисто' : '';
+  p.querySelector('[data-gc="aiall"]').hidden = !ai; p.querySelector('[data-gc="ai"]').disabled = GC.ai.busy;
+  let h = '';
+  if(GC.sp.busy) h += '<div class="gc-ban"><i></i><span>' + esc(GC.sp.msg) + '</span></div>';
+  if(GC.sp.err) h += '<div class="gc-ban err"><span>' + esc(GC.sp.err) + '</span><button type="button" class="btn small" data-gc="spell">Повторить</button></div>';
+  if(GC.ai.busy) h += '<div class="gc-ban"><i></i><span>' + esc(GC.ai.msg) + '</span><button type="button" class="btn small neutral" data-gc="stop">Стоп</button></div>';
+  if(GC.ai.err) h += '<div class="gc-ban err"><span>' + esc(GC.ai.err) + '</span><button type="button" class="btn small" data-gc="ai">Повторить</button></div>';
+  if(n) h += GC.items.map(gcCardHtml).join('');
+  else if(!busy && !GC.sp.err && !GC.ai.err) h += '<div class="gc-m">' + (GC.sp.done && GC.ai.done ? '✓ Ошибок не найдено.' : GC.sp.done ? '✓ Опечаток не найдено.<br>Грамматику и пунктуацию проверяет ИИ: нажмите «Проверить ИИ».' : '') + '</div>';
+  L.innerHTML = h; L.scrollTop = top;
 }
+
+/* ---- орфография ---- */
+async function gcSpell(quiet){
+  if(!GC.open) return;
+  const run = ++GC.sp.run, text = gcFlat().text, toks = spTokens(text, new Set(spUser())), need = {ru: new Set(), en: new Set()};
+  toks.forEach(t => { if(!SP.cache[t.lang].has(t.w)) need[t.lang].add(t.w); });
+  if(need.ru.size || need.en.size){
+    if(!quiet || !GC.sp.done){ GC.sp.busy = true; GC.sp.err = ''; GC.sp.msg = 'Загружаю словари. Это один раз, потом они хранятся на устройстве.'; gcRender(); }
+    try{
+      for(const lang of ['ru', 'en']){
+        if(!need[lang].size) continue;
+        await spEnsure(lang); if(run !== GC.sp.run) return;
+        const r = await spCall({op: 'check', lang, words: Array.from(need[lang]), user: spUser().filter(w => spScript(w) === lang)}); if(run !== GC.sp.run) return;
+        const bad = new Set(r.bad); need[lang].forEach(w => SP.cache[lang].set(w, !bad.has(w)));
+      }
+    }catch(e){ if(run !== GC.sp.run) return; GC.sp.busy = false; GC.sp.err = 'Не удалось загрузить словарь. Проверьте интернет и повторите.'; gcRender(); return; }
+  }
+  if(run !== GC.sp.run) return;
+  const prev = new Map(GC.items.filter(x => x.kind === 'spell').map(x => [x.before + '|' + x.orig, x])), used = new Set(), sp = [];
+  toks.forEach(t => {
+    if(SP.cache[t.lang].get(t.w) || GC.ign.has('s|' + t.w.toLowerCase()) || sp.length >= 300) return;
+    const before = text.slice(Math.max(0, t.i - 24), t.i), key = before + '|' + t.w, old = prev.get(key);
+    if(old && !used.has(old)){ used.add(old); sp.push(old); } else sp.push({id: uid(), kind: 'spell', before, orig: t.w, fix: '', lang: t.lang, sugg: undefined});
+  });
+  GC.items = GC.items.filter(x => x.kind !== 'spell').concat(sp);
+  GC.sp.busy = false; GC.sp.err = ''; GC.sp.done = true; GC.sgN = 0;
+  gcAfter(); gcSuggest();
+}
+async function gcSuggest(){
+  if(GC.sgBusy) return; GC.sgBusy = true;
+  try{
+    for(let guard = 0; guard < 500; guard++){
+      const it = GC.items.find(x => x.kind === 'spell' && x.sugg === undefined); if(!it) break;
+      const key = it.lang + '|' + it.orig;
+      if(SP.sg.has(key)) it.sugg = SP.sg.get(key);
+      else if(GC.sgN >= 40) it.sugg = false;
+      else { GC.sgN++; try{ const r = await spCall({op: 'suggest', lang: it.lang, word: it.orig}); SP.sg.set(key, r.list); it.sugg = r.list; }catch(e){ it.sugg = []; } }
+      gcCard(it);
+    }
+  }finally{ GC.sgBusy = false; }
+}
+
+/* ---- грамматика и пунктуация: ИИ ---- */
 function gcParse(s){
   s = String(s || '').replace(/^\s*```\w*\s*|\s*```\s*$/g, '').trim();
   const i = s.indexOf('['), j = s.lastIndexOf(']'); if(i < 0 || j < i) throw new Error('ai_fail');
   let a; try{ a = JSON.parse(s.slice(i, j + 1)); }catch(e){ throw new Error('ai_fail'); }
   if(!Array.isArray(a)) throw new Error('ai_fail');
-  return a.map(x => ({id: uid(), before: String((x && x.before) || '').slice(-24), orig: String((x && x.orig) || ''), fix: String((x && x.fix) == null ? '' : x.fix), why: String((x && x.why) || '').slice(0, 120)})).filter(x => x.orig && x.orig.length <= 80 && !/\n/.test(x.orig) && x.fix !== x.orig && !/\n/.test(x.fix));
+  return a.map(x => ({id: uid(), kind: 'ai', before: String((x && x.before) || '').slice(-24), orig: String((x && x.orig) || ''), fix: String((x && x.fix) == null ? '' : x.fix), why: String((x && x.why) || '').slice(0, 120)})).filter(x => x.orig && x.orig.length <= 80 && !/\n/.test(x.orig) && x.fix !== x.orig && !/\n/.test(x.fix) && x.fix.replace(/\s+/g, ' ').trim() !== x.orig.replace(/\s+/g, ' ').trim());
 }
 function gcChunks(t){ const out = []; let cur = ''; t.split('\n').forEach(l => { if(cur && cur.length + l.length > 5000){ out.push(cur); cur = ''; } cur += (cur ? '\n' : '') + l; }); if(cur.trim()) out.push(cur); return out; }
-async function gcScan(){
-  if(GC.busy) return;
-  const f = gcFlat(); GC.err = ''; GC.done = false; GC.items = []; GC.cur = ''; gcPaint();
+async function gcScanAI(){
+  if(GC.ai.busy) return;
+  const f = gcFlat(); GC.ai.err = ''; GC.ai.done = false;
   if(!f.text.trim()){ gcRender(); return; }
-  GC.busy = true; GC.ctl = new AbortController(); const sig = GC.ctl.signal, parts = gcChunks(f.text.slice(0, 24000)), found = [];
+  GC.ai.busy = true; GC.ctl = new AbortController(); const sig = GC.ctl.signal, parts = gcChunks(f.text.slice(0, 24000)), found = [];
   if(f.text.length > 24000) toast('Проверены первые 24 000 символов');
   try{
     for(let i = 0; i < parts.length; i++){
-      GC.msg = parts.length > 1 ? 'Проверяю… (' + (i + 1) + ' из ' + parts.length + ')' : 'Проверяю текст…'; gcRender();
+      GC.ai.msg = parts.length > 1 ? 'ИИ проверяет… (' + (i + 1) + ' из ' + parts.length + ')' : 'ИИ проверяет грамматику и пунктуацию…'; gcRender();
       const out = await aiCall('Текст для проверки:\n"""\n' + parts[i] + '\n"""', sig, {system: GC_SYS, asJson: true, temp: 0.1});
       gcParse(out).forEach(x => found.push(x));
     }
   }catch(e){
-    GC.busy = false; GC.ctl = null;
-    if(e && e.name === 'AbortError'){ GC.done = false; gcRender(); return; }
-    GC.err = (AI_ERR[e && e.message] || 'Не удалось проверить текст') + (aiDetail ? ' (' + aiDetail.slice(0, 120) + ')' : ''); gcRender(); return;
+    GC.ai.busy = false; GC.ctl = null;
+    if(e && e.name === 'AbortError'){ gcRender(); return; }
+    GC.ai.err = (AI_ERR[e && e.message] || 'Не удалось проверить текст') + (aiDetail ? ' (' + aiDetail.slice(0, 120) + ')' : ''); gcRender(); return;
   }
-  GC.busy = false; GC.ctl = null;
-  const seen = new Set(); GC.items = found.filter(x => { const k = x.before + '|' + x.orig; if(seen.has(k) || GC.ign.has(k)) return false; seen.add(k); return true; });
-  gcRefresh(); GC.done = true; gcPaint(); gcRender();
+  GC.ai.busy = false; GC.ctl = null;
+  const seen = new Set(), items = found.filter(x => { const k = x.before + '|' + x.orig; if(seen.has(k) || GC.ign.has(k)) return false; seen.add(k); return true; });
+  const aiWords = new Set(items.map(x => x.orig.toLowerCase()));
+  GC.items = GC.items.filter(x => x.kind === 'spell' && !aiWords.has(x.orig.toLowerCase())).concat(items);   /* если ИИ предложил свою правку для слова, словарная подсказка не нужна */
+  GC.ai.done = true; gcAfter();
 }
-function gcSelect(it, focus){
+
+/* ---- действия ---- */
+function gcSelect(it){
   ed.focus({preventScroll: true}); const s = getSelection(); s.removeAllRanges(); s.addRange(it.range.cloneRange()); saved = it.range.cloneRange();
   const el = it.range.startContainer.parentElement; if(el && el.scrollIntoView) el.scrollIntoView({block: 'center', behavior: 'smooth'});
 }
 function gcFind(id){ gcRefresh(); return GC.items.find(i => i.id === id) || null; }
-function gcApply(id){
+function gcApply(id, text){
   const it = gcFind(id); if(!it) return false;
   ed.focus({preventScroll: true}); const s = getSelection(); s.removeAllRanges(); s.addRange(it.range.cloneRange());
-  document.execCommand('insertText', false, it.fix);
+  document.execCommand('insertText', false, text == null ? it.fix : text);
   GC.items = GC.items.filter(x => x.id !== id); return true;
+}
+function gcDictAdd(it){
+  const w = it.orig.toLowerCase(); spUserAdd(w);
+  GC.items = GC.items.filter(x => !(x.kind === 'spell' && x.orig.toLowerCase() === w)); gcPaint(); gcRender();
+  toast('«' + it.orig + '» добавлено в мой словарь', 'Отменить', () => { spUserDel(w); gcSpell(true); });
+}
+function gcDictDlg(){
+  const draw = () => { const ws = spUser(); return '<h3>Мой словарь</h3><p class="sub" style="margin-bottom:12px">Эти слова не считаются ошибками. Словарь хранится на этом устройстве.</p><div class="sp-add"><input type="text" id="spNew" placeholder="Добавить слово" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn small" data-spadd="1">Добавить</button></div>' + (ws.length ? '<div class="sp-list">' + ws.map(w => '<div class="sp-w"><span>' + esc(w) + '</span><button type="button" class="gc-x" data-spdel="' + esc(w) + '" aria-label="Удалить">×</button></div>').join('') + '</div>' : '<p>Пока пусто. Нажмите «В словарь» у слова с опечаткой.</p>') + '<div class="acts"><button type="button" class="btn small" data-v="ok">Готово</button></div>'; };
+  dialog(draw(), '', m => {
+    const redraw = () => { m.querySelector('.np-dlg').innerHTML = draw(); };
+    const add = () => { const i = m.querySelector('#spNew'), w = (i.value || '').trim(); if(!w) return i.focus(); spUserAdd(w); redraw(); const j = m.querySelector('#spNew'); if(j) j.focus(); };
+    m.addEventListener('click', e => { const d = e.target.closest('[data-spdel]'); if(d){ spUserDel(d.dataset.spdel); redraw(); return; } if(e.target.closest('[data-spadd]')) add(); });
+    m.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target.id === 'spNew'){ e.preventDefault(); add(); } });
+  }).then(() => { if(GC.open) gcSpell(true); });
 }
 function gcClick(e){
   const b = e.target.closest('[data-gc]'), card = e.target.closest('.gc-it'), id = card && card.dataset.id;
@@ -10398,35 +10642,47 @@ function gcClick(e){
     const a = b.dataset.gc;
     if(a === 'close') return gcClose();
     if(a === 'stop'){ if(GC.ctl) GC.ctl.abort(); return; }
-    if(a === 'rescan') return gcScan();
-    if(a === 'all'){ for(let g = 0; g < 500 && GC.items.length; g++) gcApply(GC.items[0].id); gcRefresh(); GC.cur = ''; gcPaint(); gcRender(); toast('Исправления применены'); return; }
-    if(a === 'fix' && id){ gcApply(id); gcRefresh(); gcPaint(); gcRender(); return; }
-    if(a === 'skip' && id){ const it = GC.items.find(x => x.id === id); if(it) GC.ign.add(it.before + '|' + it.orig); GC.items = GC.items.filter(x => x.id !== id); gcPaint(); gcRender(); return; }
-    if(a === 'show' && id){ const it = gcFind(id); if(it){ GC.cur = id; gcSelect(it); gcPaint(); gcRender(); } return; }
+    if(a === 'spell') return gcSpell();
+    if(a === 'ai') return gcScanAI();
+    if(a === 'dict' && !id) return gcDictDlg();
+    if(a === 'aiall'){ for(let g = 0; g < 500; g++){ const x = GC.items.find(i => i.kind !== 'spell'); if(!x) break; if(!gcApply(x.id)) gcRefresh(); } GC.cur = ''; gcAfter(); toast('Правки ИИ применены'); return; }
+    const it = id && GC.items.find(x => x.id === id); if(!it) return;
+    if(a === 'fix'){ gcApply(id); gcAfter(); return; }
+    if(a === 'sug'){
+      const text = it.sugg && it.sugg[+b.dataset.k]; if(text == null) return;
+      const orig = it.orig, n = GC.items.filter(x => x.kind === 'spell' && x.orig === orig).length; gcApply(id, text); gcAfter();
+      if(n > 1) toast('Это слово встречается ещё ' + (n - 1) + ' раз', 'Заменить везде', () => { GC.items.filter(x => x.kind === 'spell' && x.orig === orig).map(x => x.id).forEach(i => gcApply(i, text)); gcAfter(); });
+      return;
+    }
+    if(a === 'more'){ it.sugg = undefined; GC.sgN = 0; gcCard(it); gcSuggest(); return; }
+    if(a === 'dict') return gcDictAdd(it);
+    if(a === 'skip'){ if(it.kind === 'spell'){ const w = it.orig.toLowerCase(); GC.ign.add('s|' + w); GC.items = GC.items.filter(x => !(x.kind === 'spell' && x.orig.toLowerCase() === w)); } else { GC.ign.add(it.before + '|' + it.orig); GC.items = GC.items.filter(x => x.id !== id); } gcPaint(); gcRender(); return; }
+    if(a === 'show'){ const f = gcFind(id); if(f){ GC.cur = id; gcSelect(f); gcPaint(); gcRender(); } return; }
   }
-  if(card){ const it = gcFind(id); if(it){ GC.cur = id; gcSelect(it); gcPaint(); gcRender(); } }
+  if(card){ const f = gcFind(id); if(f){ GC.cur = id; gcSelect(f); gcPaint(); gcRender(); } }
 }
 function gcOpen(){
-  vcCancel(); GC.open = true; GC.ign = new Set();
+  vcCancel(); GC.open = true; GC.ign = new Set(); GC.items = []; GC.cur = ''; GC.sp = {busy: false, msg: '', err: '', done: false, run: GC.sp.run}; GC.ai = {busy: false, msg: '', err: '', done: false};
   const p = document.createElement('div'); p.className = 'gc-p'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Проверка текста');
-  p.innerHTML = '<div class="gc-h"><b>Проверка текста</b><span class="gc-n"></span><button type="button" class="gc-x" data-gc="close" aria-label="Закрыть">×</button></div><div class="gc-l"></div><div class="gc-f"><button type="button" class="btn small neutral" data-gc="rescan">Перепроверить</button><button type="button" class="btn small" data-gc="all">Исправить все</button></div>';
+  p.innerHTML = '<div class="gc-h"><b>Проверка текста</b><span class="gc-n"></span><button type="button" class="gc-x" data-gc="dict" title="Мой словарь" aria-label="Мой словарь"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h10A3.5 3.5 0 0 1 18.5 8v12.5H8.5A3.5 3.5 0 0 1 5 17z"/><path d="M5 17a3.5 3.5 0 0 1 3.5-3.5h10"/></svg></button><button type="button" class="gc-x" data-gc="close" aria-label="Закрыть">×</button></div><div class="gc-l"></div><div class="gc-f"><button type="button" class="btn small neutral" data-gc="spell">Перепроверить</button><button type="button" class="btn small neutral" data-gc="aiall" hidden>Принять правки ИИ</button><button type="button" class="btn small" data-gc="ai">Проверить ИИ</button></div>';
   p.addEventListener('mousedown', e => { if(e.target.closest('button')) e.preventDefault(); });
   p.addEventListener('click', gcClick); document.body.appendChild(p); GC.el = p;
   document.querySelectorAll('[data-c="spell"]').forEach(b => b.classList.add('on'));
-  gcScan();
+  gcRender(); gcSpell();
 }
 function gcClose(){
   if(GC.ctl) GC.ctl.abort();
-  GC.open = false; GC.busy = false; GC.items = []; GC.cur = ''; if(GC.el){ GC.el.remove(); GC.el = null; }
-  if(gcHL){ CSS.highlights.delete('gc-err'); CSS.highlights.delete('gc-cur'); }
+  GC.open = false; GC.sp.run++; GC.sp.busy = GC.ai.busy = false; GC.items = []; GC.cur = ''; if(GC.el){ GC.el.remove(); GC.el = null; }
+  if(gcHL){ CSS.highlights.delete('gc-err'); CSS.highlights.delete('gc-ai'); CSS.highlights.delete('gc-cur'); }
   document.querySelectorAll('[data-c="spell"]').forEach(b => b.classList.remove('on'));
 }
 function gcToggle(){ if(GC.open) gcClose(); else gcOpen(); }
 ed.addEventListener('input', () => {
-  if(!GC.open || GC.busy || !GC.items.length) return;
-  clearTimeout(GC.tm); GC.tm = setTimeout(() => { gcRefresh(); gcPaint(); gcRender(); }, 350);
+  if(!GC.open) return;
+  clearTimeout(GC.tm); GC.tm = setTimeout(() => { if(!GC.open) return; gcAfter(); gcSpell(true); }, 600);
 });
-window.addEventListener('hashchange', () => { gcClose(); vcCancel(); });
+window.addEventListener('hashchange', () => { gcClose(); vcCancel(); vcRelease(); });
+document.addEventListener('visibilitychange', () => { if(document.hidden){ vcCancel(); vcRelease(); } });
 
 ed.addEventListener('keyup', e => { if(e.key === 'Enter' && normalizeEd()) changed(); });
 ed.addEventListener('compositionend', () => { if(normalizeEd()) changed(); });
