@@ -710,6 +710,19 @@ footer a{color:var(--text-2)}
 @media(prefers-reduced-motion:reduce){.vc-win,.vc-new,.vc-cur{animation:none}}
 ::highlight(gc-err){background-color:rgba(255,69,58,.16);text-decoration:underline wavy #ff453a;text-decoration-thickness:1px}
 ::highlight(gc-cur){background-color:rgba(255,159,10,.4)}
+.np-pop .fm-w{min-width:244px;max-height:min(72vh,540px);overflow:auto}
+.np-pop .fp-l{display:flex;flex-direction:column;max-height:min(28vh,200px);overflow:auto;padding:2px}
+.np-pop .fp-l button{text-align:left;border:0;background:transparent;border-radius:9px;padding:8px 11px;font-size:15px;color:var(--text);cursor:pointer}
+.np-pop .fp-l button:hover{background:var(--accent-soft)}
+.np-pop .fp-l button.on{background:var(--accent);color:#fff}
+.np-pop .fz-g{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:4px 2px 6px}
+.np-pop .fz-g button,.np-pop .fz-d,.np-pop .fz-r button{border:0;border-radius:9px;background:rgba(120,120,128,.14);color:var(--text);font-size:14px;padding:7px 0;cursor:pointer}
+.np-pop .fz-g button:hover,.np-pop .fz-d:hover,.np-pop .fz-r button:hover{background:var(--accent-soft)}
+.np-pop .fz-g button.on{background:var(--accent);color:#fff}
+.np-pop .fz-r{display:flex;align-items:center;gap:8px;padding:2px 2px 6px}
+.np-pop .fz-r button{width:40px;flex:none;padding:7px 0}
+.np-pop .fz-r input{flex:1;min-width:0;box-sizing:border-box;text-align:center;padding:7px 8px;border:1px solid var(--line-2);border-radius:9px;background:transparent;color:inherit;font:inherit;font-size:15px}
+.np-pop .fz-d{display:block;width:calc(100% - 4px);margin:0 2px 6px;padding:7px 0}
 ::highlight(gc-ai){background-color:rgba(10,132,255,.14);text-decoration:underline wavy #0a84ff;text-decoration-thickness:1px}
 .gc-h .gc-x{margin-left:0}
 .gc-h .gc-n{margin-right:auto}
@@ -2142,6 +2155,16 @@ body.qz-nosel .qz-win input{user-select:text;-webkit-user-select:text}
 .np-dlg .qz-row{padding:10px 0;border-bottom:0}
 .np-dlg .qz-code{margin:6px 0 8px}
 .np-dlg .qz-in + .acts{margin-top:14px}
+/* графики результатов */
+.qz-bar2.hi i{background:#30d158}.qz-bar2.mid i{background:var(--accent)}.qz-bar2.lo i{background:#ff453a}
+.qz-hist{display:flex;align-items:flex-end;gap:8px;height:170px;margin:12px 0 6px;padding:0 2px}
+.qz-hist .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
+.qz-hist .c i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:var(--accent);opacity:.85}
+.qz-hist .c i.hi{background:#30d158}.qz-hist .c i.lo{background:#ff453a}
+.qz-hist .c em{font-style:normal;font-size:12px;color:var(--text-2);min-height:14px}
+.qz-hist .c span{font-size:11px;color:var(--text-3);white-space:nowrap}
+.qz-an .r span:first-child small{font-size:12px}
+.qz-tbl .btn{margin:0}
 </style>
 <script>
 /* ресурсы главного экрана */
@@ -2426,6 +2449,21 @@ const TOPB = new Set('P H1 H2 H3 UL OL BLOCKQUOTE PRE TABLE HR'.split(' '));
 const BLK = /^(p|div|section|article|header|footer|main|aside|nav|figure|figcaption|details|summary|dl|dt|dd|h[1-6]|tfoot|caption|center|address|li|ul|ol|blockquote|pre|table|hr)$/;
 const COLOR = /^(rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*[\d.]+\s*)?\)|#[0-9a-f]{3,8})$/i;
 const hasBlock = el => !!el.querySelector('p,h1,h2,h3,ul,ol,pre,blockquote,table,hr');
+/* шрифты, доступные на любом устройстве (системные и «веб-безопасные»), и допустимые размеры */
+const FMT_FONTS = [
+  {k: 'arial', n: 'Arial', css: "Arial,Helvetica,sans-serif"},
+  {k: 'verdana', n: 'Verdana', css: "Verdana,Geneva,sans-serif"},
+  {k: 'tahoma', n: 'Tahoma', css: "Tahoma,Geneva,sans-serif"},
+  {k: 'trebuchet ms', n: 'Trebuchet MS', css: "'Trebuchet MS',Helvetica,sans-serif"},
+  {k: 'system-ui', n: 'Системный', css: "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"},
+  {k: 'times new roman', n: 'Times New Roman', css: "'Times New Roman',Times,serif"},
+  {k: 'georgia', n: 'Georgia', css: "Georgia,'Times New Roman',serif"},
+  {k: 'palatino linotype', n: 'Palatino', css: "'Palatino Linotype',Palatino,'Book Antiqua',serif"},
+  {k: 'courier new', n: 'Courier New', css: "'Courier New',Courier,monospace"}
+];
+const fmtKey = v => { const f = String(v || '').split(',')[0].replace(/["']/g, '').trim().toLowerCase(); const x = FMT_FONTS.find(o => o.k === f); return x ? x.k : ''; };
+const fmtCss = k => { const x = FMT_FONTS.find(o => o.k === k); return x ? x.css : ''; };
+const fmtSizeOf = st => { const m = String(st || '').match(/font-size:\s*(\d+(?:\.\d+)?)px/i); if(!m) return 0; const n = +m[1]; return n >= 8 && n <= 120 ? Math.round(n * 10) / 10 : 0; };
 function sanitize(html){
   const doc = new DOMParser().parseFromString('<body>' + html, 'text/html');
   const out = document.createElement('div');
@@ -2453,8 +2491,16 @@ function sanitize(html){
         continue;
       }
       if(tag === 'span'){
-        const m = (n.getAttribute('style') || '').match(/background(?:-color)?:\s*([^;]+)/i);
-        if(m && COLOR.test(m[1].trim())){ const sp = document.createElement('span'); sp.setAttribute('style', 'background-color:' + m[1].trim()); walk(n, sp); dst.appendChild(sp); }
+        const st = n.getAttribute('style') || '', parts = [];
+        const m = st.match(/background(?:-color)?:\s*([^;]+)/i);
+        if(m && COLOR.test(m[1].trim())) parts.push('background-color:' + m[1].trim());
+        let fm = false;
+        if(n.getAttribute('data-f') === '1'){   /* шрифт и размер сохраняем только у наших span, чужие стили при вставке отбрасываем */
+          const fk = fmtKey((st.match(/font-family:\s*([^;]+)/i) || [])[1]), fz = fmtSizeOf(st);
+          if(fk){ parts.push('font-family:' + fmtCss(fk)); fm = true; }
+          if(fz){ parts.push('font-size:' + fz + 'px'); fm = true; }
+        }
+        if(parts.length){ const sp = document.createElement('span'); sp.setAttribute('style', parts.join(';')); if(fm) sp.setAttribute('data-f', '1'); walk(n, sp); dst.appendChild(sp); }
         else walk(n, dst);
         continue;
       }
@@ -9616,6 +9662,112 @@ function popView(anchor){
   });
 }
 
+/* ================= шрифт и размер выделенного текста ================= */
+const FMT_SIZES = [10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
+const FMT_PROPS = /^(font-family|font-size|background-color)$/;
+const fmtPlain = sp => sp.nodeType === 1 && sp.tagName === 'SPAN' && !sp.classList.length && sp.getAttributeNames().every(a => a === 'style' || a === 'data-f') && Array.from(sp.style).every(p => FMT_PROPS.test(p));
+function fmtHasSel(quiet){
+  restore(); const s = getSelection();
+  const ok = s.rangeCount && !s.isCollapsed && ed.contains(s.anchorNode) && ed.contains(s.focusNode);
+  if(!ok && !quiet) toast('Выделите текст, у которого нужно изменить шрифт или размер');
+  return !!ok;
+}
+/* оборачиваем один текстовый узел в span со стилем (или меняем стиль уже существующего простого span) */
+function fmtNode(t, prop, val){
+  let n = t, p = n.parentNode;
+  while(p && p !== ed && fmtPlain(p)){
+    if(p.firstChild !== n || p.lastChild !== n){
+      const before = p.cloneNode(false), after = p.cloneNode(false);
+      while(p.firstChild !== n) before.appendChild(p.firstChild);
+      while(n.nextSibling) after.appendChild(n.nextSibling);
+      if(before.firstChild) p.parentNode.insertBefore(before, p);
+      if(after.firstChild) p.parentNode.insertBefore(after, p.nextSibling);
+    }
+    n = p; p = n.parentNode;
+  }
+  const chain = []; let c = t.parentNode;
+  while(c && c !== ed && c !== p && fmtPlain(c)){ chain.push(c); c = c.parentNode; }
+  if(!chain.length){ const sp = document.createElement('span'); t.parentNode.insertBefore(sp, t); sp.appendChild(t); chain.push(sp); }
+  chain.forEach((x, i) => { if(i === 0 && val) x.style.setProperty(prop, val); else x.style.removeProperty(prop); });
+  chain.forEach(x => {
+    if(x.style.fontFamily || x.style.fontSize) x.setAttribute('data-f', '1'); else x.removeAttribute('data-f');
+    if(!x.style.length){ while(x.firstChild) x.parentNode.insertBefore(x.firstChild, x); x.remove(); }
+  });
+}
+function fmtMerge(){
+  ed.querySelectorAll('span').forEach(sp => {
+    if(!sp.isConnected || !fmtPlain(sp) || sp.closest('[contenteditable="false"],pre,code')) return;
+    let nx = sp.nextSibling;
+    const skip = () => { while(nx && nx.nodeType === 3 && !nx.nodeValue){ const e = nx; nx = nx.nextSibling; e.remove(); } };
+    skip();
+    while(nx && nx.nodeType === 1 && fmtPlain(nx) && nx.getAttribute('style') === sp.getAttribute('style') && nx.getAttribute('data-f') === sp.getAttribute('data-f')){
+      while(nx.firstChild) sp.appendChild(nx.firstChild); const d = nx; nx = nx.nextSibling; d.remove(); skip();
+    }
+  });
+}
+function fmtApply(prop, val, quiet){
+  if(!fmtHasSel(quiet)) return false;
+  const s = getSelection(), r = s.getRangeAt(0);
+  let sc = r.startContainer, so = r.startOffset, ec = r.endContainer, eo = r.endOffset;
+  if(ec.nodeType === 3 && eo < ec.length) ec.splitText(eo);
+  if(sc.nodeType === 3 && so > 0){ const mid = sc.splitText(so); if(sc === ec) ec = mid; sc = mid; so = 0; }
+  const r2 = document.createRange(); r2.setStart(sc, sc.nodeType === 3 ? 0 : so); r2.setEnd(ec, ec.nodeType === 3 ? ec.length : eo);
+  const cc = r2.commonAncestorContainer, root = cc.nodeType === 1 ? cc : cc.parentNode;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = []; let n;
+  while((n = w.nextNode())){
+    if(!n.nodeValue || !r2.intersectsNode(n)) continue;
+    const pe = n.parentNode;
+    if(pe.closest && pe.closest('pre,code,[contenteditable="false"],[data-pgsp]')) continue;
+    if(!/\S/.test(n.nodeValue) && /^(UL|OL|TABLE|TBODY|THEAD|TR|COLGROUP)$/.test(pe.tagName)) continue;
+    nodes.push(n);
+  }
+  if(!nodes.length){ if(!quiet) toast('В блоках кода и вставках шрифт не меняется'); return false; }
+  nodes.forEach(t => fmtNode(t, prop, val));
+  fmtMerge();
+  const a = nodes[0], z = nodes[nodes.length - 1], nr = document.createRange();
+  nr.setStart(a, 0); nr.setEnd(z, z.nodeValue.length); s.removeAllRanges(); s.addRange(nr); saved = nr.cloneRange();
+  changed(); fmtSync(); return true;
+}
+/* что сейчас у выделения: шрифт и размер */
+function fmtState(){
+  const s = getSelection(); if(!s.rangeCount || !ed.contains(s.anchorNode)) return null;
+  const el = s.anchorNode.nodeType === 3 ? s.anchorNode.parentElement : s.anchorNode; if(!el || el.nodeType !== 1) return null;
+  let fam = '', size = 0;
+  for(let e = el; e && e !== ed; e = e.parentElement){
+    if(!fam && e.style && e.style.fontFamily) fam = fmtKey(e.style.fontFamily);
+    if(!size && e.style && e.style.fontSize) size = parseFloat(e.style.fontSize);
+  }
+  if(!size) size = Math.round(parseFloat(getComputedStyle(el).fontSize)) || 17;
+  return {fam, size};
+}
+let fmtRaf = 0;
+function fmtSync(){
+  const st = fmtState(); if(!st) return;
+  const f = FMT_FONTS.find(x => x.k === st.fam);
+  document.querySelectorAll('[data-c="font"]').forEach(e => { const tt = 'Шрифт и размер выделенного текста' + (f ? ': ' + f.n : ''); e.title = tt; e.setAttribute('aria-label', tt); });
+}
+document.addEventListener('selectionchange', () => { cancelAnimationFrame(fmtRaf); fmtRaf = requestAnimationFrame(fmtSync); });
+function popFont(anchor){
+  if(!fmtHasSel()) return;
+  const st0 = fmtState() || {fam: '', size: 17};
+  openPop(anchor, '<div class="fm-w"><div class="mh">Размер текста, px</div><div class="fz-r"><button type="button" data-s="-1" aria-label="Меньше">A−</button><input type="number" id="fzIn" min="8" max="120" step="1" value="' + Math.round(st0.size) + '" aria-label="Размер в пикселях"><button type="button" data-s="1" aria-label="Больше">A+</button></div><div class="fz-g">' + FMT_SIZES.map(n => '<button type="button" data-z="' + n + '">' + n + '</button>').join('') + '</div><button type="button" class="fz-d" data-z="">Размер по умолчанию</button><div class="mh">Шрифт</div><div class="fp-l"><button type="button" data-f="">По умолчанию</button>' + FMT_FONTS.map(f => '<button type="button" data-f="' + f.k + '" style="font-family:' + f.css + '">' + f.n + '</button>').join('') + '</div><div class="mh" style="text-transform:none;letter-spacing:0">Системные шрифты: на разных устройствах выглядят чуть по-разному.</div></div>', p => {
+    const inp = p.querySelector('#fzIn'), clampv = v => Math.max(8, Math.min(120, Math.round(+v) || 17));
+    const sync = () => {
+      const st = fmtState() || {fam: '', size: 17}, sz = Math.round(st.size);
+      p.querySelectorAll('[data-f]').forEach(b => b.classList.toggle('on', b.dataset.f === st.fam));
+      p.querySelectorAll('[data-z]').forEach(b => b.classList.toggle('on', b.dataset.z !== '' && +b.dataset.z === sz));
+      if(document.activeElement !== inp) inp.value = sz;
+    };
+    sync();
+    p.addEventListener('click', e => {
+      const f = e.target.closest('[data-f]'); if(f){ fmtApply('font-family', fmtCss(f.dataset.f)); sync(); return; }
+      const z = e.target.closest('[data-z]'); if(z){ fmtApply('font-size', z.dataset.z ? z.dataset.z + 'px' : ''); sync(); return; }
+      const s = e.target.closest('[data-s]'); if(s){ const v = clampv(+inp.value + (+s.dataset.s)); inp.value = v; fmtApply('font-size', v + 'px'); sync(); }
+    });
+    inp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); const v = clampv(inp.value); inp.value = v; fmtApply('font-size', v + 'px'); sync(); } });
+  });
+}
+
 /* ================= toolbar ================= */
 const SV = {
   ul:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
@@ -9635,6 +9787,7 @@ const SV = {
   tbl:'<rect x="3" y="8" width="13.500" height="12" rx="2"/><path d="M3 13h13.500M9.500 13v7"/><path d="M7 4.500h11a2.500 2.500 0 0 1 2.500 2.500v9"/>',
   page:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
   eraser: IC.eraser,
+  font:'<path d="M3.5 7V4.500h11V7M9 4.500v12M6.500 16.500h5"/><path d="M14 20.500l3.500-8 3.500 8M15.300 18h4.400"/>',
   ai:'<path d="M10.5 3.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6L3 11l5.600-1.9zM18.500 15l.9 2.600 2.600.9-2.600.9-.9 2.600-.9-2.600-2.600-.9 2.600-.9z"/>',
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
   spell:'<path d="M3.5 17l4-10 4 10M4.9 13.5h5.2"/><path d="M14 15.5l2.6 2.6L21 11.5"/>'
@@ -9642,7 +9795,7 @@ const SV = {
 const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${SV[k]}</svg>`;
 const TOOLS = [
   ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],['spell',svg('spell'),'Проверка орфографии (словарь) и грамматики (ИИ)'],['mic',svg('mic'),'Голосовой ввод: встроенный или Gemini (русский и английский)'],'|',
-  ['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
+  ['font',svg('font'),'Шрифт и размер выделенного текста'],['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
   '|',['h1','H1','Заголовок 1'],['h2','H2','Заголовок 2'],['h3','H3','Заголовок 3'],
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
   '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить вложенность (Shift+Tab)'],['indent',svg('indent'),'Вложенный пункт (Tab)'],
@@ -9654,7 +9807,7 @@ const TOOLS = [
 const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['cell-merge','Объединить','Объединить выделенные ячейки (выделение: протяните мышью или Shift+клик)'],['cell-split','Разъединить','Разъединить объединённую ячейку'],['cell-range','Диапазон','Выделять ячейки касанием: нажмите здесь, затем на конечную ячейку'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
 const BUB = ['ai','|','bold','italic','underline','strike','mark','|','h2','quote','code','link'];
 const toolMap = Object.fromEntries(TOOLS.filter(t => t !== '|').map(t => [t[0], t]));
-const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' : t[0] === 'ai' ? ' txt ai' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
+const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' :  t[0] === 'ai' ? ' txt ai' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
 $('#edTools').innerHTML = TOOLS.map(btn).join('');
 $('#edTbl').innerHTML = TBL.map(t => `<button type="button" class="tb txt" data-c="${t[0]}" title="${t[2]}">${t[1]}</button>`).join('');
 bubble.innerHTML = BUB.map(k => k === '|' ? btn('|') : btn(toolMap[k])).join('');
@@ -9802,7 +9955,7 @@ function run(c, b){
     case 'quote': { restore(); const bq = up(/^BLOCKQUOTE$/); return bq ? unwrap(bq) : ex('formatBlock', 'blockquote'); }
     case 'code': return toggleCode();
     case 'hr': restore(); document.execCommand('insertHorizontalRule'); ensureTail(ed); changed(); return;
-    case 'clear': return ex('removeFormat');
+    case 'clear': ex('removeFormat'); fmtApply('font-family', '', true); fmtApply('font-size', '', true); return;
     case 'alignL': return alignBlocks('left');
     case 'alignC': return alignBlocks('center');
     case 'alignR': return alignBlocks('right');
@@ -9810,6 +9963,7 @@ function run(c, b){
     case 'ai': return openAI();
     case 'spell': return gcToggle();
     case 'mic': return vcToggle();
+    case 'font': return popFont(b);
     case 'page': return popPage(b);
     case 'view': return popView(b);
     case 'table': {
@@ -12585,7 +12739,7 @@ const qzTgLink = k => (typeof YNG_INVITE_BASE !== 'undefined' && YNG_INVITE_BASE
 
 /* ---------- модель ---------- */
 const qzNewTest = () => ({id: uid(), title: 'Новый тест', desc: '', own: true, created: Date.now(), updated: Date.now(), graded: true, learn: false, closed: false,
-  pr: {blur: false, nocopy: false, qtimer: false, full: false, attempts: false, ttl: false}, attempts: 1, totalMin: 0, defSec: 45, askName: false, key: '', pubAt: 0, srv: 0, open: true, q: []});
+  pr: {blur: false, nocopy: false, qtimer: false, full: false, attempts: false, ttl: false}, attempts: 1, totalMin: 0, defSec: 45, askName: false, n: 0, key: '', pubAt: 0, srv: 0, open: true, q: []});
 function qzNewQ(type, t){
   const q = {id: uid(), t: type, text: '', expl: '', pts: 1, sec: (t && t.defSec) || 45};
   if(type === 'choice'){ q.multi = false; q.pen = 0; q.opts = [{id: uid(), text: '', ok: true}, {id: uid(), text: '', ok: false}]; }
@@ -12605,7 +12759,7 @@ function qzFixTest(o){
   if(!o || typeof o !== 'object' || !Array.isArray(o.q)) return null;
   const t = Object.assign(qzNewTest(), {id: qzId(o.id), title: qzStr(o.title, 160) || 'Без названия', desc: qzStr(o.desc, 3000), own: o.own !== false,
     created: Number(o.created) || Date.now(), updated: Number(o.updated) || Date.now(), graded: o.graded !== false, learn: !!o.learn, closed: !!o.closed,
-    attempts: qzInt(o.attempts, 1, 1, 99), totalMin: qzFl(o.totalMin, 0, 0, 600), defSec: qzInt(o.defSec, 45, 5, 3600), askName: !!o.askName,
+    attempts: qzInt(o.attempts, 1, 1, 99), totalMin: qzFl(o.totalMin, 0, 0, 600), defSec: qzInt(o.defSec, 45, 5, 3600), askName: !!o.askName, n: qzInt(o.n, 0, 0, 500),
     key: /^[A-Z0-9]{8}$/.test(o.key || '') ? o.key : '', pubAt: Number(o.pubAt) || 0, srv: Number(o.srv) || 0, open: o.open !== false});
   const p = o.pr || {}; t.pr = {blur: !!p.blur, nocopy: !!p.nocopy, qtimer: !!p.qtimer, full: !!p.full, attempts: !!p.attempts, ttl: !!p.ttl};
   if(!t.graded) t.learn = false;
@@ -12619,7 +12773,8 @@ function qzFixTest(o){
     else if(q.t === 'seq') q.items = (Array.isArray(x.items) ? x.items : []).slice(0, 40).map(i => ({id: qzId(i && i.id), text: qzStr(i && i.text, 300)}));
     else if(q.t === 'hot'){ q.img = /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(x.img || '') ? String(x.img) : '';
       q.areas = (Array.isArray(x.areas) ? x.areas : []).slice(0, 40).map(a => ({id: qzId(a && a.id), sh: a && a.sh === 'e' ? 'e' : 'r', x: qzFl(a && a.x, 0, 0, 1), y: qzFl(a && a.y, 0, 0, 1), w: qzFl(a && a.w, 0, 0, 1), h: qzFl(a && a.h, 0, 0, 1)})); }
-    else if(q.t === 'match') q.pairs = (Array.isArray(x.pairs) ? x.pairs : []).slice(0, 30).map(a => ({id: qzId(a && a.id), l: qzStr(a && a.l, 300), r: qzStr(a && a.r, 300)}));
+    else if(q.t === 'match'){ q.pairs = (Array.isArray(x.pairs) ? x.pairs : []).slice(0, 30).map(a => ({id: qzId(a && a.id), l: qzStr(a && a.l, 300), r: qzStr(a && a.r, 300)}));
+      if(Array.isArray(x.lefts) && Array.isArray(x.rights)){ q.lefts = x.lefts.slice(0, 30).map(a => ({id: qzId(a && a.id), l: qzStr(a && a.l, 300)})); q.rights = x.rights.slice(0, 30).map(a => ({id: qzId(a && a.id), r: qzStr(a && a.r, 300)})); } }
     return q;
   }).filter(Boolean);
   if(!t.graded) t.q = t.q.filter(q => QT_SURVEY.includes(q.t));
@@ -12707,28 +12862,7 @@ function qzClean(t){
   return c;
 }
 
-/* ---------- коды для обмена тестами и результатами ---------- */
-const qzB64 = u8 => { let s = ''; for(let i = 0; i < u8.length; i += 8192) s += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
-const qzUnB64 = s => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while(s.length % 4) s += '='; const b = atob(s), u = new Uint8Array(b.length); for(let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
-async function qzPipe(bytes, Ctor, fmt){ const s = new Ctor(fmt), w = s.writable.getWriter(); w.write(bytes); w.close(); return new Uint8Array(await new Response(s.readable).arrayBuffer()); }
-async function qzEnc(obj, pre){
-  const bytes = new TextEncoder().encode(JSON.stringify(obj));
-  if(window.CompressionStream){ try{ return pre + '1.' + qzB64(await qzPipe(bytes, CompressionStream, 'deflate-raw')); }catch(e){} }
-  return pre + '0.' + qzB64(bytes);
-}
-async function qzDec(code){
-  const m = /^(YQ|YR)([01])\.([A-Za-z0-9_-]+)$/.exec(code.trim()); if(!m) throw new Error('bad_code');
-  let u = qzUnB64(m[3]); if(m[2] === '1'){ if(!window.DecompressionStream) throw new Error('no_decomp'); u = await qzPipe(u, DecompressionStream, 'deflate-raw'); }
-  return {kind: m[1] === 'YQ' ? 'test' : 'result', obj: JSON.parse(new TextDecoder().decode(u))};
-}
-/* принимает код, ссылку или JSON-файл */
-async function qzParseAny(str){
-  str = String(str || '').trim(); if(!str) throw new Error('empty');
-  const lm = /#\/quiz\/s\/([A-Za-z0-9._-]+)/.exec(str); if(lm) str = lm[1];
-  if(/^(YQ|YR)[01]\./.test(str)) return qzDec(str);
-  if(str[0] === '{'){ const o = JSON.parse(str); if(o.k === 'yng-quiz') return {kind: 'test', obj: o}; if(o.k === 'yng-result') return {kind: 'result', obj: o}; }
-  throw new Error('bad_code');
-}
+/* ---------- публикация: только ссылка или ключ ---------- */
 const qzTestPack = t => ({k: 'yng-quiz', v: 1, t: Object.assign(qzClean(t), {own: false, key: '', pubAt: 0, srv: 0, open: true})});
 const qzSlug = s => (String(s).toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'test').slice(0, 40);
 const qzDur = ms => { ms = Math.max(0, Math.round(ms / 1000)); const h = Math.floor(ms / 3600), m = Math.floor(ms % 3600 / 60), s = ms % 60; return (h ? h + ':' + pad(m) : m) + ':' + pad(s); };
@@ -12736,6 +12870,10 @@ const qzDate = ts => new Date(ts).toLocaleString('ru-RU', {day: 'numeric', month
 const qzPct = (p, m) => m > 0 ? Math.round(p / m * 100) : 0;
 const qzPl = (n, a, b, c) => { const m = Math.abs(n) % 100, k = m % 10; return m > 10 && m < 20 ? c : k > 1 && k < 5 ? b : k === 1 ? a : c; };
 const qzAskS = (a, b, c) => askYN(a, b, c).then(v => v ? 'yes' : 'no');
+
+/* колонки «Сопоставления»: с сервера приходят независимые идентификаторы слева и справа, в предпросмотре — пары автора */
+const qzSides = q => q.lefts && q.lefts.length ? {L: q.lefts, R: q.rights} : {L: q.pairs.map(p => ({id: p.id, l: p.l})), R: q.pairs.map(p => ({id: p.id, r: p.r}))};
+const qzIsTg = () => !!(TG && TG.initData);
 
 /* ---------- список ---------- */
 const qzHead = (eb, h, lead) => '<div class="eyebrow" style="margin-bottom:8px">' + eb + '</div><h1 class="fl-h1">' + h + '</h1>' + (lead ? '<p class="lead">' + lead + '</p>' : '');
@@ -12750,72 +12888,30 @@ function qzTags(t){
   return '<div class="qz-tags">' + a.map(x => '<span class="qz-tag ' + x[1] + '">' + x[0] + '</span>').join('') + '</div>';
 }
 function qzCard(t, rs){
-  const id = esc(t.id), n = t.q.length, mine = rs.filter(r => r.tid === t.id && !r.imported), cnt = rs.filter(r => r.tid === t.id).length;
+  const id = esc(t.id), n = t.n || t.q.length, mine = rs.filter(r => r.tid === t.id && !r.imported), cnt = rs.filter(r => r.tid === t.id).length;
   const sub = n + ' ' + qzPl(n, 'вопрос', 'вопроса', 'вопросов') + ' · ' + (t.own ? (cnt ? cnt + ' ' + qzPl(cnt, 'прохождение', 'прохождения', 'прохождений') : 'ещё не проходили') : (mine.length ? 'ваших попыток: ' + mine.length : 'не пройден'));
   const ib = (a, k, ti, cls) => '<button type="button" class="qz-ib ' + (cls || '') + '" data-qa="' + a + '" data-id="' + id + '" title="' + ti + '" aria-label="' + ti + '">' + qIco(k) + '</button>';
   return '<article class="qz-c"><div class="qz-c-top"><span class="qz-c-ic">' + qIco('quiz') + '</span><div class="qz-c-t"><b title="' + esc(t.title) + '">' + esc(t.title) + '</b><span>' + sub + '</span></div></div>' + qzTags(t) +
-    '<div class="qz-c-ft"><button type="button" class="btn small" data-qa="play" data-id="' + id + '">' + qIco('play') + 'Пройти</button>' +
+    '<div class="qz-c-ft"><button type="button" class="btn small" data-qa="' + (t.own ? 'pvplay' : 'play') + '" data-id="' + id + '">' + qIco('play') + (t.own ? 'Предпросмотр' : 'Пройти') + '</button>' +
     (t.own ? ib('res', 'chart', 'Результаты') + ib('edit', 'pen', 'Редактировать') + ib('share', 'share', 'Поделиться') + ib('dup', 'dup', 'Создать копию') + ib('del', 'trash', 'Удалить', 'dn')
       : (mine.length ? ib('my', 'chart', 'Мои результаты') : '') + ib('del', 'trash', 'Удалить', 'dn')) + '</div></article>';
 }
 async function qzList(){
   QZ.t = null; const tk = ++QZ.tk;
   const [ts, rs] = await Promise.all([qzAll('t'), qzAll('r')]); if(tk !== QZ.tk) return;
+  /* чистка: полученные ранее тесты не должны хранить вопросы с ответами (старые версии сохраняли их целиком) */
+  for(const t of ts) if(t.own === false && Array.isArray(t.q) && t.q.length){ t.n = t.q.length; t.q = []; qzPut('t', t).catch(() => {}); }
   const all = ts.map(qzFixTest).filter(Boolean).sort((a, b) => b.updated - a.updated), my = all.filter(t => t.own), got = all.filter(t => !t.own);
   vQuiz.innerHTML = qzHead('Тестирование', 'Тесты', 'Тесты, опросы и тренажёры: создавайте свои, делитесь по ключу или ссылке и проходите чужие.') +
     '<div class="qz-keybox"><input class="qz-in" id="qzKey" placeholder="Ключ теста, например K7M4-9QXD" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Ключ теста"><button class="btn small" type="button" data-qa="openkey">Открыть</button></div>' +
-    '<div class="qz-top"><button class="btn small" type="button" data-qa="new">' + qIco('plus') + 'Новый тест</button><button class="btn small neutral" type="button" data-qa="open">' + qIco('upl') + 'Открыть по коду или файлу</button><span class="qz-cnt">Всего: ' + all.length + '</span></div>' +
-    (all.length ? '' : '<div class="np-empty"><b>Пока нет тестов</b>Создайте первый тест или откройте присланный автором код.</div>') +
+    '<div class="qz-top"><button class="btn small" type="button" data-qa="new">' + qIco('plus') + 'Новый тест</button><span class="qz-cnt">Всего: ' + all.length + '</span></div>' +
+    (all.length ? '' : '<div class="np-empty"><b>Пока нет тестов</b>Создайте первый тест или введите ключ, который прислал автор.</div>') +
     (my.length ? '<h2 class="qz-h2">Мои тесты</h2><div class="qz-grid">' + my.map(t => qzCard(t, rs)).join('') + '</div>' : '') +
     (got.length ? '<h2 class="qz-h2">Полученные</h2><div class="qz-grid">' + got.map(t => qzCard(t, rs)).join('') + '</div>' : '');
   qzRetryPending();
 }
 
-/* ---------- импорт / общий доступ ---------- */
-const qzErr = e => ({empty: 'Вставьте код или выберите файл', bad_code: 'Это не похоже на код теста', no_decomp: 'Браузер не умеет распаковывать код — попросите файл'})[e && e.message] || 'Не удалось прочитать код';
-async function qzOpenDlg(){
-  let code = '';
-  const v = await dialog('<h3>Открыть тест</h3><p>Вставьте ключ, ссылку или код от автора теста либо выберите файл с тестом.</p><textarea id="qzCode" class="qz-in" rows="4" placeholder="YQ1.… или ссылка"></textarea><input type="file" id="qzFile" accept=".json,.txt,application/json,text/plain" style="margin:10px 0 0;max-width:100%"><div class="acts" style="margin-top:14px"><button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" data-v="ok">Открыть</button></div>', '', m => {
-    const ta = m.querySelector('#qzCode'); ta.addEventListener('input', () => { code = ta.value; });
-    m.querySelector('#qzFile').addEventListener('change', async e => { const f = e.target.files[0]; if(f){ code = await f.text(); ta.value = '(файл: ' + f.name + ')'; } });
-  });
-  if(v !== 'ok') return;
-  const kk = qzNormKey(code.replace(/^.*#\/quiz\/k\//, ''));
-  if(/^[A-Za-z0-9\- ]{8,12}$/.test(code.trim()) && !/^(YQ|YR)[01]\./i.test(code.trim()) && kk.length === 8 || /#\/quiz\/k\/[A-Za-z0-9-]{8,9}/.test(code)) return qzOpenKey(kk);
-  try{ const r = await qzParseAny(code); if(r.kind !== 'test') return toast('Это результат прохождения. Импортируйте его на странице «Результаты» своего теста.'); await qzSaveImported(r.obj, true); }
-  catch(e){ toast(qzErr(e)); }
-}
-async function qzSaveImported(obj, go){
-  const t = qzFixTest(obj.t || obj); if(!t || !t.q.length) throw new Error('bad_code');
-  const ex = await qzGet('t', t.id);
-  if(ex && ex.own){ toast('Это ваш собственный тест — открываю его'); nav('#/quiz/p/' + t.id); return t; }
-  t.own = false; t.updated = Date.now(); await qzPut('t', t);
-  toast('Тест «' + t.title + '» сохранён');
-  nav(go ? '#/quiz/p/' + t.id : '#/quiz'); return t;
-}
-async function qzImportView(code){
-  let r; try{ r = await qzDec(code); }catch(e){ vQuiz.innerHTML = qzHead('Тестирование', 'Не удалось открыть', 'Ссылка повреждена или обрезана. Попросите автора прислать код или файл.') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
-  const t = r.kind === 'test' ? qzFixTest(r.obj.t || r.obj) : null;
-  if(!t){ vQuiz.innerHTML = qzHead('Тестирование', 'Это не тест', 'В ссылке находится результат прохождения. Его можно загрузить на странице «Результаты» вашего теста.') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
-  const n = t.q.length;
-  vQuiz.innerHTML = '<div class="qz-box"><div class="eyebrow" style="margin-bottom:8px">Вам прислали тест</div><h1>' + esc(t.title) + '</h1>' + (t.desc ? '<p class="lead">' + esc(t.desc) + '</p>' : '') + qzTags(t) +
-    '<p class="qz-hint" style="margin:10px 0 18px">' + n + ' ' + qzPl(n, 'вопрос', 'вопроса', 'вопросов') + '</p><div class="qz-top" style="margin:0"><button class="btn small" type="button" id="qzImGo">Сохранить и пройти</button><button class="btn small neutral" type="button" id="qzImSv">Только сохранить</button><a class="btn small neutral" href="#/quiz">Отмена</a></div></div>';
-  $('#qzImGo').onclick = () => qzSaveImported(r.obj, true).catch(e => toast(qzErr(e)));
-  $('#qzImSv').onclick = () => qzSaveImported(r.obj, false).catch(e => toast(qzErr(e)));
-}
-async function qzShareFile(t, note){
-  const code = await qzEnc(qzTestPack(t), 'YQ'), link = location.href.split('#')[0] + '#/quiz/s/' + code, big = link.length > 14000;
-  return dialog('<h3>Поделиться файлом или кодом</h3>' + (note ? '<div class="qz-warn">' + esc(note) + '<br>Пока можно поделиться тестом без сервера — но результаты тогда придётся собирать вручную.</div>' : '') + '<p>Отправьте код, ссылку или файл. Получатель откроет тест у себя, а результат пришлёт вам «кодом результата» — вы загрузите его на странице результатов.</p>' +
-    (big ? '<p class="qz-hint" style="margin:0 0 10px">Тест слишком большой для ссылки (много изображений) — используйте код или файл.</p>' : '<div class="qz-lb">Ссылка</div><div class="qz-code">' + esc(link) + '</div>') +
-    '<div class="qz-lb">Код</div><div class="qz-code">' + esc(code) + '</div><p class="qz-hint" style="margin:0 0 14px">Вместе с тестом передаются правильные ответы — делитесь им с теми, кому доверяете.</p>' +
-    '<div class="acts">' + (big ? '' : '<button type="button" class="btn small neutral" data-cp="link">Копировать ссылку</button>') + '<button type="button" class="btn small neutral" data-cp="code">Копировать код</button><button type="button" class="btn small neutral" data-cp="file">Скачать файл</button><button type="button" class="btn small" data-v="">Готово</button></div>', '', m => {
-    m.addEventListener('click', async e => {
-      const b = e.target.closest('[data-cp]'); if(!b) return;
-      if(b.dataset.cp === 'file') yngSave(new Blob([JSON.stringify(qzTestPack(t))], {type: 'application/json'}), qzSlug(t.title) + '.yngtest.json');
-      else copyText(b.dataset.cp === 'link' ? link : code, b.dataset.cp === 'link' ? 'Ссылка скопирована' : 'Код скопирован');
-    });
-  });
-}
+/* ---------- общий доступ: только ключ или ссылка ---------- */
 /* публикация на сервере: ключ и ссылки */
 async function qzPublish(t){
   const r = await qzApi('quiz.publish', {test: qzTestPack(t).t});
@@ -12826,17 +12922,17 @@ async function qzPublish(t){
 }
 async function qzShare(t){
   toast('Публикуем тест…');
-  try{ await qzPublish(t); }catch(e){ return qzShareFile(t, QZ_ERR[e.message] || ('Не удалось опубликовать: ' + e.message)); }
+  try{ await qzPublish(t); }catch(e){ qzFail(e); return; }
   const key = t.key, tl = qzTgLink(key), wl = qzWebLink(key), links = {key: qzKeyFmt(key), tg: tl, web: wl};
   const blk = (lb, val, cp) => '<div class="qz-lb">' + lb + '</div><div class="qz-code">' + esc(val) + '</div><button type="button" class="btn small neutral" data-cp="' + cp + '" style="margin:0 0 10px">Копировать</button>';
-  return dialog('<h3>Тест опубликован</h3><p>Любой, у кого есть ключ или ссылка, сможет пройти тест. Результаты всех участников соберутся на странице «Результаты».</p>' +
+  return dialog('<h3>Тест опубликован</h3><p>Открыть тест можно только по ключу или ссылке. Результаты всех участников соберутся на странице «Результаты».</p>' +
     '<div class="qz-lb">Ключ — его вводят на странице «Тесты»</div><div class="qz-keybig">' + esc(links.key) + '</div><button type="button" class="btn small" data-cp="key" style="margin:0 0 12px">Копировать ключ</button>' +
     (tl ? blk('Ссылка для Telegram', tl, 'tg') : '') + blk('Ссылка для браузера', wl, 'web') +
     '<div class="qz-row"><div class="g"><b>Принимать прохождения</b><small>Если выключить, новые ответы приниматься не будут</small></div><button type="button" class="qz-sw' + qzOn(t.open !== false) + '" id="qzAcc" role="switch" aria-checked="' + (t.open !== false) + '"></button></div>' +
-    '<div class="acts"><button type="button" class="btn small danger" data-ac="unpub">Снять с публикации</button><button type="button" class="btn small neutral" data-cp="file">Скачать файл</button><button type="button" class="btn small" data-v="">Готово</button></div>', '', (m, done) => {
+    '<div class="acts"><button type="button" class="btn small danger" data-ac="unpub">Снять с публикации</button><button type="button" class="btn small" data-v="">Готово</button></div>', '', (m, done) => {
     m.addEventListener('click', async e => {
       const b = e.target.closest('[data-cp]');
-      if(b){ if(b.dataset.cp === 'file') yngSave(new Blob([JSON.stringify(qzTestPack(t))], {type: 'application/json'}), qzSlug(t.title) + '.yngtest.json'); else copyText(links[b.dataset.cp], b.dataset.cp === 'key' ? 'Ключ скопирован' : 'Ссылка скопирована'); return; }
+      if(b){ copyText(links[b.dataset.cp], b.dataset.cp === 'key' ? 'Ключ скопирован' : 'Ссылка скопирована'); return; }
       const sw = e.target.closest('#qzAcc');
       if(sw){ const nv = !(t.open !== false); try{ await qzApi('quiz.close', {id: t.id, open: nv}); t.open = nv; sw.classList.toggle('on', nv); sw.setAttribute('aria-checked', nv); await qzPut('t', t); if(QZ.t && QZ.t.id === t.id){ QZ.t.open = nv; qzDrawPub(); } }catch(err){ qzFail(err); } return; }
       if(e.target.closest('[data-ac="unpub"]')){
@@ -12871,13 +12967,14 @@ function qzSetHtml(t){
     qzRow('Оценивать ответы', 'Выключите для опроса или обратной связи: правильных ответов нет, доступны вопросы с выбором и текстовые.', qzSw('graded', t.graded)) +
     qzRow('Режим обучения', 'После каждого ответа участник сразу видит разбор: верно или нет и пояснение.', qzSw('learn', t.learn, !t.graded), !t.graded) +
     qzRow('Спрашивать имя участника', 'При входе в тест участник введёт ФИО или продолжит с именем из Telegram. Выключено — имя берётся из Telegram автоматически.', qzSw('askName', t.askName)) +
-    qzRow('Скрыть проверку после теста', 'Участник не увидит свои ответы и оценку — только сообщение, что ответы переданы на проверку.', qzSw('closed', t.closed, !t.graded), !t.graded) + '</div>' +
+    qzRow('Скрыть проверку после теста', 'Участник не увидит свои ответы и оценку — только сообщение, что ответы переданы на проверку. Если у теста несколько попыток, разбор с правильными ответами и так показывается только после последней.', qzSw('closed', t.closed, !t.graded), !t.graded) + '</div>' +
     '<div class="qz-sec"><h3>Анти-списывание</h3>' +
+    '<div class="qz-hint" style="margin:8px 0 0">Если включена любая из функций ниже, тест можно проходить только после входа через Telegram — гости из браузера не допускаются. Правильные ответы остаются на сервере и участнику не передаются.</div>' +
     qzRow('Фиксировать потерю фокуса', 'Переключение вкладки или окна записывается и показывается в результатах.', qzSw('pr.blur', p.blur)) +
     qzRow('Запретить копирование', 'Нельзя выделять текст, копировать и вставлять (Ctrl+C / Ctrl+V).', qzSw('pr.nocopy', p.nocopy)) +
     qzRow('Таймер на каждый вопрос', 'Время задаётся у каждого вопроса. Пропускать вопросы и возвращаться назад нельзя; по окончании времени — автоматический переход.' + (p.qtimer ? '<br>Время по умолчанию для новых вопросов, сек: ' + qzNumIn('defSec', t.defSec, 3, 3600) : ''), qzSw('pr.qtimer', p.qtimer)) +
     qzRow('Полноэкранный режим', 'Тест открывается на весь экран. Если участник выйдет из него или переключит окно (Alt+Tab), тест сразу завершится с нулевым результатом.', qzSw('pr.full', p.full)) +
-    qzRow('Ограничить число попыток', 'Сколько раз один пользователь может пройти тест.' + (p.attempts ? '<br>Попыток: ' + qzNumIn('attempts', t.attempts, 1, 99) : ''), qzSw('pr.attempts', p.attempts)) +
+    qzRow('Ограничить число попыток', 'Сколько раз один пользователь Telegram может пройти тест. Попытка засчитывается в момент начала; дополнительные попытки (пересдачу) автор выдаёт на странице результатов.' + (p.attempts ? '<br>Попыток: ' + qzNumIn('attempts', t.attempts, 1, 99) : ''), qzSw('pr.attempts', p.attempts)) +
     qzRow('Таймер на весь тест', 'Когда время выйдет, тест завершится автоматически.' + (p.ttl ? '<br>Минут на тест: ' + qzNumIn('totalMin', t.totalMin, 1, 600, 1) : ''), qzSw('pr.ttl', p.ttl)) + '</div>';
 }
 const qzQSum = q => { const T = QT[q.t][0]; return T + (QZ.t.graded ? ' · ' + qzFmt(q.pts) + ' б.' : '') + (QZ.t.pr.qtimer ? ' · ' + q.sec + ' с' : ''); };
@@ -13029,7 +13126,7 @@ function qzHsFit(im){ const h = im.parentNode; if(h && im.naturalWidth && im.nat
 function qzHsDraw(e){
   const hs = e.target.closest && e.target.closest('.qz-hs[data-hs]'); if(!hs || !QZ.t || e.button > 0) return;
   const q = qzQ(hs.dataset.hs); if(!q) return; e.preventDefault();
-  const r = hs.getBoundingClientRect(), pt = ev => [Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)), Math.max(0, Math.min(1, (ev.clientY - r.top) / r.height))], a = pt(e);
+  const r = (hs.querySelector('img') || hs).getBoundingClientRect(), pt = ev => [Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)), Math.max(0, Math.min(1, (ev.clientY - r.top) / r.height))], a = pt(e);
   const tmp = document.createElement('div'); tmp.className = 'qz-ar t' + (QZ.hsShape === 'e' ? ' e' : ''); hs.appendChild(tmp);
   const geo = ev => { const b = pt(ev); return {x: Math.min(a[0], b[0]), y: Math.min(a[1], b[1]), w: Math.abs(a[0] - b[0]), h: Math.abs(a[1] - b[1])}; };
   const mv = ev => { const g = geo(ev); tmp.style.cssText = 'left:' + g.x * 100 + '%;top:' + g.y * 100 + '%;width:' + g.w * 100 + '%;height:' + g.h * 100 + '%'; };
@@ -13054,7 +13151,6 @@ async function qzFixStale(t, rs){
   for(const r of rs){
     if(r.status !== 'run' || (QZ.run && QZ.run.rid === r.id)) continue;
     const sc = qzScoreAll(t, r.ans || {}); Object.assign(r, {status: 'interrupted', end: r.end || Date.now(), per: sc.per, pts: t.pr.full ? 0 : sc.pts, max: sc.max});
-    if(r.key || t.key){ r.key = r.key || t.key; r.sent = false; }
     await qzPut('r', r).catch(() => {});
   }
   return rs;
@@ -13067,56 +13163,103 @@ function qzNameDlg(tgn){
     m.querySelector('#qzWhoOk').onclick = ok; i.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); ok(); } });
   }).then(v => v === 'tg' ? tgn : (v && v.slice(0, 2) === 'n:' ? v.slice(2) : null));
 }
-async function qzIntro(id, pv){
-  const tk = ++QZ.tk; let o = await qzGet('t', id), t = o ? qzFixTest(o) : null;
+/* условия теста по настройкам (для экрана входа) */
+const QCI = {try:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>', clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', timer:'<path d="M9 3h6M12 3v3"/><circle cx="12" cy="14" r="7"/><path d="M12 10.5V14l2 1.5"/>', eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5M3 3l18 18"/>', full:'<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/>', lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>', info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'};
+const qci = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + QCI[k] + '</svg>';
+/* плашка с условиями: rules = [[значок, html, опасно?], ...] */
+function qzCond(title, sub, rules){
+  if(!rules || !rules.length) return '';
+  return '<section class="qz-cond"><div class="qz-cond-h"><span class="qz-cond-i">' + qci('info') + '</span><div><h2>' + esc(title) + '</h2><p>' + esc(sub) + '</p></div></div><ul class="qz-cond-l">' + rules.map(r => '<li' + (r[2] ? ' class="dn"' : '') + '><span class="qz-cond-ic">' + qci(r[0]) + '</span><div>' + r[1] + '</div></li>').join('') + '</ul></section>';
+}
+function qzRules(m, used){
+  const p = m.pr || {}, r = [];
+  if(p.attempts) r.push(['try', 'Количество попыток: <b>' + m.attempts + '</b>. Использовано: ' + used + (m.left != null ? ', осталось: <b>' + m.left + '</b>' : '') + '.']);
+  if(p.ttl && m.totalMin) r.push(['clock', 'Время на весь тест: <b>' + qzFmt(m.totalMin) + ' мин</b>. Когда время выйдет, тест завершится автоматически.']);
+  if(p.qtimer) r.push(['timer', 'На каждый вопрос отведено <b>отдельное время</b>. Пропускать вопросы и возвращаться к прошлым нельзя; когда время выйдет, вы автоматически перейдёте к следующему вопросу.']);
+  if(p.blur) r.push(['eye', 'Переключение на другие вкладки и окна фиксируется, автор теста увидит это в результатах.']);
+  if(p.nocopy) r.push(['copy', 'Выделение, копирование и вставка текста отключены.']);
+  if(p.full) r.push(['full', 'Тест откроется <b>на весь экран</b>. Если вы выйдете из полноэкранного режима или переключитесь на другое окно (в том числе через Alt+Tab), тест сразу завершится с <b>нулевым результатом</b>.', 1]);
+  if(p.blur || p.nocopy || p.qtimer || p.full || p.attempts || p.ttl) r.push(['lock', 'Проходить тест можно только после входа через Telegram. Попытка засчитывается в момент начала, перезагрузка страницы её не возвращает.']);
+  return r;
+}
+function qzNameDlg(tgn){
+  let last = ''; try{ last = localStorage.getItem('yng-qz-name') || ''; }catch(e){}
+  return dialog('<h3>Представьтесь</h3><p>Укажите ФИО — его увидит автор теста.</p><input class="qz-in" id="qzWhoIn" maxlength="80" placeholder="Фамилия Имя Отчество" autocomplete="name" value="' + esc(last) + '" data-focus><div class="acts" style="flex-wrap:wrap">' +
+    (tgn ? '<button type="button" class="btn small neutral" data-v="tg">Продолжить как «' + esc(tgn) + '»</button>' : '') + '<button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" id="qzWhoOk">Продолжить</button></div>', '', (m, done) => {
+    const i = m.querySelector('#qzWhoIn'), ok = () => { const v = qzNorm(i.value); if(!v){ i.focus(); i.style.borderColor = '#ff453a'; return; } try{ localStorage.setItem('yng-qz-name', v); }catch(e){} done('n:' + v); };
+    m.querySelector('#qzWhoOk').onclick = ok; i.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); ok(); } });
+  }).then(v => v === 'tg' ? tgn : (v && v.slice(0, 2) === 'n:' ? v.slice(2) : null));
+}
+const qzIntro = (id, pv) => pv ? qzIntroPv(id) : qzIntroSrv(id);
+/* предпросмотр для автора: всё локально, результат не сохраняется */
+async function qzIntroPv(id){
+  const tk = ++QZ.tk, o = await qzGet('t', id), t = o ? qzFixTest(o) : null; if(tk !== QZ.tk) return;
   if(!t){ vQuiz.innerHTML = qzHead('Тестирование', 'Тест не найден', 'Возможно, он был удалён.') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
-  const user = qzUser(), tgn = qzTgName(), sv = {used: 0, closed: false, gone: false, offline: false};
-  if(t.key && !pv){
-    try{
-      const g = await qzApi('quiz.get', {key: t.key}); sv.used = g.used || 0; sv.closed = !g.open;
-      if(!t.own && g.test && g.updated !== t.srv){ const nt = qzFixTest(Object.assign({}, g.test, {own: false, key: t.key, srv: g.updated, open: g.open})); if(nt){ nt.id = t.id; nt.updated = Date.now(); await qzPut('t', nt); t = nt; } }
-    }catch(e){ if(e.message === 'bad_key') sv.gone = true; else sv.offline = true; }
-    if(sv.gone && t.own){ t.key = ''; t.pubAt = 0; await qzPut('t', t); sv.gone = false; }
-  }
-  const p = t.pr, rs = await qzFixStale(t, (await qzAll('r')).filter(r => r.tid === t.id && r.uid === user.id && !r.preview));
-  const lim = p.attempts ? t.attempts : Infinity, used = Math.max(rs.length, sv.used), left = lim - used, n = t.q.length, anyPr = p.blur || p.nocopy || p.qtimer || p.full || p.attempts || p.ttl;
-  const rules = [];
-  if(p.attempts) rules.push(['try', 'Количество попыток: <b>' + t.attempts + '</b>. Использовано: ' + (pv ? 0 : used) + ', осталось: <b>' + (pv ? t.attempts : Math.max(0, left)) + '</b>.']);
-  if(p.ttl && t.totalMin) rules.push(['clock', 'Время на весь тест: <b>' + qzFmt(t.totalMin) + ' мин</b>. Когда время выйдет, тест завершится автоматически.']);
-  if(p.qtimer) rules.push(['timer', 'На каждый вопрос отведено <b>отдельное время</b>. Пропускать вопросы и возвращаться к прошлым нельзя; когда время выйдет, вы автоматически перейдёте к следующему вопросу.']);
-  if(p.blur) rules.push(['eye', 'Переключение на другие вкладки и окна фиксируется, автор теста увидит это в результатах.']);
-  if(p.nocopy) rules.push(['copy', 'Выделение, копирование и вставка текста отключены.']);
-  if(p.full) rules.push(['full', 'Тест откроется <b>на весь экран</b>. Если вы выйдете из полноэкранного режима или переключитесь на другое окно (в том числе через Alt+Tab), тест сразу завершится с <b>нулевым результатом</b>.', 1]);
-  const block = !pv && (left <= 0 || sv.closed || sv.gone), msg = sv.gone ? 'Автор снял этот тест с публикации — пройти его больше нельзя.' : sv.closed ? 'Автор закрыл приём ответов на этот тест.' : 'Попытки закончились. Вы уже использовали все ' + t.attempts + ' ' + qzPl(t.attempts, 'попытку', 'попытки', 'попыток') + '.';
-  let who = null; if(tk !== QZ.tk) return;
-  const QCI = {try:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>', clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', timer:'<path d="M9 3h6M12 3v3"/><circle cx="12" cy="14" r="7"/><path d="M12 10.5V14l2 1.5"/>', eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5M3 3l18 18"/>', full:'<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/>', info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'};
-  const qci = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + QCI[k] + '</svg>';
-  const cond = rules.length ? '<section class="qz-cond"><div class="qz-cond-h"><span class="qz-cond-i">' + qci('info') + '</span><div><h2>Перед началом прочитайте условия</h2><p>Эти правила действуют, пока вы проходите тест.</p></div></div><ul class="qz-cond-l">' + rules.map(r => '<li' + (r[2] ? ' class="dn"' : '') + '><span class="qz-cond-ic">' + qci(r[0]) + '</span><div>' + r[1] + '</div></li>').join('') + '</ul></section>' : '';
-  vQuiz.innerHTML = '<div class="qz-box"><button type="button" class="qz-bk" data-qa="' + (pv ? 'backEdit' : 'list') + '" data-id="' + esc(t.id) + '">' + qIco('back') + (pv ? 'Вернуться к редактированию' : 'Все тесты') + '</button><div class="eyebrow" style="margin-bottom:8px">' + (pv ? 'Предпросмотр' : t.graded ? 'Тест' : 'Опрос') + '</div><h1>' + esc(t.title) + '</h1>' + (t.desc ? '<p class="lead">' + esc(t.desc) + '</p>' : '') +
+  const n = t.q.length, rules = qzRules({pr: t.pr, attempts: t.attempts, totalMin: t.totalMin, left: t.attempts}, 0);
+  vQuiz.innerHTML = '<div class="qz-box"><button type="button" class="qz-bk" data-qa="backEdit" data-id="' + esc(t.id) + '">' + qIco('back') + 'Вернуться к редактированию</button><div class="eyebrow" style="margin-bottom:8px">Предпросмотр</div><h1>' + esc(t.title) + '</h1>' + (t.desc ? '<p class="lead">' + esc(t.desc) + '</p>' : '') +
     '<div class="qz-info"><span class="qz-tag ac">' + n + ' ' + qzPl(n, 'вопрос', 'вопроса', 'вопросов') + '</span>' + (t.learn ? '<span class="qz-tag">Режим обучения: разбор после каждого ответа</span>' : '') + (t.closed ? '<span class="qz-tag">Ответы уйдут на проверку</span>' : '') + '</div>' +
-    cond +
-    (sv.offline && t.key ? '<div class="qz-rules" style="background:rgba(255,159,10,.14)">Нет связи с сервером. Тест можно пройти, а результат отправится автору, когда связь появится.</div>' : '') +
-    (block ? '<div class="qz-warn">' + msg + '</div>' : '<div class="qz-who" id="qzWho"></div><button type="button" class="btn" id="qzGo"' + (t.askName && !pv ? ' disabled' : '') + '>' + qIco('play') + 'Начать' + (pv ? ' предпросмотр' : ' тест') + '</button>') +
-    (!pv && rs.length ? '<div class="qz-top" style="margin:16px 0 0"><button type="button" class="btn small neutral" data-qa="my" data-id="' + esc(t.id) + '">Мои предыдущие результаты</button></div>' : '') + '</div>';
+    qzCond('Так тест увидит участник', 'Предпросмотр: такие правила увидит участник.', rules) +
+    '<div class="qz-hint" style="margin:0 0 14px">Предпросмотр проходит на вашем устройстве: результат нигде не сохраняется и в попытки не засчитывается.</div><button type="button" class="btn" id="qzGo">' + qIco('play') + 'Начать предпросмотр</button></div>';
+  $('#qzGo').onclick = () => qzStart(t, {id: qzUser().id, name: qzTgName() || 'Автор'}, true, null, '');
+}
+/* прохождение: вопросы, попытки, таймеры и проверка — на сервере */
+async function qzIntroSrv(id){
+  const tk = ++QZ.tk, o = await qzGet('t', id); if(tk !== QZ.tk) return;
+  const back = '<a class="btn small" href="#/quiz">К списку тестов</a>';
+  if(!o || !o.key){ vQuiz.innerHTML = qzHead('Тестирование', 'Тест недоступен', 'Тесты открываются только по ключу или ссылке от автора. Введите ключ на странице «Тесты».') + back; return; }
+  let g; try{ g = await qzApi('quiz.get', {key: o.key}); }catch(e){
+    if(tk !== QZ.tk) return;
+    vQuiz.innerHTML = qzHead('Тестирование', esc(o.title || 'Тест'), e.message === 'bad_key' ? 'Автор снял этот тест с публикации — пройти его больше нельзя.' : e.message === 'network' ? 'Нет связи с сервером. Для прохождения теста нужен интернет.' : esc(QZ_ERR[e.message] || e.message)) + back + (e.message === 'network' ? ' <button class="btn small neutral" type="button" data-qa="retryIntro" data-id="' + esc(id) + '">Повторить</button>' : '');
+    return;
+  }
+  if(tk !== QZ.tk) return;
+  const m = g.meta;
+  if(!o.own){ Object.assign(o, {title: m.title, desc: m.desc, graded: m.graded, learn: m.learn, closed: m.closed, askName: m.askName, pr: m.pr, attempts: m.attempts, totalMin: m.totalMin, n: m.n, srv: m.updated, open: m.open, q: []}); await qzPut('t', o); }
+  const tgn = qzTgName(), isTg = qzIsTg(), needTg = m.strict && !isTg, rules = qzRules(m, m.used), n = m.n;
+  const warn = needTg ? 'Этот тест нужно проходить в Telegram: автор включил защиту от списывания, и участник должен быть авторизован.' : !m.canStart ? 'Автор закрыл приём ответов на этот тест.' : m.left === 0 ? 'Попытки закончились. Вы уже использовали все ' + m.limit + ' ' + qzPl(m.limit, 'попытку', 'попытки', 'попыток') + '. Если нужна пересдача, попросите автора теста открыть её для вас.' : '';
+  const tl = qzTgLink(o.key);
+  let who = null;
+  vQuiz.innerHTML = '<div class="qz-box"><button type="button" class="qz-bk" data-qa="list">' + qIco('back') + 'Все тесты</button><div class="eyebrow" style="margin-bottom:8px">' + (m.graded ? 'Тест' : 'Опрос') + '</div><h1>' + esc(m.title) + '</h1>' + (m.desc ? '<p class="lead">' + esc(m.desc) + '</p>' : '') +
+    '<div class="qz-info"><span class="qz-tag ac">' + n + ' ' + qzPl(n, 'вопрос', 'вопроса', 'вопросов') + '</span>' + (m.learn ? '<span class="qz-tag">Режим обучения: разбор после каждого ответа</span>' : '') + (m.closed ? '<span class="qz-tag">Ответы уйдут на проверку</span>' : '') + '</div>' +
+    qzCond('Перед началом прочитайте условия', 'Эти правила действуют, пока вы проходите тест.', rules) +
+    (warn ? '<div class="qz-warn">' + warn + '</div>' + (needTg && tl ? '<a class="btn" href="' + esc(tl) + '" target="_blank" rel="noopener">Открыть в Telegram</a>' : '') :
+      '<div class="qz-who" id="qzWho"></div><button type="button" class="btn" id="qzGo"' + (m.askName ? ' disabled' : '') + '>' + qIco('play') + 'Начать ' + (m.graded ? 'тест' : 'опрос') + '</button>') + '</div>';
   const go = $('#qzGo'); if(!go) return;
   const setWho = nm => { who = nm; const e = $('#qzWho'); if(e) e.innerHTML = 'Вы проходите тест как <b>' + esc(nm) + '</b> · <a href="#" data-qa="rename">изменить</a>'; go.disabled = false; };
   QZ.askWho = async () => { const v = await qzNameDlg(tgn); if(v === null){ if(who === null) nav('#/quiz'); return; } setWho(v); };
-  if(t.askName && !pv) QZ.askWho();
-  go.onclick = () => { const name = pv ? (tgn || 'Автор') : t.askName ? who : (tgn || 'Гость'); if(!name) return; qzStart(t, {id: user.id, name}, pv); };
+  if(m.askName) QZ.askWho();
+  go.onclick = async () => {
+    const name = m.askName ? who : (tgn || 'Гость'); if(!name) return;
+    if(m.pr.full && !(await qzEnterFs())){ await modal({title: 'Полноэкранный режим недоступен', text: 'Автор включил обязательный полноэкранный режим, но это устройство или браузер его не поддерживает. Откройте тест на компьютере в Telegram Desktop.', buttons: [{v: 'ok', t: 'Понятно'}]}); return; }
+    go.disabled = true;
+    let srv; try{ srv = await qzApi('quiz.start', {key: o.key, name}); }catch(e){ qzExitFs(); qzFail(e); qzIntroSrv(id); return; }
+    qzStart(qzFixTest(Object.assign({}, srv.test, {own: false})), {id: qzUser().id, name}, false, srv, o.key);
+  };
 }
-async function qzStart(t0, user, pv){
+async function qzStart(t0, user, pv, srv, key){
   const t = qzClean(t0), p = t.pr;
-  if(p.full && !(await qzEnterFs())){ await modal({title: 'Полноэкранный режим недоступен', text: 'Автор включил обязательный полноэкранный режим, но это устройство или браузер его не поддерживает. Откройте тест на компьютере в браузере.', buttons: [{v: 'ok', t: 'Понятно'}]}); return; }
-  const run = QZ.run = {t, user, pv: !!pv, rid: 'r' + uid(), start: Date.now(), ans: {}, i: 0, locked: {}, review: false, sel: null, viol: [], off: [], tm: 0, qEnd: 0, saveT: 0, done: false, fsOk: false, mr: {}, gs: {}, noclick: 0,
-    tEnd: p.ttl && t.totalMin ? Date.now() + t.totalMin * 60000 : 0};
+  if(pv && p.full && !(await qzEnterFs())){ await modal({title: 'Полноэкранный режим недоступен', text: 'Автор включил обязательный полноэкранный режим, но это устройство или браузер его не поддерживает. Откройте тест на компьютере в Telegram Desktop.', buttons: [{v: 'ok', t: 'Понятно'}]}); return; }
+  const st = Date.now(), skew = srv ? st - srv.serverNow : 0;
+  const run = QZ.run = {t, user, pv: !!pv, rid: srv ? srv.aid : 'r' + uid(), start: st, ans: {}, i: 0, locked: {}, review: false, sel: null, viol: [], off: [], tm: 0, qEnd: 0, saveT: 0, done: false, fsOk: false, mr: {}, gs: {}, noclick: 0, vd: {}, qf: {}, canon: {},
+    tEnd: srv ? (srv.tEnd ? srv.tEnd + skew : 0) : (p.ttl && t.totalMin ? st + t.totalMin * 60000 : 0),
+    srv: srv ? {aid: srv.aid, key, q: Promise.resolve(), err: null} : null};
   t.q.forEach(q => {
-    if(q.t === 'seq'){ let o = q.items.map(x => x.id), k = 0; if(o.length > 1) do{ o = qzShuf(o); }while(o.every((id, i) => id === q.items[i].id) && ++k < 20); run.ans[q.id] = {o, t: false}; }
-    if(q.t === 'match'){ let o = q.pairs.map(x => x.id), k = 0; if(o.length > 1) do{ o = qzShuf(o); }while(o.every((id, i) => id === q.pairs[i].id) && ++k < 20); run.mr[q.id] = o; }
+    if(q.t === 'seq'){ let o = q.items.map(x => x.id), k = 0; if(o.length > 1 && !srv) do{ o = qzShuf(o); }while(o.every((id, i) => id === q.items[i].id) && ++k < 20); run.ans[q.id] = {o, t: false}; }
+    if(q.t === 'match'){ const sd = qzSides(q); let o = sd.R.map(x => x.id), k = 0; if(o.length > 1 && !srv) do{ o = qzShuf(o); }while(o.every((id, i) => id === sd.R[i].id) && ++k < 20); run.mr[q.id] = o; }
     if(q.t === 'group') run.gs[q.id] = qzShuf(q.items.map(x => x.id));
   });
   QV = run; document.body.classList.add('qz-run');
   qzArm(run); qzSetQ(0, true); qzSaveRun(true);
   run.tm = setInterval(qzTick, 250); window.scrollTo(0, 0);
+}
+/* вызов сервера в ходе попытки: повтор при обрыве связи */
+async function qzSrvCall(run, action, data){
+  for(let i = 0; ; i++){ try{ return await qzApi(action, Object.assign({aid: run.srv.aid}, data)); }catch(e){ if(e.message !== 'network' || i >= 2) throw e; await new Promise(r => setTimeout(r, 700)); } }
+}
+const qzSrvQ = (run, fn) => { run.srv.q = run.srv.q.then(fn).catch(e => { run.srv.err = e; }); return run.srv.q; };
+function qzSrvLeave(V, from, to){
+  const q = V.t.q[from], a = V.ans[q.id];
+  qzSrvQ(V, async () => { if(qzAnswered(q, a) && !V.locked[q.id]) await qzSrvCall(V, 'quiz.answer', {qid: q.id, answer: a}); if(to > from) await qzSrvCall(V, 'quiz.enter', {i: to}); });
 }
 /* защита: потеря фокуса, копирование, полный экран */
 function qzViol(run, ev){
@@ -13150,19 +13293,18 @@ function qzArm(run){
 }
 function qzDisarm(run){ clearInterval(run.tm); clearTimeout(run.saveT); run.off.forEach(f => { try{ f(); }catch(e){} }); run.off = []; if(run.t.pr.full) qzExitFs(); }
 function qzSaveRun(now){
-  const run = QZ.run; if(!run || run.pv) return; clearTimeout(run.saveT);
+  const run = QZ.run; if(!run || run.pv || run.srv) return; clearTimeout(run.saveT);
   const w = () => qzPut('r', {id: run.rid, tid: run.t.id, tTitle: run.t.title, name: run.user.name, uid: run.user.id, start: run.start, end: 0, ans: run.ans, per: {}, pts: 0, max: 0, graded: run.t.graded, status: 'run', viol: run.viol, key: run.t.key || ''}).catch(() => {});
   if(now) w(); else run.saveT = setTimeout(w, 600);
 }
 async function qzFinish(status, silent){
   const run = QZ.run; if(!run || run.done) return; run.done = true; qzDisarm(run);
+  if(run.srv) return qzFinishSrv(run, status, silent);
   const t = run.t, sc = qzScoreAll(t, run.ans), zero = status === 'fs-exit' || (status === 'abandon' && t.pr.full);
   const r = {id: run.rid, tid: t.id, tTitle: t.title, name: run.user.name, uid: run.user.id, start: run.start, end: Date.now(), ans: run.ans, per: sc.per, pts: zero ? 0 : sc.pts, max: sc.max, graded: t.graded, status, viol: run.viol, preview: run.pv, closed: t.closed};
-  if(t.key && !run.pv){ r.key = t.key; r.sent = false; }
   QZ.run = null; QV = null; document.body.classList.remove('qz-run');
   if(run.pv) QZ.pv = {r, t}; else try{ await qzPut('r', r); }catch(e){ toast('Не удалось сохранить результат'); }
   if(!silent) nav('#/quiz/v/' + (run.pv ? 'pv' : r.id));
-  if(r.key) qzSubmit(r.id);
 }
 function qzTick(){
   const run = QZ.run; if(!run || run.done) return; const now = Date.now();
@@ -13180,10 +13322,40 @@ function qzAdvance(auto){
   qzSetQ(run.i + 1); if(auto) toast('Время вышло — следующий вопрос');
 }
 function qzSetQ(i, first){
-  const V = QV; V.i = Math.max(0, Math.min(V.t.q.length - 1, i)); V.sel = null;
+  const V = QV, ni = Math.max(0, Math.min(V.t.q.length - 1, i));
+  if(V.srv && !V.review && !first && V.t.pr.qtimer && ni !== V.i) qzSrvLeave(V, V.i, ni);
+  V.i = ni; V.sel = null;
   if(!V.review && V.t.pr.qtimer){ V.qEnd = Date.now() + V.t.q[V.i].sec * 1000; }
   if(first) qzDrawRun(); else qzDrawQ();
   if(!V.review) qzTick();
+}
+/* завершение попытки на сервере: ответы уходят на проверку, баллы возвращает сервер */
+async function qzFinishSrv(run, status, silent){
+  const t = run.t, aid = run.srv.aid;
+  if(t.pr.qtimer){ const q = t.q[run.i], a = run.ans[q.id]; qzSrvQ(run, async () => { if(qzAnswered(q, a) && !run.locked[q.id]) await qzSrvCall(run, 'quiz.answer', {qid: q.id, answer: a}); }); }
+  const rec = {id: aid, tid: t.id, tTitle: t.title, name: run.user.name, uid: run.user.id, start: run.start, end: Date.now(), ans: {}, per: {}, pts: 0, max: 0, graded: t.graded, status: 'sending', viol: run.viol, srv: true, key: run.srv.key, sent: false, closed: t.closed,
+    pend: {answers: run.ans, status: status === 'abandon' ? 'abandoned' : status, viol: run.viol}};
+  QZ.run = null; QV = null; document.body.classList.remove('qz-run');
+  try{ await qzPut('r', rec); }catch(e){}
+  if(!silent) nav('#/quiz/v/' + aid);
+  await run.srv.q;
+  qzFinalize(aid, 0);
+}
+const qzFinBusy = {};
+async function qzFinalize(aid, tries){
+  if(qzFinBusy[aid]) return; qzFinBusy[aid] = 1;
+  try{
+    const r = await qzGet('r', aid); if(!r || !r.pend) return;
+    try{
+      const d = await qzApi('quiz.finish', {aid, answers: r.pend.answers, status: r.pend.status, viol: r.pend.viol});
+      Object.assign(r, {status: d.res.status, pts: d.res.pts, max: d.res.max, per: d.res.per, end: d.res.finished || r.end, viol: d.res.viol || r.viol, sent: true, err: '', rvLater: !!d.rvLater, rv: d.rv ? {t: d.rv.t} : null, ans: d.rv ? d.rv.ans : {}}); delete r.pend;
+    }catch(e){ r.err = e.message; if(['forbidden', 'bad_key'].includes(e.message)){ r.sent = 'fail'; r.status = 'abandoned'; delete r.pend; } else if(e.message === 'network' && (tries || 0) < 8) setTimeout(() => qzFinalize(aid, (tries || 0) + 1), 4000); }
+    try{ await qzPut('r', r); }catch(e){}
+    if(QZ.viewRid === aid && location.hash.split('?')[0] === '#/quiz/v/' + aid) qzResultView(aid, '');
+  } finally { delete qzFinBusy[aid]; }
+}
+async function qzRetryPending(){
+  try{ const rs = (await qzAll('r')).filter(r => r.pend && r.srv); for(const r of rs) await qzFinalize(r.id, 0); }catch(e){}
 }
 
 /* ---------- отрисовка вопроса ---------- */
@@ -13215,9 +13387,9 @@ function qzAnsBody(V, q, a, lk){
     return (!lk ? '<p class="qz-hint" style="margin:0 0 8px">Нажмите на нужное место на изображении. Можно нажать ещё раз, чтобы изменить ответ.</p>' : '') + '<div class="qz-hs" data-hot="' + id + '"' + (lk ? '' : ' style="cursor:crosshair"') + '><img alt="" src="' + q.img + '">' + (lk && g ? qzAreasHtml(q.areas) : '') + mk + '</div>';
   }
   if(q.t === 'match'){
-    const by = {}; q.pairs.forEach(p => { by[p.id] = p; }); const ro = (V.mr && V.mr[q.id]) || q.pairs.map(p => p.id), m = a || {}, used = {}; Object.keys(m).forEach(k => { used[k] = 1; used['r' + m[k]] = 1; });
+    const sd = qzSides(q), by = {}; sd.R.forEach(p => { by[p.id] = p; }); const ro = (V.mr && V.mr[q.id]) || sd.R.map(p => p.id), m = a || {}, used = {}; Object.keys(m).forEach(k => { used[k] = 1; used['r' + m[k]] = 1; });
     const cl = (p, side) => { let c = 'qz-mi' + (V.sel && V.sel.side === side && V.sel.id === p.id ? ' sel' : '') + (used[side === 'l' ? p.id : 'r' + p.id] ? ' lnk' : ''); if(lk && g){ if(side === 'l' && m[p.id]) c += m[p.id] === p.id ? ' ok' : ' no'; } return c; };
-    return (!lk ? '<p class="qz-hint" style="margin:0 0 8px">Соедините пары: нажмите на элемент слева и на подходящий справа или протяните линию.</p>' : '') + '<div class="qz-mt" id="qzMt"><svg class="qz-ln" id="qzLn"></svg><div class="col">' + q.pairs.map(p => '<div class="' + cl(p, 'l') + '" data-ml="' + esc(p.id) + '">' + esc(p.l) + '</div>').join('') + '</div><div class="col">' + ro.filter(k => by[k]).map(k => '<div class="' + cl(by[k], 'r') + '" data-mr="' + esc(k) + '">' + esc(by[k].r) + '</div>').join('') + '</div></div>' + (!lk ? '<div style="margin-top:12px"><button type="button" class="btn small neutral" data-qa="mclr">Сбросить связи</button></div>' : '');
+    return (!lk ? '<p class="qz-hint" style="margin:0 0 8px">Соедините пары: нажмите на элемент слева и на подходящий справа или протяните линию.</p>' : '') + '<div class="qz-mt" id="qzMt"><svg class="qz-ln" id="qzLn"></svg><div class="col">' + sd.L.map(p => '<div class="' + cl(p, 'l') + '" data-ml="' + esc(p.id) + '">' + esc(p.l) + '</div>').join('') + '</div><div class="col">' + ro.filter(k => by[k]).map(k => '<div class="' + cl(by[k], 'r') + '" data-mr="' + esc(k) + '">' + esc(by[k].r) + '</div>').join('') + '</div></div>' + (!lk ? '<div style="margin-top:12px"><button type="button" class="btn small neutral" data-qa="mclr">Сбросить связи</button></div>' : '');
   }
   return '';
 }
@@ -13242,15 +13414,17 @@ function qzCorrectHtml(q){
   if(q.t === 'match') return li(q.pairs.map(p => p.l + ' — ' + p.r));
   return '';
 }
-function qzVerdict(V, q, a){
+function qzVerdict(V, q, a, vd){
   const t = V.t; if(!t.graded) return '';
-  const s = qzScore(q, a, true), cls = s.ok ? 'ok' : s.answered ? 'no' : 'nt', ttl = s.ok ? 'Верно' : !s.answered ? 'Ответ не дан' : s.f > 0 ? 'Частично верно' : 'Неверно';
+  const s = vd || qzScore(q, a, true), cls = s.ok ? 'ok' : s.answered ? 'no' : 'nt', ttl = s.ok ? 'Верно' : !s.answered ? 'Ответ не дан' : s.f > 0 ? 'Частично верно' : 'Неверно';
   return '<div class="qz-vd ' + cls + '"><b>' + ttl + (s.max ? ' · ' + qzFmt(s.pts) + ' из ' + qzFmt(s.max) + ' б.' : '') + '</b>' + (s.ok ? '' : '<div>Правильный ответ:' + qzCorrectHtml(q) + '</div>') + (q.expl ? '<p><b>Пояснение:</b> ' + esc(q.expl) + '</p>' : '') + '</div>';
 }
 function qzWinHtml(V){
-  const q = V.t.q[V.i], a = V.ans[q.id], lk = V.review || !!V.locked[q.id], n = V.t.q.length; V.lk = lk;
-  return '<div class="qz-meta"><span>Вопрос ' + (V.i + 1) + ' из ' + n + '</span>' + (V.t.graded ? '<span>' + qzFmt(q.pts) + ' б.</span>' : '') + '' + '</div><div class="qz-qt">' + esc(q.text) + '</div>' +
-    (!V.t.graded && q.expl ? '<p class="qz-hint" style="margin:-8px 0 14px">' + esc(q.expl) + '</p>' : '') + qzAnsBody(V, q, a, lk) + (lk ? qzVerdict(V, q, a) : '');
+  const q0 = V.t.q[V.i], lk = V.review || !!V.locked[q0.id], n = V.t.q.length; V.lk = lk;
+  /* зафиксированный вопрос в режиме обучения: полные данные (с правильным ответом) приходят от сервера только сейчас */
+  const srvLk = !V.review && V.srv && V.locked[q0.id] && V.qf[q0.id], q = srvLk ? V.qf[q0.id] : q0, a = srvLk ? V.canon[q0.id] : V.ans[q0.id];
+  return '<div class="qz-meta"><span>Вопрос ' + (V.i + 1) + ' из ' + n + '</span>' + (V.t.graded ? '<span>' + qzFmt(q0.pts) + ' б.</span>' : '') + '</div><div class="qz-qt">' + esc(q0.text) + '</div>' +
+    (!V.t.graded && q0.expl ? '<p class="qz-hint" style="margin:-8px 0 14px">' + esc(q0.expl) + '</p>' : '') + qzAnsBody(V, q, a, lk) + (lk ? qzVerdict(V, q, a, srvLk ? V.vd[q0.id] : null) : '');
 }
 function qzGridHtml(V){
   const t = V.t, qt = !V.review && t.pr.qtimer;
@@ -13361,7 +13535,14 @@ async function qzRunClick(e, qa, b){
     if(await qzAskS('Завершить тест?', un ? 'Вы не ответили на ' + un + ' ' + qzPl(un, 'вопрос', 'вопроса', 'вопросов') + '. После завершения вернуться к ним нельзя.' : 'Ответы будут отправлены. Изменить их потом нельзя.', 'Завершить') === 'yes') qzFinish('done');
     return true;
   }
-  if(qa === 'lock'){ if(qzAnswered(q, V.ans[q.id])){ V.locked[q.id] = true; qzDrawQ(); } return true; }
+  if(qa === 'lock'){
+    if(!qzAnswered(q, V.ans[q.id])) return true;
+    if(!V.srv){ V.locked[q.id] = true; qzDrawQ(); return true; }
+    b.disabled = true;
+    try{ await V.srv.q; const d = await qzSrvCall(V, 'quiz.answer', {qid: q.id, answer: V.ans[q.id], lock: true}); if(d.late){ toast('Время на вопрос уже вышло'); qzDrawQ(); return true; } V.locked[q.id] = true; V.vd[q.id] = d.vd; V.qf[q.id] = d.q; V.canon[q.id] = d.a; qzDrawQ(); }
+    catch(err){ qzFail(err); qzDrawQ(); }
+    return true;
+  }
   if(qa === 'mclr'){ qzAns(q, {}, true); return true; }
   if(qa === 'sum'){ nav('#/quiz/v/' + (V.pvMode ? 'pv' : V.r.id)); return true; }
   return false;
@@ -13373,41 +13554,43 @@ function qzWinClick(e){
   const sm = e.target.closest('[data-sm]');
   if(sm && q.t === 'seq'){ const a = V.ans[q.id], o2 = a.o.slice(), i = o2.indexOf(sm.dataset.k), j = i + (+sm.dataset.sm); if(j >= 0 && j < o2.length){ [o2[i], o2[j]] = [o2[j], o2[i]]; qzAns(q, {o: o2, t: true}, true); } return; }
   const hs = e.target.closest('.qz-hs[data-hot]');
-  if(hs && q.t === 'hot'){ const r = hs.getBoundingClientRect(); qzAns(q, {x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), y: Math.max(0, Math.min(1, (e.clientY - r.top) / r.height))}, true); return; }
+  if(hs && q.t === 'hot'){ const r = (hs.querySelector('img') || hs).getBoundingClientRect(); qzAns(q, {x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), y: Math.max(0, Math.min(1, (e.clientY - r.top) / r.height))}, true); return; }
   const z = e.target.closest('.qz-drop');
   if(z && q.t === 'group' && V.sel && !e.target.closest('.qz-chip') && Date.now() - (V.noclick || 0) > 40){ qzGroupPlace(q, V.sel, z.dataset.drop); }
 }
 
 /* ---------- итоги, разбор ---------- */
-const QZ_ST = {done: 'Завершён', timeout: 'Время вышло', 'fs-exit': 'Нарушение: выход из полного экрана', abandon: 'Прерван', interrupted: 'Прерван', run: 'Идёт'};
+const QZ_ST = {done: 'Завершён', timeout: 'Время вышло', 'fs-exit': 'Выход из полного экрана', abandon: 'Прерван', abandoned: 'Прерван', interrupted: 'Прерван', run: 'Идёт', sending: 'Отправка'};
 async function qzResultView(rid, mode){
   const tk = ++QZ.tk; let r, t;
   if(rid === 'pv' && QZ.pv){ r = QZ.pv.r; t = QZ.pv.t; }
-  else { r = await qzGet('r', rid); const o = r && await qzGet('t', r.tid); t = o ? qzFixTest(o) : null; }
+  else { r = await qzGet('r', rid); if(r){ if(r.rv && r.rv.t) t = qzFixTest(Object.assign({}, r.rv.t, {own: false})); else { const o = await qzGet('t', r.tid); t = o ? qzFixTest(o) : null; } } }
+  if(tk !== QZ.tk) return;
   if(!r || !t){ vQuiz.innerHTML = qzHead('Тестирование', 'Результат не найден', 'Возможно, он был удалён.') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
-  if(tk !== QZ.tk) return;
-  const author = t.own && (r.imported || r.uid !== qzUser().id), canRev = r.status !== 'fs-exit' && r.status !== 'run' && (t.own || (t.graded && !t.closed));
+  QZ.viewRid = r.id;
+  const user = qzUser(), author = !!(t.own && (r.imported || r.remote || r.uid !== user.id)), pend = !!r.pend;
+  const canRev = !pend && r.status !== 'fs-exit' && r.status !== 'run' && r.status !== 'sending' && (rid === 'pv' || author || !!r.rv) && t.q.length > 0;
   if(mode === 'q' && canRev){
-    QV = {t, ans: r.ans || {}, i: 0, review: true, locked: {}, sel: null, r, pvMode: rid === 'pv', mr: {}, gs: {}}; qzDrawReview(); return;
+    QV = {t, ans: r.ans || {}, i: 0, review: true, locked: {}, sel: null, r, pvMode: rid === 'pv', mr: {}, gs: {}, vd: {}, qf: {}, canon: {}}; qzDrawReview(); return;
   }
-  const n = t.q.length, pct = qzPct(r.pts, r.max);
-  const user = qzUser(), rs = rid === 'pv' ? [] : (await qzAll('r')).filter(x => x.tid === t.id && x.uid === user.id && !x.preview), left = t.pr.attempts ? t.attempts - rs.length : Infinity;
-  if(tk !== QZ.tk) return;
-  const blur = (r.viol || []).length;
-  let h = '<div class="qz-box"><button type="button" class="qz-bk" data-qa="' + (rid === 'pv' ? 'backEdit' : author ? 'resBack' : 'list') + '" data-id="' + esc(t.id) + '">' + qIco('back') + (rid === 'pv' ? 'Вернуться к редактированию' : author ? 'К результатам' : 'Все тесты') + '</button>';
+  const pct = qzPct(r.pts, r.max), blur = (r.viol || []).length;
+  const backA = rid === 'pv' ? 'backEdit' : author ? 'resBack' : 'list';
+  let h = '<div class="qz-box"><button type="button" class="qz-bk" data-qa="' + backA + '" data-id="' + esc(t.id) + '">' + qIco('back') + (rid === 'pv' ? 'Вернуться к редактированию' : author ? 'К результатам' : 'Все тесты') + '</button>';
   if(rid === 'pv') h += '<div class="qz-tag ac" style="margin:0 0 10px;display:inline-block">Предпросмотр — результат не сохранён</div>';
+  if(pend){
+    h += '<div class="qz-done" style="background:rgba(10,132,255,.14);color:var(--accent)">' + qIco('upl') + '</div><h1>Отправляем ответы на проверку…</h1>' +
+      (r.err ? '<p class="lead">Не удалось отправить: ' + esc(QZ_ERR[r.err] || r.err) + '. Не закрывайте приложение — отправка повторится сама.</p><button type="button" class="btn small" data-qa="fretry" data-id="' + esc(r.id) + '">Отправить сейчас</button>' : '<p class="lead">Это займёт несколько секунд.</p>');
+    vQuiz.innerHTML = h + '</div>'; return;
+  }
   if(r.status === 'fs-exit') h += '<div class="qz-done" style="background:rgba(255,69,58,.16);color:#ff453a">' + qIco('x') + '</div><h1>Тест завершён досрочно</h1><p class="lead">Вы вышли из полноэкранного режима или переключили окно. По правилам теста результат — <b>0 баллов</b>.</p>';
-  else if(!t.graded || (t.closed && !t.own)) h += '<div class="qz-done">' + qIco('check') + '</div><h1>' + (t.graded ? 'Ваши ответы переданы на проверку' : 'Спасибо за ответы!') + '</h1><p class="lead">' + (t.graded ? 'Результат вам покажет автор теста.' : 'Ваши ответы сохранены.') + '</p>';
-  else h += '<h1>' + esc(t.title) + '</h1><div class="qz-big"><div class="qz-ring" style="--p:' + pct + '"><span>' + pct + '%</span></div><div><div style="font-size:22px;font-weight:700;letter-spacing:-.02em">' + qzFmt(r.pts) + ' из ' + qzFmt(r.max) + ' б.</div><div style="color:var(--text-2)">' + (r.status === 'timeout' ? 'Время вышло, тест завершён автоматически' : r.status === 'abandon' || r.status === 'interrupted' ? 'Тест был прерван' : 'Тест завершён') + '</div></div></div>';
+  else if(!t.graded || (t.closed && !author)) h += '<div class="qz-done">' + qIco('check') + '</div><h1>' + (t.graded ? 'Ваши ответы переданы на проверку' : 'Спасибо за ответы!') + '</h1><p class="lead">' + (t.graded ? 'Результат вам покажет автор теста.' : 'Ваши ответы сохранены.') + '</p>';
+  else h += '<h1>' + esc(t.title) + '</h1><div class="qz-big"><div class="qz-ring" style="--p:' + pct + '"><span>' + pct + '%</span></div><div><div style="font-size:22px;font-weight:700;letter-spacing:-.02em">' + qzFmt(r.pts) + ' из ' + qzFmt(r.max) + ' б.</div><div style="color:var(--text-2)">' + (r.status === 'timeout' ? 'Время вышло, тест завершён автоматически' : r.status === 'abandon' || r.status === 'abandoned' || r.status === 'interrupted' ? 'Тест был прерван' : 'Тест завершён') + '</div></div></div>';
   h += '<div class="qz-info">' + (author ? '<span class="qz-tag">' + esc(r.name || 'Без имени') + '</span>' : '') + '<span class="qz-tag">' + qzDate(r.start) + '</span><span class="qz-tag">Время: ' + qzDur((r.end || r.start) - r.start) + '</span>' + (t.pr.blur || blur ? '<span class="qz-tag' + (blur ? ' ac' : '') + '">Потерь фокуса: ' + blur + '</span>' : '') + '</div>';
   if(author && blur) h += '<div class="qz-rules"><b>Журнал потери фокуса</b><ul>' + r.viol.map(v => '<li>' + qzDur(v.t) + ' от начала — ' + (v.ev === 'hidden' ? 'вкладка скрыта' : 'окно потеряло фокус') + '</li>').join('') + '</ul></div>';
+  if(!author && r.rvLater && !canRev) h += '<div class="qz-hint" style="margin:0 0 14px">Разбор с правильными ответами откроется после вашей последней попытки.</div>';
   h += '<div class="qz-top" style="margin:0 0 6px">' + (canRev ? '<button type="button" class="btn small" data-qa="review" data-id="' + esc(rid) + '">Посмотреть ответы</button>' : '') +
-    (rid !== 'pv' && !t.own && left > 0 ? '<a class="btn small neutral" href="#/quiz/p/' + esc(t.id) + '">Пройти ещё раз' + (isFinite(left) ? ' (осталось ' + left + ')' : '') + '</a>' : '') + '</div>';
-  QZ.viewRid = r.id;
-  if(rid !== 'pv' && !author && r.key) h += qzSendHtml(r);
-  else if(!t.own && rid !== 'pv') h += '<div class="qz-an" style="margin:16px 0 0"><b>Отправить результат автору</b><p class="qz-hint" style="margin:0 0 10px">Автор получит ваши ответы, если вы пришлёте ему код или файл результата.</p><div class="qz-top" style="margin:0"><button type="button" class="btn small neutral" data-qa="rcode" data-id="' + esc(r.id) + '">Копировать код</button><button type="button" class="btn small neutral" data-qa="rfile" data-id="' + esc(r.id) + '">Скачать файл</button></div></div>';
+    (rid !== 'pv' && !author && r.key ? '<a class="btn small neutral" href="#/quiz/p/' + esc(t.id) + '">Пройти ещё раз</a>' : '') + '</div>';
   vQuiz.innerHTML = h + '</div>';
-  if(r.key && r.sent === false) (async () => { for(let i = 0; i < 14 && QZ.viewRid === r.id; i++){ await new Promise(x => setTimeout(x, 450)); const f = await qzGet('r', r.id); if(f && (f.sent !== false || f.err)){ qzSendMark(f); return; } } })();
 }
 function qzDrawReview(){
   const V = QV;
@@ -13415,113 +13598,109 @@ function qzDrawReview(){
     '<div class="qz-main"><aside class="qz-side"><b>Вопросы</b><div class="qz-gr" id="qzGrid"></div><div class="qz-leg">' + (V.t.graded ? '<span><i style="background:rgba(48,209,88,.5)"></i>верно</span><span><i style="background:rgba(255,69,58,.5)"></i>неверно</span><span><i style="border:1px dashed var(--text-3)"></i>без ответа</span>' : '<span><i style="background:rgba(10,132,255,.4)"></i>есть ответ</span>') + '</div></aside><div><section class="qz-win" id="qzWin"></section><div class="qz-foot" id="qzFoot"></div></div></div>';
   qzDrawQ();
 }
-async function qzResCode(rid){
-  const r = await qzGet('r', rid); if(!r) return null;
-  return qzEnc(qzResPack(r), 'YR');
-}
-
-/* отправка результата автору на сервер */
-function qzSendHtml(r){
-  const fb = '<button type="button" class="btn small neutral" data-qa="rcode" data-id="' + esc(r.id) + '">Копировать код</button><button type="button" class="btn small neutral" data-qa="rfile" data-id="' + esc(r.id) + '">Скачать файл</button>';
-  if(r.sent === true) return '<div class="qz-sendst ok" id="qzSendSt"><b>Результат отправлен автору</b></div>';
-  if(r.sent === 'fail') return '<div class="qz-sendst bad" id="qzSendSt"><b>Не удалось отправить результат</b><br>' + esc(QZ_ERR[r.err] || r.err || '') + '<br>Можно передать его автору кодом или файлом.<br>' + fb + '</div>';
-  if(r.err) return '<div class="qz-sendst bad" id="qzSendSt"><b>Результат пока не отправлен</b><br>' + esc(QZ_ERR[r.err] || r.err) + '. Он отправится сам при следующем открытии приложения.<br><button type="button" class="btn small" data-qa="rsend" data-id="' + esc(r.id) + '">Отправить сейчас</button>' + fb + '</div>';
-  return '<div class="qz-sendst" id="qzSendSt"><b>Отправляем результат автору…</b></div>';
-}
-function qzSendMark(r){ const e = $('#qzSendSt'); if(e && QZ.viewRid === r.id) e.outerHTML = qzSendHtml(r); }
-async function qzSubmit(rid){
-  const r = await qzGet('r', rid); if(!r || !r.key || r.sent === true || r.sent === 'fail' || r.status === 'run') return r;
-  try{ await qzApi('quiz.submit', {key: r.key, result: qzResPack(r).r}); r.sent = true; r.err = ''; }
-  catch(e){ r.err = e.message; if(['closed', 'attempts', 'bad_key', 'too_big', 'bad_input', 'bad_action'].includes(e.message)) r.sent = 'fail'; }
-  try{ await qzPut('r', r); }catch(e){}
-  qzSendMark(r); return r;
-}
-let qzRetrying = false;
-async function qzRetryPending(){
-  if(qzRetrying) return; qzRetrying = true;
-  try{ const rs = (await qzAll('r')).filter(r => r.key && r.sent === false && r.status !== 'run' && !r.preview); for(const r of rs) await qzSubmit(r.id); }catch(e){}
-  qzRetrying = false;
-}
 
 /* ---------- результаты автора ---------- */
-function qzFixResult(o, t){
-  if(!o || o.tid !== t.id) return null;
-  const ans = o.ans && typeof o.ans === 'object' ? o.ans : {}, sc = qzScoreAll(t, ans), zero = o.status === 'fs-exit';
-  return {id: qzStr(o.id, 60) || 'r' + uid(), tid: t.id, tTitle: t.title, name: qzStr(o.name, 80) || 'Без имени', uid: qzStr(o.uid, 60), start: Number(o.start) || Date.now(), end: Number(o.end) || Date.now(), ans, per: sc.per, pts: zero ? 0 : sc.pts, max: sc.max, graded: t.graded,
-    status: ['done', 'timeout', 'fs-exit', 'abandon', 'interrupted'].includes(o.status) ? o.status : 'done', viol: Array.isArray(o.viol) ? o.viol.slice(0, 200).map(v => ({t: Number(v && v.t) || 0, ev: qzStr(v && v.ev, 12)})) : [], imported: true, closed: t.closed, tg: !!o.tg, tname: qzStr(o.tname, 80), uname: qzStr(o.uname, 40), remote: false};
+/* строка результата с сервера → локальная запись (для просмотра попытки) */
+function qzRemoteRow(row, t){
+  return {id: qzStr(row.aid || row.id, 40), tid: t.id, tTitle: t.title, name: qzStr(row.name, 80) || 'Без имени', uid: qzStr(row.uid, 60), start: Number(row.started) || 0, end: Number(row.finished) || Number(row.started) || 0,
+    ans: row.ans && typeof row.ans === 'object' ? row.ans : {}, per: row.per && typeof row.per === 'object' ? row.per : {}, pts: Number(row.pts) || 0, max: Number(row.max) || 0, graded: t.graded, status: qzStr(row.status, 12),
+    viol: Array.isArray(row.viol) ? row.viol.slice(0, 100).map(v => ({t: Number(v && v.t) || 0, ev: qzStr(v && v.ev, 12)})) : [], imported: true, remote: true, tg: !!row.tg, tname: qzStr(row.tname, 80), uname: qzStr(row.uname, 40), key: t.key, sent: true, closed: t.closed};
 }
-/* результаты участников с сервера → в локальную память автора */
 async function qzPullRemote(t){
   const d = await qzApi('quiz.results', {id: t.id}), have = await qzAll('r'), ids = new Set();
-  for(const row of d.results || []){
-    row.tid = t.id; const r = qzFixResult(row, t); if(!r) continue;
-    Object.assign(r, {id: qzStr(row.rid, 60) || r.id, remote: true, uid: qzStr(row.uid, 60), key: t.key, sent: true}); ids.add(r.id); await qzPut('r', r);
-  }
+  for(const row of d.results || []){ const r = qzRemoteRow(row, t); ids.add(r.id); await qzPut('r', r); }
   for(const r of have) if(r.tid === t.id && r.remote && !ids.has(r.id)) await qzDel('r', r.id);
-  if(d.open !== undefined){ const raw = await qzGet('t', t.id); if(raw){ raw.open = d.open; await qzPut('t', raw); } t.open = d.open; }
+  const raw = await qzGet('t', t.id); if(raw){ raw.open = d.open; await qzPut('t', raw); } t.open = d.open;
   return d;
 }
-async function qzResults(id){
-  const tk = ++QZ.tk, o = await qzGet('t', id), t = o ? qzFixTest(o) : null; if(tk !== QZ.tk) return;
-  if(!t || !t.own){ vQuiz.innerHTML = qzHead('Тестирование', 'Тест не найден', '') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
-  let remoteErr = '';
-  if(t.key){ vQuiz.innerHTML = qzHead('Результаты', esc(t.title), 'Загружаем результаты участников…'); try{ await qzPullRemote(t); }catch(e){ remoteErr = QZ_ERR[e.message] || e.message; } }
-  const rs = (await qzFixStale(t, (await qzAll('r')).filter(r => r.tid === id && !r.preview))).sort((a, b) => b.start - a.start), fin = rs.filter(r => r.status !== 'run'), n = fin.length, g = t.graded;
-  const pcts = fin.map(r => qzPct(r.pts, r.max)), avg = n ? Math.round(pcts.reduce((a, b) => a + b, 0) / n) : 0, best = n ? Math.max.apply(null, pcts) : 0, avgT = n ? fin.reduce((a, r) => a + ((r.end || r.start) - r.start), 0) / n : 0, vio = fin.filter(r => (r.viol || []).length).length;
-  if(tk !== QZ.tk) return;
-  const st = (v, l) => '<div><b>' + v + '</b><span>' + l + '</span></div>';
-  let h = '<button type="button" class="qz-bk" data-qa="list">' + qIco('back') + 'Все тесты</button>' + qzHead('Результаты', esc(t.title), t.key ? (g ? 'Результаты всех участников приходят сюда автоматически. Баллы пересчитываются по их ответам.' : 'Опрос: ниже собраны ответы участников, они приходят автоматически.') : (g ? 'Оценка по баллам. Результаты, присланные участниками кодом, загружаются кнопкой ниже.' : 'Опрос: оценки нет, ниже собраны ответы участников.')) +
-    '<div class="qz-top"><button class="btn small" type="button" data-qa="resimp" data-id="' + esc(id) + '">' + qIco('upl') + 'Загрузить результаты</button>' + (n ? '<button class="btn small neutral" type="button" data-qa="rescsv" data-id="' + esc(id) + '">' + qIco('dl') + 'Таблица CSV</button><button class="btn small neutral" type="button" data-qa="resjson" data-id="' + esc(id) + '">' + qIco('dl') + 'JSON</button>' : '') + '<button class="btn small neutral" type="button" data-qa="edit" data-id="' + esc(id) + '">' + qIco('pen') + 'Редактировать тест</button></div>' +
-    (t.key ? '<div class="qz-pubbar"><span><b>Опубликован</b> · ключ <span style="font-family:var(--mono);letter-spacing:.06em">' + esc(qzKeyFmt(t.key)) + '</span> · ' + (t.open === false ? 'приём закрыт' : 'приём открыт') + '</span><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small neutral" type="button" data-qa="resref">Обновить</button><button class="btn small neutral" type="button" data-qa="accept" data-id="' + esc(id) + '">' + (t.open === false ? 'Открыть приём' : 'Закрыть приём') + '</button><button class="btn small" type="button" data-qa="shareR" data-id="' + esc(id) + '">Поделиться</button></span></div>' : '<div class="qz-hint" style="margin:-6px 0 14px">Тест не опубликован: результаты собираются только вручную. Нажмите «Поделиться» в редакторе, чтобы получить ключ и ссылку.</div>') +
-    (remoteErr ? '<div class="qz-warn">Не удалось загрузить результаты с сервера: ' + esc(remoteErr) + '. Показаны сохранённые на этом устройстве. <button class="btn small" type="button" data-qa="resref">Повторить</button></div>' : '');
-  if(!rs.length) return void (vQuiz.innerHTML = h + '<div class="np-empty"><b>Результатов пока нет</b>Когда участники пройдут тест, их результаты появятся здесь. Присланный код результата загрузите кнопкой выше.</div>');
-  h += '<div class="qz-st">' + st(n, 'прохождений') + (g ? st(avg + '%', 'средний результат') + st(best + '%', 'лучший результат') : '') + st(qzDur(avgT), 'среднее время') + (vio ? st(vio, 'с потерей фокуса') : '') + '</div>';
-  h += '<div class="qz-sc"><table class="qz-tbl"><thead><tr><th>Участник</th><th>Дата</th>' + (g ? '<th>Результат</th>' : '') + '<th>Время</th><th>Статус</th><th>Фокус</th><th></th></tr></thead><tbody>' + rs.map(r => {
-    const p = qzPct(r.pts, r.max), v = (r.viol || []).length;
-    return '<tr data-qa="resopen" data-id="' + esc(r.id) + '"><td>' + esc(r.name || '—') + (r.imported && !r.remote ? ' <span class="qz-tag">загружен</span>' : '') + (r.uname || (r.tname && r.tname !== r.name) ? '<span class="qz-sub">' + (r.tname && r.tname !== r.name ? esc(r.tname) + ' ' : '') + (r.uname ? '@' + esc(r.uname) : '') + '</span>' : '') + '</td><td>' + qzDate(r.start) + '</td>' + (g ? '<td><div style="display:flex;gap:10px;align-items:center"><div class="qz-bar2" style="width:90px"><i style="width:' + p + '%"></i></div><span>' + qzFmt(r.pts) + '/' + qzFmt(r.max) + ' (' + p + '%)</span></div></td>' : '') + '<td>' + qzDur((r.end || r.start) - r.start) + '</td><td>' + esc(QZ_ST[r.status] || r.status) + '</td><td>' + (v ? '<span class="qz-tag ac">' + v + '</span>' : '—') + '</td><td><button type="button" class="qz-ib dn" data-qa="resdel" data-id="' + esc(r.id) + '" aria-label="Удалить результат">' + qIco('trash') + '</button></td></tr>';
-  }).join('') + '</tbody></table></div>';
-  h += '<h2 class="qz-h2">По вопросам</h2>' + t.q.map((q, i) => {
+const qzBarCls = p => p >= 75 ? 'hi' : p >= 50 ? 'mid' : 'lo';
+const qzWho = r => esc(r.name || '—') + (r.uname || (r.tname && r.tname !== r.name) ? '<span class="qz-sub">' + (r.tname && r.tname !== r.name ? esc(r.tname) + ' ' : '') + (r.uname ? '@' + esc(r.uname) : '') + '</span>' : '');
+/* участники: одна строка на человека */
+function qzPeople(rows, grants, base){
+  const by = new Map(); rows.forEach(r => { if(!by.has(r.uid)) by.set(r.uid, []); by.get(r.uid).push(r); });
+  return Array.from(by, ([uid, a]) => {
+    a.sort((x, y) => y.start - x.start); const fin = a.filter(r => r.status !== 'run'), best = fin.reduce((m, r) => !m || qzPct(r.pts, r.max) > qzPct(m.pts, m.max) ? r : m, null), extra = (grants && grants[uid]) | 0;
+    return {uid, a, last: a[0], best, used: a.length, extra, limit: base != null ? base + extra : null};
+  }).sort((x, y) => y.last.start - x.last.start);
+}
+function qzAnalytics(t, fin, g){
+  const n = fin.length; if(!n) return '';
+  return t.q.map((q, i) => {
     let b = '<div class="qz-an"><b>' + (i + 1) + '. ' + esc(q.text) + '</b>';
     const row = (lb, cnt, tot) => '<div class="r"><span>' + lb + '</span><div class="qz-bar2"><i style="width:' + qzPct(cnt, tot) + '%"></i></div><em>' + cnt + '</em></div>';
-    if(g && n){ const ok = fin.filter(r => r.per && r.per[q.id] && r.per[q.id].ok).length; b += row('Ответили верно', ok, n) + '<div class="qz-hint" style="margin:0">' + qzPct(ok, n) + '% участников</div>'; }
+    if(g){ const ok = fin.filter(r => r.per && r.per[q.id] && r.per[q.id].ok).length; b += row('Ответили верно', ok, n) + '<div class="qz-hint" style="margin:0">' + qzPct(ok, n) + '% попыток</div>'; }
     if(q.t === 'choice') b += q.opts.map(x => row((x.ok && g ? '✓ ' : '') + esc(x.text), fin.filter(r => Array.isArray((r.ans || {})[q.id]) && r.ans[q.id].includes(x.id)).length, n || 1)).join('');
     else if(q.t === 'open' && !g){ const tx = fin.map(r => (r.ans || {})[q.id]).filter(x => qzNorm(x)).slice(0, 30); b += tx.length ? tx.map(x => '<div class="qz-tx">' + esc(x) + '</div>').join('') : '<div class="qz-hint">Ответов пока нет</div>'; }
     return b + '</div>';
   }).join('');
+}
+function qzChartsHtml(t, people, fin, g){
+  if(!g) return '<h2 class="qz-h2" style="margin-top:0">Ответы по вопросам</h2>' + (qzAnalytics(t, fin, g) || '<div class="np-empty"><b>Ответов пока нет</b></div>');
+  const bests = people.filter(p => p.best), pcts = bests.map(p => qzPct(p.best.pts, p.best.max)).sort((a, b) => a - b);
+  if(!pcts.length) return '<div class="np-empty"><b>Для графиков пока нет завершённых попыток</b></div>';
+  const avg = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length), med = pcts.length % 2 ? pcts[(pcts.length - 1) / 2] : Math.round((pcts[pcts.length / 2 - 1] + pcts[pcts.length / 2]) / 2);
+  const bk = new Array(10).fill(0); pcts.forEach(p => { bk[Math.min(9, Math.floor(p / 10))]++; }); const mx = Math.max.apply(null, bk) || 1;
+  const st = (v, l) => '<div><b>' + v + '</b><span>' + l + '</span></div>';
+  const sorted = bests.slice().sort((a, b) => qzPct(b.best.pts, b.best.max) - qzPct(a.best.pts, a.best.max));
+  return '<div class="qz-st">' + st(pcts.length, 'участников с результатом') + st(avg + '%', 'средний (лучшие попытки)') + st(med + '%', 'медиана') + st(pcts[pcts.length - 1] + '%', 'максимум') + st(pcts[0] + '%', 'минимум') + '</div>' +
+    '<div class="qz-an"><b>Распределение результатов</b><div class="qz-hist" role="img" aria-label="Распределение результатов участников">' + bk.map((c, i) => '<div class="c"><em>' + (c || '') + '</em><i class="' + qzBarCls(i * 10 + 5) + '" style="height:' + Math.max(c ? 4 : 1, c / mx * 100) + '%"></i><span>' + (i * 10) + (i === 9 ? '–100' : '') + '</span></div>').join('') + '</div><div class="qz-hint">Сколько участников набрали результат в диапазоне, % (по лучшей попытке)</div></div>' +
+    '<div class="qz-an"><b>Результаты участников</b>' + sorted.map(p => { const pc = qzPct(p.best.pts, p.best.max); return '<div class="r"><span>' + esc(p.best.name || '—') + (p.used > 1 ? ' <small class="qz-sub" style="display:inline">(' + p.used + ' поп.)</small>' : '') + '</span><div class="qz-bar2 ' + qzBarCls(pc) + '"><i style="width:' + pc + '%"></i></div><em style="min-width:92px">' + qzFmt(p.best.pts) + '/' + qzFmt(p.best.max) + ' · ' + pc + '%</em></div>'; }).join('') + '</div>' +
+    '<h2 class="qz-h2">Верные ответы по вопросам</h2>' + qzAnalytics(t, fin, g);
+}
+async function qzResults(id){
+  const tk = ++QZ.tk, o = await qzGet('t', id), t = o ? qzFixTest(o) : null; if(tk !== QZ.tk) return;
+  if(!t || !t.own){ vQuiz.innerHTML = qzHead('Тестирование', 'Тест не найден', '') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; return; }
+  const head = '<button type="button" class="qz-bk" data-qa="list">' + qIco('back') + 'Все тесты</button>';
+  if(!t.key){ vQuiz.innerHTML = head + qzHead('Результаты', esc(t.title), 'Тест не опубликован — результатов нет. Нажмите «Поделиться» в редакторе: вы получите ключ и ссылку, а результаты всех участников будут собираться здесь.') + '<button class="btn small" type="button" data-qa="edit" data-id="' + esc(id) + '">' + qIco('pen') + 'Редактировать тест</button>'; return; }
+  vQuiz.innerHTML = head + qzHead('Результаты', esc(t.title), 'Загружаем результаты участников…');
+  let d = null, remoteErr = ''; try{ d = await qzPullRemote(t); }catch(e){ remoteErr = QZ_ERR[e.message] || e.message; }
+  const rows = (await qzAll('r')).filter(r => r.tid === id && r.remote).sort((a, b) => b.start - a.start);
+  if(tk !== QZ.tk) return;
+  const g = t.graded, fin = rows.filter(r => r.status !== 'run'), n = fin.length, base = d ? d.base : (t.pr.attempts ? t.attempts : null), grants = d ? d.grants : {}, people = qzPeople(rows, grants, base);
+  const tab = QZ.rtab || 'people', limited = base != null;
+  const tabBtn = (v, l) => '<button type="button" data-qa="rtab" data-v="' + v + '" class="' + (tab === v ? 'on' : '') + '">' + l + '</button>';
+  let h = head + qzHead('Результаты', esc(t.title), g ? 'Результаты всех участников приходят сюда автоматически. Баллы считает сервер.' : 'Опрос: ниже собраны ответы участников, они приходят автоматически.') +
+    '<div class="qz-top">' + (n ? '<button class="btn small neutral" type="button" data-qa="rescsv" data-id="' + esc(id) + '">' + qIco('dl') + 'Таблица CSV</button><button class="btn small neutral" type="button" data-qa="resjson" data-id="' + esc(id) + '">' + qIco('dl') + 'JSON</button>' : '') + '<button class="btn small neutral" type="button" data-qa="edit" data-id="' + esc(id) + '">' + qIco('pen') + 'Редактировать тест</button></div>' +
+    '<div class="qz-pubbar"><span><b>Опубликован</b> · ключ <span style="font-family:var(--mono);letter-spacing:.06em">' + esc(qzKeyFmt(t.key)) + '</span> · ' + (t.open === false ? 'приём закрыт' : 'приём открыт') + '</span><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small neutral" type="button" data-qa="resref">Обновить</button><button class="btn small neutral" type="button" data-qa="accept" data-id="' + esc(id) + '">' + (t.open === false ? 'Открыть приём' : 'Закрыть приём') + '</button><button class="btn small" type="button" data-qa="shareR" data-id="' + esc(id) + '">Поделиться</button></span></div>' +
+    (remoteErr ? '<div class="qz-warn">Не удалось загрузить результаты с сервера: ' + esc(remoteErr) + '. Показаны сохранённые на этом устройстве. <button class="btn small" type="button" data-qa="resref">Повторить</button></div>' : '');
+  if(!rows.length) return void (vQuiz.innerHTML = h + '<div class="np-empty"><b>Результатов пока нет</b>Когда участники пройдут тест, их результаты появятся здесь.</div>');
+  const pcts = fin.map(r => qzPct(r.pts, r.max)), avg = n ? Math.round(pcts.reduce((a, b) => a + b, 0) / n) : 0, best = n ? Math.max.apply(null, pcts) : 0, avgT = n ? fin.reduce((a, r) => a + ((r.end || r.start) - r.start), 0) / n : 0, vio = fin.filter(r => (r.viol || []).length).length;
+  const st = (v, l) => '<div><b>' + v + '</b><span>' + l + '</span></div>';
+  h += '<div class="qz-st">' + st(people.length, 'участников') + st(rows.length, 'попыток') + (g ? st(avg + '%', 'средний результат') + st(best + '%', 'лучший результат') : '') + st(qzDur(avgT), 'среднее время') + (vio ? st(vio, 'с потерей фокуса') : '') + '</div>' +
+    '<div class="qz-seg" style="margin:0 0 16px">' + tabBtn('people', 'Участники') + tabBtn('attempts', 'Все попытки') + tabBtn('charts', 'Графики') + '</div>';
+  if(tab === 'people'){
+    h += '<div class="qz-sc"><table class="qz-tbl"><thead><tr><th>Участник</th><th>Попытки</th>' + (g ? '<th>Лучший результат</th>' : '') + '<th>Последняя</th><th></th></tr></thead><tbody>' + people.map(p => {
+      const r = p.best || p.last, pc = qzPct(r.pts, r.max), canGrant = limited || t.open === false;
+      return '<tr data-qa="resopen" data-id="' + esc(p.last.id) + '"><td>' + qzWho(p.last) + '</td><td>' + p.used + (p.limit != null ? ' из ' + p.limit : '') + (p.extra ? ' <span class="qz-tag ac" title="Выдано дополнительных попыток">+' + p.extra + '</span>' : '') + '</td>' +
+        (g ? '<td><div style="display:flex;gap:10px;align-items:center"><div class="qz-bar2 ' + qzBarCls(pc) + '" style="width:90px"><i style="width:' + pc + '%"></i></div><span>' + qzFmt(r.pts) + '/' + qzFmt(r.max) + ' (' + pc + '%)</span></div></td>' : '') +
+        '<td>' + qzDate(p.last.start) + '<span class="qz-sub">' + esc(QZ_ST[p.last.status] || p.last.status) + '</span></td><td style="white-space:nowrap;text-align:right">' +
+        (canGrant ? '<button type="button" class="btn small" data-qa="grant" data-uid="' + esc(p.uid) + '" data-id="' + esc(id) + '" data-nm="' + esc(p.last.name) + '">Открыть повторно</button>' : '') + (p.extra ? ' <button type="button" class="btn small neutral" data-qa="revoke" data-uid="' + esc(p.uid) + '" data-id="' + esc(id) + '" title="Забрать выданную попытку">−</button>' : '') + '</td></tr>';
+    }).join('') + '</tbody></table></div><div class="qz-hint" style="margin:-8px 0 16px">' + (limited ? 'Пересдача: кнопка «Открыть повторно» даёт участнику ещё одну попытку сверх лимита. ' : '') + (t.open === false ? 'Приём закрыт для всех, но участник с выданной попыткой может пройти тест по тому же ключу.' : '') + '</div>';
+  } else if(tab === 'attempts'){
+    h += '<div class="qz-sc"><table class="qz-tbl"><thead><tr><th>Участник</th><th>Дата</th>' + (g ? '<th>Результат</th>' : '') + '<th>Время</th><th>Статус</th><th>Фокус</th><th></th></tr></thead><tbody>' + rows.map(r => {
+      const p = qzPct(r.pts, r.max), v = (r.viol || []).length;
+      return '<tr data-qa="resopen" data-id="' + esc(r.id) + '"><td>' + qzWho(r) + '</td><td>' + qzDate(r.start) + '</td>' + (g ? '<td><div style="display:flex;gap:10px;align-items:center"><div class="qz-bar2 ' + qzBarCls(p) + '" style="width:90px"><i style="width:' + p + '%"></i></div><span>' + qzFmt(r.pts) + '/' + qzFmt(r.max) + ' (' + p + '%)</span></div></td>' : '') + '<td>' + qzDur((r.end || r.start) - r.start) + '</td><td>' + esc(QZ_ST[r.status] || r.status) + '</td><td>' + (v ? '<span class="qz-tag ac">' + v + '</span>' : '—') + '</td><td><button type="button" class="qz-ib dn" data-qa="resdel" data-id="' + esc(r.id) + '" aria-label="Удалить попытку">' + qIco('trash') + '</button></td></tr>';
+    }).join('') + '</tbody></table></div>';
+  } else h += qzChartsHtml(t, people, fin, g);
   vQuiz.innerHTML = h;
 }
 function qzCsv(t, rs){
   const c = v => { v = String(v == null ? '' : v); return /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }, g = t.graded;
-  const head = ['Имя', 'Начало', 'Статус', 'Время, с', 'Потерь фокуса'].concat(g ? ['Баллы', 'Максимум', 'Процент'] : []).concat(t.q.map((q, i) => 'В' + (i + 1) + ': ' + q.text.slice(0, 40))).concat(g ? t.q.map((q, i) => 'В' + (i + 1) + ' верно') : []);
-  const rows = rs.filter(r => r.status !== 'run').map(r => [r.name, new Date(r.start).toLocaleString('ru-RU'), QZ_ST[r.status] || r.status, Math.round(((r.end || r.start) - r.start) / 1000), (r.viol || []).length]
+  const head = ['Имя', 'Telegram', 'Начало', 'Статус', 'Время, с', 'Потерь фокуса'].concat(g ? ['Баллы', 'Максимум', 'Процент'] : []).concat(t.q.map((q, i) => 'В' + (i + 1) + ': ' + q.text.slice(0, 40))).concat(g ? t.q.map((q, i) => 'В' + (i + 1) + ' верно') : []);
+  const rows = rs.filter(r => r.status !== 'run').map(r => [r.name, r.uname ? '@' + r.uname : r.tname || '', new Date(r.start).toLocaleString('ru-RU'), QZ_ST[r.status] || r.status, Math.round(((r.end || r.start) - r.start) / 1000), (r.viol || []).length]
     .concat(g ? [qzFmt(r.pts), qzFmt(r.max), qzPct(r.pts, r.max)] : []).concat(t.q.map(q => qzAnsText(q, (r.ans || {})[q.id]))).concat(g ? t.q.map(q => (r.per && r.per[q.id] && r.per[q.id].ok) ? 1 : 0) : []));
   return '\ufeff' + [head].concat(rows).map(r => r.map(c).join(';')).join('\r\n');
 }
-async function qzImportRes(t){
-  let txt = '';
-  const v = await dialog('<h3>Загрузить результаты</h3><p>Вставьте код результата, который прислал участник (можно несколько, каждый с новой строки), или выберите файлы.</p><textarea id="qzCode" class="qz-in" rows="4" placeholder="YR1.…"></textarea><input type="file" id="qzFile" multiple accept=".json,.txt,application/json,text/plain" style="margin:10px 0 0;max-width:100%"><div class="acts" style="margin-top:14px"><button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" data-v="ok">Загрузить</button></div>', '', m => {
-    const ta = m.querySelector('#qzCode'); ta.addEventListener('input', () => { txt = ta.value; });
-    m.querySelector('#qzFile').addEventListener('change', async e => { const fs = Array.from(e.target.files); txt = ''; for(const f of fs) txt += '\n' + await f.text(); ta.value = '(файлов: ' + fs.length + ')'; });
-  });
-  if(v !== 'ok') return;
-  const objs = []; const codes = txt.match(/YR[01]\.[A-Za-z0-9_-]+/g) || [];
-  for(const c of codes){ try{ const d = await qzDec(c); if(d.kind === 'result') objs.push(d.obj.r); }catch(e){} }
-  if(!codes.length){ try{ const j = JSON.parse(txt.trim()); (Array.isArray(j) ? j : [j]).forEach(x => { objs.push(x && x.r ? x.r : x); }); }catch(e){ const parts = txt.split(/\n(?=\{)/); parts.forEach(s => { try{ const x = JSON.parse(s.trim()); objs.push(x && x.r ? x.r : x); }catch(e2){} }); } }
-  let ok = 0, skip = 0; const have = new Set((await qzAll('r')).map(r => r.id));
-  for(const o of objs){ const r = qzFixResult(o, t); if(!r || have.has(r.id) || r.status === 'run'){ skip++; continue; } await qzPut('r', r); have.add(r.id); ok++; }
-  toast(ok ? 'Загружено результатов: ' + ok + (skip ? ' (пропущено: ' + skip + ')' : '') : 'Не удалось загрузить: код не относится к этому тесту или уже загружен');
-  if(ok) qzResults(t.id);
-}
-const qzResPack = r => ({k: 'yng-result', v: 1, r: {id: r.id, tid: r.tid, name: r.name, uid: r.uid, start: r.start, end: r.end, ans: r.ans, status: r.status, viol: r.viol}});
 
+/* ---------- вход по ключу ---------- */
 async function qzOpenKey(raw, replace){
   const key = qzNormKey(raw); if(key.length !== 8){ toast('Ключ состоит из 8 символов, например K7M4-9QXD'); return false; }
   toast('Ищем тест…');
   let g; try{ g = await qzApi('quiz.get', {key}); }catch(e){ qzFail(e); return false; }
-  const t = qzFixTest(g.test); if(!t){ toast('Не удалось прочитать тест'); return false; }
-  const ex = await qzGet('t', t.id);
-  if(!(ex && ex.own)){ Object.assign(t, {own: false, key: g.key, srv: g.updated, open: g.open, updated: Date.now()}); await qzPut('t', t); }
-  if(replace) location.replace('#/quiz/p/' + t.id); else nav('#/quiz/p/' + t.id);
+  const m = g.meta, ex = await qzGet('t', g.id);
+  if(ex && ex.own){ if(ex.key !== g.key){ ex.key = g.key; await qzPut('t', ex); } }
+  else { const stub = Object.assign(qzNewTest(), {id: g.id, title: m.title, desc: m.desc, own: false, graded: m.graded, learn: m.learn, closed: m.closed, askName: m.askName, pr: m.pr, attempts: m.attempts, totalMin: m.totalMin, n: m.n, key: g.key, srv: m.updated, open: m.open, updated: Date.now(), q: []}); await qzPut('t', stub); }
+  if(replace) location.replace('#/quiz/p/' + g.id); else nav('#/quiz/p/' + g.id);
   return true;
 }
 
@@ -13533,7 +13712,7 @@ async function renderQuiz(){
   if(QZ.t && (sub !== 'e' || id !== QZ.t.id)){ await qzFlush(); QZ.t = null; }
   try{
     if(!sub) await qzList(); else if(sub === 'e') await qzEdit(id); else if(sub === 'p') await qzIntro(id, seg[3] === 'pv');
-    else if(sub === 'v') await qzResultView(id, seg[3] === 'q' ? 'q' : ''); else if(sub === 'r') await qzResults(id); else if(sub === 's') await qzImportView(seg.slice(2).join('/'));
+    else if(sub === 'v') await qzResultView(id, seg[3] === 'q' ? 'q' : ''); else if(sub === 'r') await qzResults(id);
     else if(sub === 'k'){ vQuiz.innerHTML = qzHead('Тестирование', 'Открываем тест…', 'Ключ: ' + esc(qzKeyFmt(qzNormKey(id)))); if(!(await qzOpenKey(id, true))) vQuiz.innerHTML = qzHead('Тестирование', 'Не удалось открыть тест', 'Проверьте ключ или попросите автора прислать ссылку ещё раз.') + '<a class="btn small" href="#/quiz">К списку тестов</a>'; }
     else await qzList();
   }catch(err){ vQuiz.innerHTML = qzHead('Тестирование', 'Не удалось открыть раздел', esc(String(err && err.message || err))) + '<a class="btn small" href="#/quiz">К списку тестов</a>'; }
@@ -13549,8 +13728,9 @@ vQuiz.addEventListener('click', async e => {
     switch(qa){
       case 'list': await qzFlush(); nav('#/quiz'); return;
       case 'new': { const t = qzNewTest(); await qzPut('t', t); nav('#/quiz/e/' + t.id); return; }
-      case 'open': qzOpenDlg(); return;
       case 'play': nav('#/quiz/p/' + id); return;
+      case 'pvplay': { const t = qzFixTest(await qzGet('t', id)); if(!t) return; if(qzValidate(t).length){ toast('Сначала доработайте тест — откройте его в редакторе'); return; } nav('#/quiz/p/' + id + '/pv'); return; }
+      case 'retryIntro': qzIntroSrv(id); return;
       case 'edit': nav('#/quiz/e/' + id); return;
       case 'res': nav('#/quiz/r/' + id); return;
       case 'backEdit': nav('#/quiz/e/' + id); return;
@@ -13561,17 +13741,29 @@ vQuiz.addEventListener('click', async e => {
       case 'shareR': { const t = qzFixTest(await qzGet('t', id)); if(!t) return; if(qzValidate(t).length){ toast('Сначала доработайте тест — откройте его в редакторе'); return; } await qzShare(t); qzResults(id); return; }
       case 'openkey': qzOpenKey($('#qzKey').value); return;
       case 'rename': e.preventDefault(); if(QZ.askWho) QZ.askWho(); return;
-      case 'rsend': { const r = await qzGet('r', id); if(r){ r.err = ''; r.sent = false; await qzPut('r', r); qzSendMark(r); await qzSubmit(id); } return; }
+      case 'fretry': { const r = await qzGet('r', id); if(r){ r.err = ''; await qzPut('r', r); } qzFinalize(id, 0); return; }
       case 'resref': qzResults(location.hash.split('?')[0].split('/')[3]); return;
+      case 'rtab': QZ.rtab = b.dataset.v; qzResults(location.hash.split('?')[0].split('/')[3]); return;
       case 'accept': { const raw = await qzGet('t', id); if(!raw) return; const nv = raw.open === false; try{ await qzApi('quiz.close', {id, open: nv}); raw.open = nv; await qzPut('t', raw); toast(nv ? 'Приём ответов открыт' : 'Приём ответов закрыт'); }catch(err){ qzFail(err); return; } qzResults(id); return; }
-      case 'dup': { const t = qzFixTest(await qzGet('t', id)); if(!t) return; t.id = uid(); t.title += ' (копия)'; t.created = t.updated = Date.now(); await qzPut('t', t); toast('Копия создана'); qzList(); return; }
-      case 'del': { const t = await qzGet('t', id); if(!t || await qzAskS('Удалить тест?', 'Тест «' + t.title + '» и все его результаты будут удалены с этого устройства.') !== 'yes') return; for(const r of (await qzAll('r')).filter(r => r.tid === id)) await qzDel('r', r.id); await qzDel('t', id); toast('Тест удалён'); qzList(); return; }
+      case 'grant': {
+        if(await qzAskS('Открыть тест повторно?', 'Участник «' + (b.dataset.nm || '') + '» получит ещё одну попытку пройти тест — по тому же ключу или ссылке.', 'Открыть') !== 'yes') return;
+        try{ await qzApi('quiz.grant', {id, uid: b.dataset.uid, add: 1}); toast('Участнику выдана ещё одна попытка'); }catch(err){ qzFail(err); return; } qzResults(id); return; }
+      case 'revoke': { try{ await qzApi('quiz.grant', {id, uid: b.dataset.uid, add: -1}); toast('Дополнительная попытка отозвана'); }catch(err){ qzFail(err); return; } qzResults(id); return; }
+      case 'dup': { const t = qzFixTest(await qzGet('t', id)); if(!t) return; t.id = uid(); t.title += ' (копия)'; t.created = t.updated = Date.now(); t.key = ''; t.pubAt = 0; t.srv = 0; t.open = true; await qzPut('t', t); toast('Копия создана (без публикации)'); qzList(); return; }
+      case 'del': {
+        const t = await qzGet('t', id); if(!t) return;
+        if(await qzAskS('Удалить тест?', t.own && t.key ? 'Тест «' + t.title + '» будет снят с публикации, а результаты всех участников удалены.' : 'Тест «' + t.title + '» и ваши результаты будут удалены с этого устройства.') !== 'yes') return;
+        if(t.own && t.key){ try{ await qzApi('quiz.unpublish', {id}); }catch(err){ if(err.message !== 'forbidden' && err.message !== 'bad_key'){ qzFail(err); return; } } }
+        for(const r of (await qzAll('r')).filter(r => r.tid === id)) await qzDel('r', r.id); await qzDel('t', id); toast('Тест удалён'); qzList(); return; }
       case 'my': { const u = qzUser(), rs = (await qzAll('r')).filter(r => r.tid === id && r.uid === u.id && !r.preview && r.status !== 'run').sort((a, c) => c.start - a.start); if(rs[0]) nav('#/quiz/v/' + rs[0].id); else toast('Результатов пока нет'); return; }
-      case 'rcode': { const c = await qzResCode(id); if(c) copyText(c, 'Код результата скопирован — отправьте его автору теста'); return; }
-      case 'rfile': { const r = await qzGet('r', id); if(r) yngSave(new Blob([JSON.stringify(qzResPack(r))], {type: 'application/json'}), qzSlug(r.tTitle) + '.yngresult.json'); return; }
-      case 'resimp': { const t = qzFixTest(await qzGet('t', id)); if(t) qzImportRes(t); return; }
-      case 'rescsv': case 'resjson': { const t = qzFixTest(await qzGet('t', id)), rs = (await qzAll('r')).filter(r => r.tid === id && !r.preview); const nm = qzSlug(t.title); if(qa === 'rescsv') yngSave(new Blob([qzCsv(t, rs)], {type: 'text/csv;charset=utf-8'}), nm + '-results.csv'); else yngSave(new Blob([JSON.stringify(rs.filter(r => r.status !== 'run').map(qzResPack))], {type: 'application/json'}), nm + '-results.json'); return; }
-      case 'resdel': { e.stopPropagation(); if(await qzAskS('Удалить результат?', 'Этот результат будет удалён.') !== 'yes') return; const rr = await qzGet('r', id); if(rr && rr.remote){ try{ await qzApi('quiz.result.delete', {id: rr.tid, rid: id}); }catch(err){ qzFail(err); return; } } await qzDel('r', id); qzResults(location.hash.split('/')[3]); return; }
+      case 'rescsv': case 'resjson': {
+        const t = qzFixTest(await qzGet('t', id)), rs = (await qzAll('r')).filter(r => r.tid === id && r.remote); const nm = qzSlug(t.title);
+        if(qa === 'rescsv') yngSave(new Blob([qzCsv(t, rs)], {type: 'text/csv;charset=utf-8'}), nm + '-results.csv');
+        else yngSave(new Blob([JSON.stringify(rs.filter(r => r.status !== 'run').map(r => ({name: r.name, telegram: r.uname, status: r.status, started: r.start, finished: r.end, points: r.pts, max: r.max, per: r.per, answers: r.ans, violations: r.viol})))], {type: 'application/json'}), nm + '-results.json'); return; }
+      case 'resdel': {
+        e.stopPropagation(); if(await qzAskS('Удалить попытку?', 'Результат будет удалён. Попытка при этом останется посчитанной — вернуть участнику попытку можно кнопкой «Открыть повторно».') !== 'yes') return;
+        try{ await qzApi('quiz.attempt.delete', {id: location.hash.split('?')[0].split('/')[3], aid: id}); }catch(err){ qzFail(err); return; }
+        await qzDel('r', id); qzResults(location.hash.split('?')[0].split('/')[3]); return; }
       default: if(QZ.t) await qzEditClick(b, qa);
     }
   }catch(err){ toast('Ошибка: ' + (err && err.message || err)); }
