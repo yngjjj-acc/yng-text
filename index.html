@@ -723,6 +723,159 @@ footer a{color:var(--text-2)}
 .np-pop .fz-r button{width:40px;flex:none;padding:7px 0}
 .np-pop .fz-r input{flex:1;min-width:0;box-sizing:border-box;text-align:center;padding:7px 8px;border:1px solid var(--line-2);border-radius:9px;background:transparent;color:inherit;font:inherit;font-size:15px}
 .np-pop .fz-d{display:block;width:calc(100% - 4px);margin:0 2px 6px;padding:7px 0}
+/* ===== абзацы, отступы, сворачивание разделов, навигатор ===== */
+.ed.nb{line-height:var(--p-lh,1.65)}
+.ed.nb>p:not(.tk):not(.cap):not(.fx):not(.fw):not([data-lk]):not([data-ms]):not([data-tb]):not([data-ch]){text-indent:var(--p-ind,0);margin-bottom:var(--p-gap,.7em)}
+.ed.nb>p[style*="text-align:center"],.ed.nb>p[style*="text-align:right"]{text-indent:0}
+.nb [data-ind="1"]{margin-left:2em}.nb [data-ind="2"]{margin-left:4em}.nb [data-ind="3"]{margin-left:6em}.nb [data-ind="4"]{margin-left:8em}
+.nb [data-ind="5"]{margin-left:10em}.nb [data-ind="6"]{margin-left:12em}.nb [data-ind="7"]{margin-left:14em}.nb [data-ind="8"]{margin-left:16em}
+@media (max-width:760px){.nb [data-ind="5"]{margin-left:8em}.nb [data-ind="6"]{margin-left:8em}.nb [data-ind="7"]{margin-left:8em}.nb [data-ind="8"]{margin-left:8em}}
+.ed [data-fh]{display:none!important}
+.ed h1,.ed h2,.ed h3{position:relative;scroll-margin-top:200px}
+.ed h1::before,.ed h2::before,.ed h3::before{content:"";position:absolute;left:-26px;top:.32em;width:22px;height:22px;border-radius:7px;background:var(--text-2);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/16px no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/16px no-repeat;opacity:0;transition:opacity .15s,transform .15s;cursor:pointer}
+.ed h1:hover::before,.ed h2:hover::before,.ed h3:hover::before{opacity:.5}
+.ed h1[data-fold]::before,.ed h2[data-fold]::before,.ed h3[data-fold]::before{opacity:.75;transform:rotate(-90deg)}
+.ed h1[data-fold]::after,.ed h2[data-fold]::after,.ed h3[data-fold]::after{content:" ⋯";color:var(--text-3);font-weight:400}
+@media (hover:none){.ed h1::before,.ed h2::before,.ed h3::before{opacity:.4}}
+@media (max-width:760px){.ed h1::before,.ed h2::before,.ed h3::before{left:-18px;width:18px;height:18px}}
+@keyframes nvFl{0%{background:var(--accent-soft)}100%{background:transparent}}
+.ed .nv-fl{animation:nvFl 1.4s ease-out;border-radius:8px}
+@media print{.ed [data-fh]{display:revert!important}.ed h1::before,.ed h2::before,.ed h3::before,.ed [data-fold]::after{display:none!important}.ed.nb>p:not(.tk):not(.cap):not(.fx):not(.fw):not([data-lk]):not([data-ms]):not([data-tb]):not([data-ch]){margin-bottom:var(--p-gap,.7em)!important}.nvp{display:none!important}}
+.pa-w{min-width:250px}
+.pa-r{display:flex;flex-wrap:wrap;gap:6px;padding:2px 2px 8px}
+.pa-r button{border:0;border-radius:9px;background:rgba(120,120,128,.14);color:var(--text);font-size:13.5px;padding:7px 11px;cursor:pointer}
+.pa-r button:hover{background:var(--accent-soft)}
+.pa-r button.on{background:var(--accent);color:#fff}
+.nvp{position:fixed;left:14px;top:calc(var(--stick) + 78px);bottom:16px;width:262px;z-index:120;display:flex;flex-direction:column;background:var(--bg-elev);border:1px solid var(--line-2);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.16);overflow:hidden}
+.nvp[hidden]{display:none}
+.nvp-h{display:flex;align-items:center;gap:4px;padding:10px 10px 8px 14px;border-bottom:1px solid var(--line)}
+.nvp-h b{font-size:14.5px}
+.nvp-n{margin-right:auto;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nvp-n:empty{display:none}
+.nvp-h b{margin-right:auto}.nvp-n+button{margin-left:0}
+.nvp-h button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--text-2);cursor:pointer;font-size:18px;line-height:1;display:grid;place-items:center;padding:0}
+.nvp-h button:hover{background:var(--bg-alt)}
+.nvp-h svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nvp-l{overflow:auto;padding:6px;flex:1;min-height:0}
+.nvp-e{padding:18px 14px;color:var(--text-3);font-size:13.5px;line-height:1.5;text-align:center}
+.nvi{display:flex;align-items:center;gap:0;border-radius:9px}
+.nvi:hover,.nvi.cur{background:var(--accent-soft)}
+.nvi.cur .nvt{color:var(--accent);font-weight:600}
+.nvi.lv2{padding-left:14px}.nvi.lv3{padding-left:28px}
+.nvc{flex:none;width:24px;height:28px;border:0;background:transparent;color:var(--text-3);cursor:pointer;display:grid;place-items:center;padding:0}
+.nvc:disabled{opacity:.25;cursor:default}
+.nvc svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.nvi.fd .nvc svg{transform:rotate(-90deg)}
+.nvt{flex:1;min-width:0;text-align:left;border:0;background:transparent;color:var(--text);padding:7px 8px 7px 2px;font:inherit;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.nvi.lv1 .nvt{font-weight:600}
+body.nv-open #vEd{margin-left:296px!important;margin-right:auto!important}
+body.zen .nvp{display:none}
+body.zen.nv-open #vEd{margin-left:auto!important;margin-right:auto!important}
+@media (max-width:1099px){
+  body.nv-open #vEd{margin-left:auto!important}
+  .nvp{width:min(280px,82vw);bottom:auto;max-height:52vh}
+}
+@media (max-width:700px){.nvp{left:8px;right:8px;width:auto;top:auto;bottom:8px;max-height:42vh}}
+/* ===== презентации: панель по запросу, кнопки-ссылки, мастер-слайды, ИИ ===== */
+.dk-rp[hidden]{display:none}
+.dkp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.dkp-h h4{margin:0}
+.dkp-x{width:28px;height:28px;border:0;border-radius:8px;background:rgba(120,120,128,.14);color:var(--text-2);font-size:18px;line-height:1;cursor:pointer}
+.dkp-x:hover{background:var(--accent-soft)}
+.dk-rp .btn+.btn{margin-left:6px}
+.dko-btn{display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center;line-height:1.15;box-sizing:border-box;padding:0 .6em;overflow:hidden}
+.dko-btn .dk-btn{width:100%}
+.dks .dko.dk-link{cursor:pointer}
+.dk-stage .dko[data-gol]::after{content:attr(data-gol);position:absolute;right:-8px;top:-12px;transform:scale(var(--ik,1));transform-origin:right bottom;background:var(--accent);color:#fff;font:700 12px/1 var(--font,system-ui);padding:4px 7px;border-radius:99px;pointer-events:none;z-index:6;white-space:nowrap}
+.dk-m{pointer-events:none}
+.dk-grid{position:absolute;top:0;bottom:0;left:var(--gm,60px);right:var(--gm,60px);display:flex;gap:16px;pointer-events:none;z-index:1}
+.dk-grid i{flex:1;background:rgba(10,132,255,.08);border-left:1px dashed rgba(10,132,255,.4);border-right:1px dashed rgba(10,132,255,.4)}
+.dk-slide .dko[data-role="num"]:not([style*="color:"]) .dk-tx{color:var(--sa)}
+.dkmr{display:flex;align-items:center;gap:8px}
+.dkmb{display:flex;align-items:center;gap:8px;flex:none;padding-right:6px}
+.dkmb b{white-space:nowrap}
+.dkmh{font-size:12px;color:var(--text-3);white-space:nowrap}
+.dk-ai textarea{width:100%;box-sizing:border-box;min-height:150px;resize:vertical;padding:10px 12px;border:1px solid var(--line-2);border-radius:12px;background:transparent;color:inherit;font:inherit;font-size:15px;line-height:1.5}
+.dk-aiopt{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 4px}
+.dk-aiopt label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--text-2)}
+.dk-aiopt .gs{min-width:150px}
+.dk-ai .ai-load{margin:18px 0}
+/* ===== v4.23: кнопка навигатора, меню шрифта, окно создания презентации, подсказки ===== */
+.icon-btn.on{background:var(--accent-soft);color:var(--accent)}
+.np-pop .fm2{width:min(318px,calc(100vw - 28px));max-height:min(80vh,660px);overflow:auto}
+.fm2-note{margin:6px 10px 2px;padding:9px 12px;border-radius:11px;background:var(--accent-soft);color:var(--accent);font-size:12.5px;line-height:1.4}
+.fm2-sec{padding:12px 12px 10px}
+.fm2-sec+.fm2-sec{border-top:1px solid var(--line)}
+.fm2-h{display:flex;align-items:baseline;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:9px}
+.fm2-v{font-size:13px;font-weight:650;letter-spacing:0;text-transform:none;color:var(--text)}
+.fm2-sec.off .fm2-body{opacity:.4;pointer-events:none}
+.fm2-fonts{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:232px;overflow:auto;padding:1px}
+.fm2-f{display:flex;align-items:center;gap:9px;min-width:0;border:1px solid var(--line-2);background:transparent;border-radius:12px;padding:8px 9px;cursor:pointer;color:var(--text);text-align:left}
+.fm2-f:hover{border-color:var(--accent);background:var(--accent-soft)}
+.fm2-f.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent) inset}
+.fm2-s{flex:none;width:32px;text-align:center;font-size:21px;line-height:1}
+.fm2-n{min-width:0;font-size:12.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fm2-step{display:flex;gap:8px;align-items:center}
+.fm2-step button{flex:none;width:40px;height:40px;border:1px solid var(--line-2);border-radius:12px;background:transparent;color:var(--text);font-size:20px;line-height:1;cursor:pointer;padding:0}
+.fm2-step button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.fm2-step input{flex:1;min-width:0;height:40px;box-sizing:border-box;text-align:center;border:1px solid var(--line-2);border-radius:12px;background:transparent;color:inherit;font:inherit;font-size:16px;font-weight:650}
+.fm2-step input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fm2-range{display:block;width:100%;margin:14px 0 6px;accent-color:var(--accent)}
+.fm2-chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0 2px}
+.fm2-chips button{border:1px solid var(--line-2);background:transparent;border-radius:99px;padding:4px 11px;font-size:12.5px;color:var(--text);cursor:pointer}
+.fm2-chips button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.fm2-chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.fm2-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:12px;background:rgba(120,120,128,.14)}
+.fm2-seg button{border:0;background:transparent;border-radius:9px;padding:8px;font-size:13.5px;color:var(--text);cursor:pointer}
+.fm2-seg button.on{background:var(--bg-elev);box-shadow:0 1px 3px rgba(0,0,0,.18);font-weight:650}
+.fm2-foot{padding:8px 12px 10px;border-top:1px solid var(--line)}
+.fm2-reset{border:0;background:transparent;color:var(--text-2);font-size:13px;cursor:pointer;padding:6px 2px}
+.fm2-reset:hover{color:var(--accent)}
+.fm2-reset:disabled{opacity:.4;cursor:default}
+.tipbox{position:fixed;z-index:700;pointer-events:none;display:none;max-width:300px;background:#1d1d1f;color:#f5f5f7;padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.dk-info{flex:none;width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:var(--text-3);display:inline-grid;place-items:center;padding:0;cursor:help}
+.dk-info svg{width:17px;height:17px}
+.dk-info:hover,.dk-info:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+.dkn-dlg{width:min(880px,100%);padding:0;display:flex;flex-direction:column;overflow:hidden}
+.dkn-h{padding:24px 28px 6px}
+.dkn-h h3{margin:0 0 4px}
+.dkn-h p{margin:0;font-size:14px;color:var(--text-2)}
+.dkn-body{padding:14px 28px 6px;overflow:auto;flex:1;min-height:0}
+.dkn-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.dkn-fld>label,.dkn-lab{display:block;margin:0 0 7px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3)}
+.dkn-lab{margin:20px 0 9px}
+.dkdlg input.dkn-in[type=text]{display:block;width:100%;box-sizing:border-box;height:48px;padding:0 15px;border:1.5px solid var(--line-2);border-radius:13px;background:var(--bg);color:var(--text);font:inherit;font-size:16px;transition:border-color .15s,box-shadow .15s}
+.dkdlg input.dkn-in[type=text]::placeholder{color:var(--text-3)}
+.dkdlg input.dkn-in[type=text]:hover{border-color:var(--text-3)}
+.dkdlg input.dkn-in[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.dkn-fm{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dkn-fm button{display:flex;align-items:center;gap:10px;min-width:0;height:48px;box-sizing:border-box;padding:0 12px;border:1.5px solid var(--line-2);border-radius:13px;background:var(--bg);color:var(--text);cursor:pointer;text-align:left}
+.dkn-fm button:hover{border-color:var(--text-3)}
+.dkn-fm button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.dkn-fm i{flex:none;display:block;border:2px solid currentColor;border-radius:3px;opacity:.85}
+.dkn-fm .a169{width:26px;height:15px}.dkn-fm .a43{width:21px;height:16px}
+.dkn-fm b{display:block;font-size:14px;line-height:1.15}
+.dkn-fm small{display:block;font-size:11.5px;line-height:1.2;color:var(--text-3);white-space:nowrap}
+.dkn-fm button.on small{color:inherit;opacity:.8}
+.dkn-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;max-height:none;overflow:visible;padding:3px}
+.dkn-grid .dkt{position:relative;align-items:stretch;gap:8px;padding:7px 7px 10px;border:1.5px solid var(--line-2);border-radius:15px;background:var(--bg);transition:border-color .15s,box-shadow .15s,transform .15s}
+.dkn-grid .dkt:hover{background:var(--bg);border-color:var(--text-3);transform:translateY(-1px)}
+.dkn-grid .dkt.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dkn-grid .dkt.sel::after{content:"";position:absolute;right:12px;top:12px;width:22px;height:22px;border-radius:50%;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.500l4 4 8-9'/%3E%3C/svg%3E") center/14px no-repeat;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.dkn-grid .dkt b{font-size:13px;font-weight:600}
+.dkn-f{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 28px;border-top:1px solid var(--line);background:var(--bg-elev)}
+.dkn-sum{min-width:0;font-size:13px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dkn-sum b{color:var(--text);font-weight:650}
+.dkn-f .acts{margin:0;flex:none}
+@media (max-width:640px){.dkn-row{grid-template-columns:1fr}.dkn-h,.dkn-body,.dkn-f{padding-left:18px;padding-right:18px}.dkn-grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}.dkn-sum{display:none}.dkn-f{justify-content:flex-end}}
+.dkl-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:44px 20px;border:1.5px dashed var(--line-2);border-radius:20px;background:var(--bg-elev)}
+.dkl-empty .dkl-ei{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:8px}
+.dkl-empty .dkl-ei svg{width:28px;height:28px}
+.dkl-empty b{font-size:17px}
+.dkl-empty span{color:var(--text-2);font-size:14.5px;max-width:380px;line-height:1.5}
+.dkl-empty .btn{margin-top:14px}
+.dkl-card{border-radius:16px}
+.dkl-card:hover{box-shadow:0 10px 28px rgba(0,0,0,.14)}
 ::highlight(gc-ai){background-color:rgba(10,132,255,.14);text-decoration:underline wavy #0a84ff;text-decoration-thickness:1px}
 .gc-h .gc-x{margin-left:0}
 .gc-h .gc-n{margin-right:auto}
@@ -2310,6 +2463,7 @@ async function yngSave(blob, name){
     <div class="ed-top">
       <input id="edTitle" class="ed-title" type="text" placeholder="Без названия" maxlength="160" autocomplete="off" aria-label="Название черновика">
       <div class="ed-acts">
+        <button class="icon-btn" id="btnNav" type="button" title="Навигатор по заголовкам" aria-label="Навигатор по заголовкам" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15M13 9h4.5M13 12.5h4.5M13 16h3"/></svg></button>
         <button class="icon-btn" id="btnList" type="button" title="Мои черновики" aria-label="Мои черновики"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12.5l9 5 9-5M3 17l9 5 9-5"/></svg></button>
         <button class="icon-btn" id="btnZen" type="button" title="Режим Zen — только текст" aria-label="Режим Zen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
         <button class="icon-btn" id="btnMenu" type="button" title="Меню" aria-label="Меню"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button>
@@ -2521,6 +2675,8 @@ function sanitize(html){
         if(n.classList && n.classList.contains('cap')){ const ck = n.getAttribute('data-cap') === 't' ? 't' : 'i'; el.className = 'cap'; el.setAttribute('data-cap', ck); }
       }
       if(/^(p|h1|h2|h3|li|blockquote|td|th)$/.test(tag)){ const am = (n.getAttribute('style') || '').match(/text-align:\s*(center|right|justify)/i); if(am) el.setAttribute('style', 'text-align:' + am[1].toLowerCase()); }
+      if(/^(p|h1|h2|h3|blockquote)$/.test(tag)){ const ind = n.getAttribute('data-ind'); if(/^[1-8]$/.test(ind || '')) el.setAttribute('data-ind', ind); }
+      if(/^h[123]$/.test(tag) && n.getAttribute('data-fold') === '1') el.setAttribute('data-fold', '1');
       if(tag === 'a'){
         const h = (n.getAttribute('href') || '').trim();
         if(/^(https?:|mailto:|tel:|#)/i.test(h)){ el.setAttribute('href', h); el.setAttribute('target', '_blank'); el.setAttribute('rel', 'noopener noreferrer'); }
@@ -4343,8 +4499,8 @@ function pgStrip(root){
 }
 function pgClear(){ if(ed.querySelector('[data-pgp],[data-pgsp]')) pgStrip(ed); }
 function edHtml(){
-  if(!ed.querySelector('[data-pgp],[data-pgsp]')) return ed.innerHTML;
-  const c = ed.cloneNode(true); pgStrip(c); return c.innerHTML;
+  if(!ed.querySelector('[data-pgp],[data-pgsp],[data-fh]')) return ed.innerHTML;
+  const c = ed.cloneNode(true); pgStrip(c); c.querySelectorAll('[data-fh]').forEach(n => n.removeAttribute('data-fh')); return c.innerHTML;
 }
 /* элементы, которые можно переносить целиком или построчно */
 function pgUnits(root, out){
@@ -8277,7 +8433,7 @@ const dkTpl = d => DK_TPL.find(t => t.k === (d && d.tpl)) || DK_TPL_LEG.find(t =
 const dkDims = d => DK_FMT[d && d.fmt] || DK_FMT['16:9'];
 const DK_LAYOUTS = [
   ['title', 'Титульный'], ['content', 'Заголовок и текст'], ['two', 'Две колонки'], ['imgL', 'Картинка слева'],
-  ['imgR', 'Картинка справа'], ['quote', 'Цитата'], ['section', 'Раздел'], ['blank', 'Пустой']
+  ['imgR', 'Картинка справа'], ['quote', 'Цитата'], ['section', 'Раздел'], ['bignum', 'Крупная цифра'], ['blank', 'Пустой']
 ];
 /* слоты макетов в долях слайда: [тип, x, y, w, h, кегль, выравнивание, жирный] */
 const DK_SLOTS = {
@@ -8288,7 +8444,8 @@ const DK_SLOTS = {
   imgR: [['title', .06, .10, .43, .18, 44, 'left', 1], ['body', .06, .32, .43, .56, 26, 'left', 0], ['image', .53, .09, .42, .82]],
   quote: [['title', .12, .28, .76, .34, 46, 'center', 0], ['sub', .12, .66, .76, .1, 26, 'center', 0]],
   section: [['title', .08, .36, .84, .2, 72, 'center', 1]],
-  blank: []
+  blank: [],
+  bignum: [['title', .06, .08, .88, .14, 44, 'left', 1], ['num', .06, .27, .88, .40, 190, 'center', 1], ['sub', .08, .70, .84, .16, 34, 'center', 0]]
 };
 function dkMkObj(t, o){ return Object.assign({id: uid(), t, x: 0, y: 0, w: 300, h: 100}, o); }
 function dkSlotObj(d, s, text){
@@ -8325,7 +8482,7 @@ function dkFixChart(c){
 }
 function dkFixObj(o){
   if(!o || typeof o !== 'object') return null;
-  const t = ['text', 'image', 'video', 'chart', 'task', 'file', 'tbl', 'shape', 'fx', 'table', 'code'].includes(o.t) ? o.t : null; if(!t) return null;
+  const t = ['text', 'image', 'video', 'chart', 'task', 'file', 'tbl', 'shape', 'fx', 'table', 'code', 'btn'].includes(o.t) ? o.t : null; if(!t) return null;
   const r = {id: okId(o.id) ? o.id : uid(), t, x: dkNum(o.x, 0), y: dkNum(o.y, 0), w: Math.max(20, Math.min(4000, dkNum(o.w, 300))), h: Math.max(20, Math.min(4000, dkNum(o.h, 100)))};
   { const rt = dkNum(o.rot, 0); if(rt) r.rot = Math.max(-360, Math.min(360, Math.round(rt * 10) / 10)); }
   if(t === 'text'){ r.html = sanitize(String(o.html || '')).slice(0, 40000); if(typeof o.ph === 'string') r.ph = sanitize(o.ph).slice(0, 2000); r.fs = Math.max(8, Math.min(200, dkNum(o.fs, 28))); r.al = ['left', 'center', 'right', 'justify'].includes(o.al) ? o.al : 'left'; r.b = !!o.b; r.role = String(o.role || '').slice(0, 10); r.hd = !!o.hd; if(/^#[0-9a-f]{6}$/i.test(o.bgc || '')){ r.bgc = o.bgc; r.rad = Math.max(0, Math.min(120, Math.round(dkNum(o.rad, 20)))); } if(/^#[0-9a-f]{6}$/i.test(o.c || '')) r.c = o.c; }
@@ -8337,16 +8494,28 @@ function dkFixObj(o){
   else if(t === 'fx'){ const m = fxParse(o.fx); if(!m) return null; r.fx = JSON.stringify(m); r.fs = Math.max(12, Math.min(200, dkNum(o.fs, 44))); }
   else if(t === 'table'){ r.html = sanitize(String(o.html || '')).slice(0, 40000); r.fs = Math.max(8, Math.min(120, dkNum(o.fs, 22))); }
   else if(t === 'code'){ r.text = String(o.text || '').slice(0, 20000); r.fs = Math.max(8, Math.min(80, dkNum(o.fs, 20))); }
+  else if(t === 'btn'){ r.label = String(o.label == null ? 'Кнопка' : o.label).slice(0, 80); r.c = /^#[0-9a-f]{6}$/i.test(o.c || '') ? o.c : '#0a84ff'; r.fs = Math.max(8, Math.min(120, dkNum(o.fs, 28))); r.rad = Math.max(0, Math.min(120, Math.round(dkNum(o.rad, 16)))); }
+  if(o.go && typeof o.go === 'object'){ const gk = o.go.k; if(['next', 'prev', 'first', 'back'].includes(gk)) r.go = {k: gk}; else if(gk === 'slide' && okId(o.go.id)) r.go = {k: 'slide', id: o.go.id}; }
   return r;
+}
+const dkFixBg = b => b && /^#[0-9a-f]{6}$/i.test(b.c || '') ? {c: b.c} : (b && typeof b.img === 'string' && /^data:image\/(png|jpe?g|webp|gif|avif);/i.test(b.img) ? {img: b.img} : null);
+function dkFixMasters(d){
+  return (Array.isArray(d.masters) ? d.masters : []).slice(0, 8).filter(m => m && typeof m === 'object').map(m => ({
+    id: okId(m.id) ? m.id : uid(), name: String(m.name || 'Мастер').slice(0, 40), bg: dkFixBg(m.bg), lay: 'blank',
+    grid: {on: !!(m.grid && m.grid.on), cols: [4, 6, 12].includes(+(m.grid && m.grid.cols)) ? +m.grid.cols : 12},
+    tr: {type: 'instant', ease: 'inout', dur: 300},
+    objs: (Array.isArray(m.objs) ? m.objs : []).slice(0, 40).map(dkFixObj).filter(o => o && ['text', 'image', 'shape'].includes(o.t))
+  }));
 }
 function dkFixDeck(d){
   if(!d || typeof d !== 'object') return null;
-  const out = {v: 1, fmt: DK_FMT[d.fmt] ? d.fmt : '16:9', tpl: DK_TPL.some(t => t.k === d.tpl) || DK_TPL_LEG.some(t => t.k === d.tpl) ? d.tpl : 'clean', slides: [], mg: {on: !!(d.mg && d.mg.on), v: Math.max(5, Math.min(200, Math.round(dkNum(d.mg && d.mg.v, 40))))}, rl: d.rl === true};
+  const out = {v: 1, fmt: DK_FMT[d.fmt] ? d.fmt : '16:9', tpl: DK_TPL.some(t => t.k === d.tpl) || DK_TPL_LEG.some(t => t.k === d.tpl) ? d.tpl : 'clean', slides: [], masters: [], mg: {on: !!(d.mg && d.mg.on), v: Math.max(5, Math.min(200, Math.round(dkNum(d.mg && d.mg.v, 40))))}, rl: d.rl === true};
+  out.masters = dkFixMasters(d);
   (Array.isArray(d.slides) ? d.slides : []).slice(0, 200).forEach(s => {
     if(!s || typeof s !== 'object') return;
     const tr = s.tr || {};
     out.slides.push({
-      id: okId(s.id) ? s.id : uid(), lay: DK_SLOTS[s.lay] ? s.lay : 'blank',
+      id: okId(s.id) ? s.id : uid(), lay: DK_SLOTS[s.lay] ? s.lay : 'blank', master: out.masters.some(m => m.id === s.master) ? s.master : '',
       bg: s.bg && /^#[0-9a-f]{6}$/i.test(s.bg.c || '') ? {c: s.bg.c} : (s.bg && typeof s.bg.img === 'string' && /^data:image\/(png|jpe?g|webp|gif|avif);/i.test(s.bg.img) ? {img: s.bg.img} : null),
       objs: (Array.isArray(s.objs) ? s.objs : []).slice(0, 120).map(dkFixObj).filter(Boolean),
       tr: {type: ['instant', 'dissolve', 'smart', 'push', 'wipe', 'zoom', 'cover'].includes(tr.type) ? tr.type : 'smart', ease: ['linear', 'in', 'out', 'inout'].includes(tr.ease) ? tr.ease : 'inout', dur: Math.max(100, Math.min(3000, Math.round(dkNum(tr.dur, 300))))}
@@ -8438,9 +8607,17 @@ function dkChartHtml(o, deck, slide){
   const dark = dkSlideDark(deck, slide);
   return `<div class="dk-ch">${chartSvg(o.ch, 640, Math.round(640 * o.h / Math.max(1, o.w)), {fg: dark ? '#f5f5f7' : '#1d1d1f', grid: dark ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.14)', dark})}</div>`;
 }
+const dkMasterOf = (deck, slide) => (slide && slide.master && deck.masters) ? (deck.masters.find(m => m.id === slide.master) || null) : null;
+const dkGoStr = g => g.k === 'slide' ? 'slide:' + g.id : g.k;
+function dkGoLabel(deck, g){
+  if(!g) return '';
+  if(g.k === 'slide'){ const i = deck.slides.findIndex(s => s.id === g.id); return i < 0 ? '↪ ✕' : '↪ ' + (i + 1); }
+  return {back: '↩ назад', next: '→', prev: '←', first: '⇤'}[g.k] || '';
+}
 function dkSlideDark(deck, slide){
-  if(slide && slide.bg && slide.bg.c) return dkLum(slide.bg.c) < .5;
-  if(slide && slide.bg && slide.bg.img) return true;
+  const b = slide && (slide.bg || (dkMasterOf(deck, slide) || {}).bg);
+  if(b && b.c) return dkLum(b.c) < .5;
+  if(b && b.img) return true;
   return dkLum(dkTpl(deck).fg) > .6;
 }
 /* дерево выбора «ссылка на задачу/файл» */
@@ -8476,6 +8653,7 @@ function dkObjInner(o, deck, slide, mode){
     case 'fx': return `<div class="dk-fx" style="font-size:${o.fs}px">${fxView(fxParse(o.fx) || [''])}</div>`;
     case 'table': return `<div class="dk-tb nb" style="font-size:${o.fs}px">${o.html}</div>`;
     case 'code': return `<pre class="dk-cd" style="font-size:${o.fs}px"><code>${esc(o.text)}</code></pre>`;
+    case 'btn': return `<div class="dk-btn">${esc(o.label)}</div>`;
   }
   return '';
 }
@@ -8483,21 +8661,28 @@ function dkObjStyle(o){
   let s = `left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;`;
   if(o.t === 'text'){ s += `font-size:${o.fs}px;text-align:${o.al};` + (o.b ? 'font-weight:700;' : '') + (o.c ? `color:${o.c};` : (o.bgc ? `color:${dkLum(o.bgc) < .55 ? '#fff' : '#111'};` : '')) + (o.bgc ? `background:${o.bgc};border-radius:${o.rad == null ? 20 : o.rad}px;` : ''); }
   if(o.t === 'shape') s += `background:${o.c};opacity:${o.op};` + (o.kind === 'ellipse' ? 'border-radius:50%;' : 'border-radius:14px;');
+  if(o.t === 'btn') s += `background:${o.c};color:${dkLum(o.c) < .55 ? '#fff' : '#111'};font-size:${o.fs}px;border-radius:${o.rad}px;`;
   if(o.rot) s += `transform:rotate(${o.rot}deg);`;
   return s;
 }
 function dkSlideBg(deck, slide){
-  const T = dkTpl(deck);
-  if(slide.bg && slide.bg.c) return `background:${slide.bg.c}`;
-  if(slide.bg && slide.bg.img) return `background:#000 url("${slide.bg.img}") center/cover no-repeat`;
+  const T = dkTpl(deck), m = dkMasterOf(deck, slide), b = slide.bg || (m && m.bg);
+  if(b && b.c) return `background:${b.c}`;
+  if(b && b.img) return `background:#000 url("${b.img}") center/cover no-repeat`;
   return `background:${T.bg}`;
 }
 function dkSlideHtml(deck, slide, mode){
-  const [W, H] = dkDims(deck), T = dkTpl(deck);
+  const [W, H] = dkDims(deck), T = dkTpl(deck), mst = dkMasterOf(deck, slide), isM = !!(deck.masters && deck.masters.includes(slide));
   const vars = `--sf:${T.fg};--sf2:${T.fg2};--sa:${T.ac};--sh:${DK_FONTS[T.fh]};--sb:${DK_FONTS[T.fb]};`;
   const cls = `dk-slide d-${T.deco}${dkSlideDark(deck, slide) ? ' dk-dark' : ''}`;
-  return `<div class="${cls}" data-sid="${slide.id}" style="width:${W}px;height:${H}px;${vars}"><div class="dk-bg" style="${dkSlideBg(deck, slide)}"></div><div class="dk-deco"></div>` +
-    slide.objs.map(o => `<div class="dko dko-${o.t}${o.hd ? ' hd' : ''}${o.bgc ? ' plate' : ''}" data-oid="${o.id}" style="${dkObjStyle(o)}">${dkObjInner(o, deck, slide, mode)}</div>`).join('') + '</div>';
+  const idx = deck.slides.indexOf(slide), tok = o => (o.t === 'text' && !isM) ? Object.assign({}, o, {html: String(o.html || '').replace(/\{n\}/g, idx + 1).replace(/\{total\}/g, deck.slides.length)}) : o;
+  const mh = mst ? mst.objs.map(o => `<div class="dko dko-${o.t} dk-m${o.hd ? ' hd' : ''}${o.bgc ? ' plate' : ''}"${o.role ? ' data-role="' + o.role + '"' : ''} data-mid="${o.id}" style="${dkObjStyle(o)}">${dkObjInner(tok(o), deck, slide, mode === 'edit' ? 'thumb' : mode)}</div>`).join('') : '';
+  const gsrc = isM ? slide : mst, gr = (mode === 'edit' && gsrc && gsrc.grid && gsrc.grid.on) ? `<div class="dk-grid" style="--gm:${deck.mg && deck.mg.on ? deck.mg.v : 60}px">${'<i></i>'.repeat(gsrc.grid.cols || 12)}</div>` : '';
+  return `<div class="${cls}" data-sid="${slide.id}" style="width:${W}px;height:${H}px;${vars}"><div class="dk-bg" style="${dkSlideBg(deck, slide)}"></div><div class="dk-deco"></div>${mh}${gr}` +
+    slide.objs.map(o => {
+      const ga = o.go ? (mode === 'view' ? ` data-go="${dkGoStr(o.go)}"` : (mode === 'edit' ? ` data-gol="${esc(dkGoLabel(deck, o.go))}"` : '')) : '';
+      return `<div class="dko dko-${o.t}${o.hd ? ' hd' : ''}${o.bgc ? ' plate' : ''}${o.go ? ' dk-link' : ''}"${o.role ? ' data-role="' + o.role + '"' : ''} data-oid="${o.id}"${ga} style="${dkObjStyle(o)}">${dkObjInner(o, deck, slide, mode)}</div>`;
+    }).join('') + '</div>';
 }
 /* подключить блобы видео после вставки в DOM */
 function dkHydrate(root){
@@ -8665,7 +8850,18 @@ function dkShow(rec, start){
     const f = await dkTransit(host, deck, A, B, tr, dir);
     S.busy = false; S.cur = f; dkEnterSlide(S, f);
   };
-  S.go = go;
+  S.go = go; S.hist = [];
+  S.link = spec => {
+    if(S.busy) return;
+    const k = String(spec).split(':')[0], id = String(spec).slice(k.length + 1); let n = -1, dir = 1;
+    if(k === 'slide'){ n = deck.slides.findIndex(s => s.id === id); if(n < 0) return; if(n !== S.i) S.hist.push(S.i); dir = n > S.i ? 1 : -1; }
+    else if(k === 'next') n = S.i + 1;
+    else if(k === 'prev'){ n = S.i - 1; dir = -1; }
+    else if(k === 'first'){ n = 0; dir = -1; }
+    else if(k === 'back'){ n = S.hist.length ? S.hist.pop() : S.i - 1; dir = -1; }
+    if(n < 0 || n === S.i) return;
+    go(n, dir);
+  };
   host.innerHTML = ''; S.cur = dkEl(dkSlideHtml(deck, deck.slides[S.i], 'view')); host.appendChild(S.cur); dkHydrate(S.cur); dkFit(S.cur, deck, deck.slides[S.i]); upd(); dkEnterSlide(S, S.cur);
   /* навигация по половинам */
   let down = null;
@@ -8677,6 +8873,7 @@ function dkShow(rec, start){
   fit.addEventListener('pointerup', e => {
     if(S.tool !== 'none'){ dkDrawEnd(S, e); return; }
     if(!down) return; const d = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null; if(d > 8) return;
+    const gl = e.target.closest('[data-go]'); if(gl){ S.link(gl.dataset.go); return; }
     if(e.target.closest('[data-dkck],video,a')) return;
     const r = fit.getBoundingClientRect();
     if(e.clientX - r.left < r.width / 2) go(S.i - 1, -1); else go(S.i + 1, 1);
@@ -8875,9 +9072,9 @@ Object.assign(IC, {
   dkimg: '<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 16l-5-5L7 19.5"/>',
   dkfile: '<path d="M7 3.5h7l4.5 4.5v11A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M9 12h6M9 16h4"/>'
 });
-const dk = {rec: null, deck: null, i: 0, sel: [], undo: [], redo: [], tab: 'text', editing: null, k: 1, built: false, clip: null, bgAll: false, timer: 0, thTimer: 0};
+const dk = {rec: null, deck: null, i: 0, sel: [], undo: [], redo: [], tab: 'text', mEdit: '', panel: '', editing: null, k: 1, built: false, clip: null, bgAll: false, timer: 0, thTimer: 0};
 const dkV = () => document.getElementById('vDeck'), dkL = () => document.getElementById('vSlides');
-const dkSlideObj = () => dk.deck.slides[dk.i];
+const dkSlideObj = () => (dk.mEdit && (dk.deck.masters || []).find(m => m.id === dk.mEdit)) || dk.deck.slides[dk.i];
 const dkSelObjs = () => dkSlideObj().objs.filter(o => dk.sel.includes(o.id));
 
 /* ---------- снимки для отмены (картинки заменяются метками) ---------- */
@@ -8889,6 +9086,7 @@ function dkUnsnap(s){ return JSON.parse(s, (k, v) => (typeof v === 'string' && v
 function dkPush(){ dk.undo.push(dkSnap()); if(dk.undo.length > 40) dk.undo.shift(); dk.redo = []; }
 function dkRestoreSnap(s){
   dk.deck = dkUnsnap(s); dk.rec.deck = dk.deck; dk.i = Math.min(dk.i, dk.deck.slides.length - 1);
+  if(dk.mEdit && !(dk.deck.masters || []).some(m => m.id === dk.mEdit)) dk.mEdit = '';
   const ids = new Set(dkSlideObj().objs.map(o => o.id)); dk.sel = dk.sel.filter(x => ids.has(x));
   dkDraw(); dkDirty();
 }
@@ -8913,7 +9111,7 @@ function renderSlides(){
   el.innerHTML = `<div class="page"><div class="eyebrow">Презентации</div><h1 class="fl-h1">Презентации</h1>
     <p class="lead">Слайды с умными переходами, диаграммами, видео и режимом показа. Каждая презентация — файл в папке «Презентации».</p>
     <div class="dkl-acts"><button type="button" class="btn" id="dklNew">${ico('plus')} Новая презентация</button><button type="button" class="btn neutral" id="dklImp">${ico('dkfile')} Открыть резервную копию</button></div>
-    ${list.length ? `<div class="dkl-grid">${list.map(r => dkCardHtml(r)).join('')}</div>` : `<div class="empty"><b>Презентаций пока нет</b><span>Нажмите «Новая презентация» и выберите шаблон.</span></div>`}</div>`;
+    ${list.length ? `<div class="dkl-grid">${list.map(r => dkCardHtml(r)).join('')}</div>` : `<div class="dkl-empty"><div class="dkl-ei">${ico('dkfile')}</div><b>Презентаций пока нет</b><span>Создайте первую: выберите шаблон и формат, а потом добавляйте слайды вручную или с помощью ИИ.</span><button type="button" class="btn" data-dklnew="1">${ico('plus')} Создать презентацию</button></div>`}</div>`;
   el.querySelectorAll('.dkl-th').forEach(t => { const r = DR[t.dataset.id]; if(!r) return; const [W] = dkDims(r.deck); t.firstElementChild.style.transform = `scale(${t.clientWidth / W})`; });
 }
 function dkCardHtml(r){
@@ -8923,24 +9121,36 @@ function dkCardHtml(r){
     <div class="dkl-ac"><button type="button" class="icon-btn" data-dkdup="${r.id}" title="Дублировать" aria-label="Дублировать">${ico('dkdup')}</button><button type="button" class="icon-btn" data-dkdel="${r.id}" title="В корзину" aria-label="В корзину">${ico('trash')}</button></div></div>`;
 }
 async function dkNewDlg(){
-  let fmt = '16:9', title = '';
-  const html = `<h3>Новая презентация</h3><label>Название</label><input type="text" id="dkNm" maxlength="120" placeholder="Новая презентация" data-focus>
-    <label>Формат</label><div class="seg dk-seg"><button type="button" data-fm="16:9" class="on">16:9 · широкоформатный</button><button type="button" data-fm="4:3">4:3 · стандартный</button></div>
-    <label>Шаблон</label><div class="dkt-grid" id="dkTg"></div><div class="acts"><button type="button" class="btn small neutral" data-v="">Отмена</button></div>`;
-  const res = await dialog(html, 'dkdlg', (m, done) => {
-    const g = m.querySelector('#dkTg');
+  let fmt = '16:9', sel = DK_TPL[0].k;
+  const html = `<div class="dkn-h"><h3>Новая презентация</h3><p>Выберите шаблон и формат. Всё это можно изменить позже.</p></div>
+    <div class="dkn-body"><div class="dkn-row">
+      <div class="dkn-fld"><label for="dkNm">Название</label><input type="text" id="dkNm" class="dkn-in" maxlength="120" placeholder="Например, «Итоги квартала»" autocomplete="off" data-focus></div>
+      <div class="dkn-fld"><label>Формат</label><div class="dkn-fm" role="radiogroup" aria-label="Формат слайдов"><button type="button" role="radio" aria-checked="true" data-fm="16:9" class="on"><i class="a169"></i><span><b>16:9</b><small>Широкий</small></span></button><button type="button" role="radio" aria-checked="false" data-fm="4:3"><i class="a43"></i><span><b>4:3</b><small>Стандартный</small></span></button></div></div>
+    </div><div class="dkn-lab">Шаблон</div><div class="dkt-grid dkn-grid" id="dkTg" role="listbox" aria-label="Шаблоны"></div></div>
+    <div class="dkn-f"><span class="dkn-sum" id="dkSum"></span><div class="acts"><button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" id="dkNmGo">Создать презентацию</button></div></div>`;
+  let title = '';
+  const res = await dialog(html, 'dkdlg dkn-dlg', (m, done) => {
+    const g = m.querySelector('#dkTg'), nm = m.querySelector('#dkNm');
+    const tname = k => k === '__blank' ? 'Пустая презентация' : ((DK_TPL.find(t => t.k === k) || {}).n || '');
+    const sum = () => { m.querySelector('#dkSum').innerHTML = 'Шаблон: <b>' + esc(tname(sel)) + '</b> · ' + fmt; };
     const draw = () => {
-      g.innerHTML = `<button type="button" class="dkt dkt-blank" data-tp="__blank" title="Пустая презентация"><span class="dkt-th" style="aspect-ratio:${fmt === '4:3' ? '4/3' : '16/9'}"><span class="dkt-plus">${ico('plus')}</span></span><b>Пустая презентация</b></button>` + DK_TPL.map(t => {
+      g.innerHTML = `<button type="button" role="option" class="dkt dkt-blank" data-tp="__blank" title="Пустая презентация"><span class="dkt-th" style="aspect-ratio:${fmt === '4:3' ? '4/3' : '16/9'}"><span class="dkt-plus">${ico('plus')}</span></span><b>Пустая</b></button>` + DK_TPL.map(t => {
         const d = dkNewDeck(t.k, fmt), [W, H] = dkDims(d);
-        return `<button type="button" class="dkt" data-tp="${t.k}" title="${esc(t.n)}"><span class="dkt-th" style="aspect-ratio:${W}/${H}"><span class="dkt-in" style="width:${W}px;height:${H}px">${dkSlideHtml(d, d.slides[0], 'thumb')}</span></span><b>${esc(t.n)}</b></button>`;
+        return `<button type="button" role="option" class="dkt" data-tp="${t.k}" title="${esc(t.n)}"><span class="dkt-th" style="aspect-ratio:${W}/${H}"><span class="dkt-in" style="width:${W}px;height:${H}px">${dkSlideHtml(d, d.slides[0], 'thumb')}</span></span><b>${esc(t.n)}</b></button>`;
       }).join('');
       g.querySelectorAll('.dkt-th').forEach(t => { const w = t.clientWidth || 150, W = fmt === '4:3' ? 960 : 1280; t.firstElementChild.style.transform = `scale(${w / W})`; });
+      g.querySelectorAll('.dkt').forEach(b => { const on = b.dataset.tp === sel; b.classList.toggle('sel', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      sum();
     };
+    const go = () => { title = nm.value.trim(); done('tpl:' + sel); };
     draw();
     m.addEventListener('click', e => {
-      const f = e.target.closest('[data-fm]'); if(f){ fmt = f.dataset.fm; m.querySelectorAll('[data-fm]').forEach(b => b.classList.toggle('on', b === f)); draw(); return; }
-      const t = e.target.closest('[data-tp]'); if(t){ title = m.querySelector('#dkNm').value.trim(); done('tpl:' + t.dataset.tp); }
+      const f = e.target.closest('[data-fm]'); if(f){ fmt = f.dataset.fm; m.querySelectorAll('[data-fm]').forEach(b => { b.classList.toggle('on', b === f); b.setAttribute('aria-checked', b === f ? 'true' : 'false'); }); draw(); return; }
+      const t = e.target.closest('[data-tp]'); if(t){ sel = t.dataset.tp; g.querySelectorAll('.dkt').forEach(b => { const on = b === t; b.classList.toggle('sel', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); }); sum(); return; }
+      if(e.target.closest('#dkNmGo')) go();
     });
+    m.addEventListener('dblclick', e => { if(e.target.closest('[data-tp]')) go(); });
+    nm.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); go(); } });
   });
   if(!res || !res.startsWith('tpl:')) return null;
   return {tpl: res.slice(4), fmt, title};
@@ -8957,7 +9167,7 @@ function dkImportPick(){
 document.addEventListener('click', async e => {
   if(view !== 'slides') return;
   let b;
-  if(e.target.closest('#dklNew')){ dkNewFlow(); return; }
+  if(e.target.closest('#dklNew,[data-dklnew]')){ dkNewFlow(); return; }
   if(e.target.closest('#dklImp')){ dkImportPick(); return; }
   if((b = e.target.closest('[data-dkdup]'))){ e.stopPropagation(); const r = DR[b.dataset.dkdup]; if(!r) return; const c = JSON.parse(JSON.stringify(r)); c.id = uid(); c.title = (r.title || 'Без названия') + ' (копия)'; c.created = c.updated = Date.now(); DR[c.id] = c; await dbPut(c); badge(); renderSlides(); toast('Копия создана'); return; }
   if((b = e.target.closest('[data-dkdel]'))){ e.stopPropagation(); const r = DR[b.dataset.dkdel]; if(r) trashDraft(r, true); return; }
@@ -9047,12 +9257,12 @@ function dkEnter(id){
   if(!isDeck(rec)){ toast('Презентация не найдена'); nav('#/slides'); return; }
   if(!dk.built) dkBuild();
   if(dk.rec && dk.rec.id !== rec.id){ dk.i = 0; dk.sel = []; dk.undo = []; dk.redo = []; }
-  dk.rec = rec; dk.deck = rec.deck; dk.i = Math.min(dk.i, dk.deck.slides.length - 1);
+  dk.rec = rec; dk.deck = rec.deck; dk.i = Math.min(dk.i, dk.deck.slides.length - 1); dk.mEdit = '';
   document.getElementById('dkTitle').value = rec.title || '';
   document.getElementById('dkSt').textContent = 'сохранено';
   dkTabSet(dk.tab, true); dkDraw(); requestAnimationFrame(dkFitStage);
 }
-function dkLeave(){ if(dk.rec){ dkEndEdit(); dkSaveNow(); } }
+function dkLeave(){ if(dk.rec){ dkEndEdit(); dk.mEdit = ''; dkSaveNow(); } }
 function dkDraw(){ dkThumbs(); dkStageDraw(); dkRibDraw(); dkPanel(); }
 function dkFitStage(){
   const sw = document.getElementById('dkSw'); if(!sw || !dk.deck) return;
@@ -9101,6 +9311,7 @@ function dkThumbs(){
 }
 function dkThumbOne(){
   const c = document.getElementById('dkThc'); if(!c || view !== 'deck') return;
+  if(dk.mEdit){ dkThumbs(); return; }
   const th = c.querySelector(`.dkth[data-i="${dk.i}"] .dkthi`); if(!th) return;
   const [W] = dkDims(dk.deck); th.innerHTML = dkSlideHtml(dk.deck, dkSlideObj(), 'thumb');
 }
@@ -9255,16 +9466,17 @@ function dkTextCmd(c, arg){
 const dkB = (c, h, t, extra) => `<button type="button" class="dkb${extra || ''}" data-dkc="${c}" title="${t}" aria-label="${t}">${h}</button>`;
 const dkSep = '<span class="dksep"></span>';
 function dkRibDraw(){
+  if(dk.mEdit) dk.tab = 'text';
   const r = document.getElementById('dkRib'), t = dk.tab; if(!r) return;
   document.querySelectorAll('.dk-tabs [data-dkt]').forEach(b => { b.classList.toggle('on', b.dataset.dkt === t); b.setAttribute('aria-selected', b.dataset.dkt === t); });
   const sl = dkSlideObj();
   if(t === 'text'){
-    r.innerHTML = dkB('bold', '<b>B</b>', 'Жирный') + dkB('italic', '<i>I</i>', 'Курсив') + dkB('underline', '<u>U</u>', 'Подчёркнутый') + dkB('strike', '<s>S</s>', 'Зачёркнутый') + dkB('mark', '<span class="hl"></span>', 'Маркер') + dkSep +
+    r.innerHTML = (dk.mEdit ? dkMasterBar() : '') + dkB('bold', '<b>B</b>', 'Жирный') + dkB('italic', '<i>I</i>', 'Курсив') + dkB('underline', '<u>U</u>', 'Подчёркнутый') + dkB('strike', '<s>S</s>', 'Зачёркнутый') + dkB('mark', '<span class="hl"></span>', 'Маркер') + dkSep +
       dkB('h1', 'H1', 'Заголовок 1') + dkB('h2', 'H2', 'Заголовок 2') + dkB('h3', 'H3', 'Заголовок 3') + dkSep +
       dkB('alignL', svg('alL'), 'По левому краю') + dkB('alignC', svg('alC'), 'По центру') + dkB('alignR', svg('alR'), 'По правому краю') + dkB('alignJ', svg('alJ'), 'По ширине') + dkSep +
       dkB('ul', svg('ul'), 'Маркированный список') + dkB('ol', svg('ol'), 'Нумерованный список') + dkB('quote', svg('quote'), 'Цитата') + dkB('codeb', svg('code'), 'Код в тексте') + dkB('link', svg('link'), 'Ссылка') + dkB('clear', svg('eraser'), 'Убрать форматирование') + dkSep +
       dkB('i-text', 'Aa', 'Добавить текстовый блок') + dkB('i-image', ico('dkimg'), 'Изображение') + dkB('i-video', ico('dkvideo'), 'Видео на слайд (.mp4, .webm, .mov, до 35 МБ)') + dkB('i-table', svg('table'), 'Таблица') + dkB('i-code', svg('code'), 'Блок кода') +
-      dkB('i-fx', ico('dkfx'), 'Формулы') + dkB('i-chart', ico('dkchart'), 'Диаграммы') + dkB('i-tbl', svg('tbl'), 'Таблица из раздела «Таблицы»') + dkB('i-plate', ico('dkplate'), 'Плашка с текстом') + dkB('i-shape', ico('dkshape'), 'Фигура') + dkB('i-emoji', ico('dkemoji'), 'Эмодзи') + dkSep +
+      dkB('i-fx', ico('dkfx'), 'Формулы') + dkB('i-chart', ico('dkchart'), 'Диаграммы') + dkB('i-tbl', svg('tbl'), 'Таблица из раздела «Таблицы»') + dkB('i-plate', ico('dkplate'), 'Плашка с текстом') + dkB('i-shape', ico('dkshape'), 'Фигура') + dkB('i-btn', '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.500" width="18" height="9" rx="4.500"/><path d="M9 12h6M13 10l2 2-2 2"/></svg>', 'Кнопка-ссылка: переход на другой слайд') + dkB('i-emoji', ico('dkemoji'), 'Эмодзи') + dkSep +
       dkB('i-task', svg('task'), 'Карточка задачи на слайд') + dkB('i-file', ico('dkfile'), 'Текстовый файл на слайд') + dkB('i-mus', ico('music'), 'Ноты из «Нотной тетради» на слайд') + dkSep + dkB('undo', svg('undo'), 'Отменить (Ctrl+Z)') + dkB('redo', svg('redo'), 'Повторить (Ctrl+Y)');
   } else if(t === 'tpl'){
     r.innerHTML = `<div class="dkt-row">${DK_TPL.map(x => {
@@ -9275,10 +9487,10 @@ function dkRibDraw(){
     const sw = ['#ffffff', '#f5f5f7', '#1d1d1f', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#0b3d91'];
     r.innerHTML = `<div class="dkgrp"><span class="dklb">Макет</span><div class="dklay">${DK_LAYOUTS.map(l => `<button type="button" class="dkl${sl.lay === l[0] ? ' on' : ''}" data-dklay="${l[0]}" title="${l[1]}">${dkLayIcon(l[0])}<small>${l[1]}</small></button>`).join('')}</div></div>${dkSep}
       <div class="dkgrp"><span class="dklb">Формат</span><div class="seg dk-seg"><button type="button" data-dkfm="16:9" class="${dk.deck.fmt === '16:9' ? 'on' : ''}">16:9</button><button type="button" data-dkfm="4:3" class="${dk.deck.fmt === '4:3' ? 'on' : ''}">4:3</button></div></div>${dkSep}
-      <div class="dkgrp"><span class="dklb">Фон слайда</span><div class="dkbg">${sw.map(c => `<button type="button" class="dksw${sl.bg && sl.bg.c === c ? ' on' : ''}" data-dkbg="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('')}<button type="button" class="dksw custom" id="dkBgCb" title="Свой цвет" aria-label="Свой цвет"></button><button type="button" class="btn small neutral" data-dkc="bg-img">${ico('dkimg')} Изображение</button><button type="button" class="btn small ghost" data-dkc="bg-reset">Из шаблона</button><label class="dkchk"><input type="checkbox" id="dkBgAll"${dk.bgAll ? ' checked' : ''}> ко всем слайдам</label></div></div>`;
+      <div class="dkgrp"><span class="dklb">Фон слайда</span><div class="dkbg">${sw.map(c => `<button type="button" class="dksw${sl.bg && sl.bg.c === c ? ' on' : ''}" data-dkbg="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('')}<button type="button" class="dksw custom" id="dkBgCb" title="Свой цвет" aria-label="Свой цвет"></button><button type="button" class="btn small neutral" data-dkc="bg-img">${ico('dkimg')} Изображение</button><button type="button" class="btn small ghost" data-dkc="bg-reset">Из шаблона</button><label class="dkchk"><input type="checkbox" id="dkBgAll"${dk.bgAll ? ' checked' : ''}> ко всем слайдам</label></div></div>` + dkSep + dkMasterRib() + dkSep + dkViewRib() + dkSep + dkAiRib();
   } else if(t === 'tr'){
     r.innerHTML = `<div class="dkgrp"><span class="dklb">Переход к этому слайду</span><div class="dktr">${DK_TR.map(x => `<button type="button" class="chip${sl.tr.type === x[0] ? ' on' : ''}" data-dktr="${x[0]}">${x[1]}</button>`).join('')}</div></div>${dkSep}
-      <button type="button" class="btn small" data-dkc="tr-prev">${ico('play')} Просмотр</button><button type="button" class="btn small neutral" data-dkc="tr-all">Применить ко всем слайдам</button><span class="hint dkhint">Параметры (кривая, длительность) — в правой панели. «Умный переход» сопоставляет одинаковые объекты на соседних слайдах и плавно перемещает их.</span>`;
+      <button type="button" class="btn small" data-dkc="tr-prev">${ico('play')} Просмотр</button><button type="button" class="btn small neutral" data-dkc="tr-all">Применить ко всем слайдам</button><button type="button" class="btn small neutral" data-dkc="panel-tr">Настройка перехода…</button><button type="button" class="dk-info" data-tip="Кривая скорости и длительность открываются кнопкой «Настройка перехода». «Умный переход» сопоставляет одинаковые объекты на соседних слайдах и плавно перемещает их." aria-label="Подсказка о переходах"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button>`;
   } else {
     r.innerHTML = `<button type="button" class="btn small" data-dkc="show-0">${ico('play')} С первого слайда</button><button type="button" class="btn small neutral" data-dkc="show-cur">С текущего слайда</button>${dkSep}<button type="button" class="btn small neutral" data-dkc="pdf">Скачать PDF / печать</button>${dkSep}<button type="button" class="btn small neutral" data-dkc="backup">Скачать резервную копию</button><button type="button" class="btn small ghost" data-dkc="restore">Открыть копию…</button>`;
   }
@@ -9294,24 +9506,53 @@ function dkRibSync(){
   document.querySelectorAll('#dkRib [data-dkc]').forEach(b => { if(/^(bold|italic|underline|strike|mark|h1|h2|h3|align.|ul|ol|quote|codeb|link|clear)$/.test(b.dataset.dkc)) b.classList.toggle('dim', dis); });
 }
 function dkTabSet(t, silent){ dk.tab = t; dkRibDraw(); }
+function dkPanelNone(sl){
+  const tr = sl.tr, k = dk.panel;
+  const head = t => `<div class="dkp-h"><h4>${t}</h4><button type="button" class="dkp-x" data-dkc="panel-close" aria-label="Закрыть">×</button></div>`;
+  if(k === 'view') return head('Поля и линейки') + `<label class="dkchk"><input type="checkbox" id="dkRl"${dk.deck.rl === true ? ' checked' : ''}> Линейки по краям слайда</label><label class="dkchk"><input type="checkbox" id="dkMgOn"${dk.deck.mg && dk.deck.mg.on ? ' checked' : ''}> Ограничительные поля</label>
+      <label>Ширина полей, px (5–200)</label><div class="dkdur"><input type="range" id="dkMgR" min="5" max="200" value="${dk.deck.mg ? dk.deck.mg.v : 40}"><input type="number" id="dkMg" min="5" max="200" value="${dk.deck.mg ? dk.deck.mg.v : 40}"></div><p class="hint">Поля видны только в редакторе, в показе и PDF их нет. Объекты притягиваются к краю поля.</p>`;
+  if(k === 'menu') return head('Настройки') + `<button type="button" class="btn small" data-dkc="panel-tr">Настройка перехода</button><button type="button" class="btn small neutral" data-dkc="panel-view">Поля и линейки</button><p class="hint">Окна настроек открываются по запросу и закрываются крестиком.</p>`;
+  return head('Настройка перехода') + `<p class="hint">Слайд ${dk.i + 1} из ${dk.deck.slides.length}. Применяется при переходе на этот слайд.</p>
+      <label>Тип перехода</label><select class="gs" id="dkTrT">${DK_TR.map(x => `<option value="${x[0]}"${tr.type === x[0] ? ' selected' : ''}>${x[1]}</option>`).join('')}</select>
+      <label>Кривая скорости</label><select class="gs" id="dkTrE"${tr.type === 'instant' ? ' disabled' : ''}>${DK_EASES.map(x => `<option value="${x[0]}"${tr.ease === x[0] ? ' selected' : ''}>${x[1]}</option>`).join('')}</select>
+      <label>Длительность, мс</label><div class="dkdur"><input type="range" id="dkTrDr" min="100" max="3000" step="50" value="${tr.dur}"${tr.type === 'instant' ? ' disabled' : ''}><input type="number" id="dkTrD" min="100" max="3000" step="50" value="${tr.dur}"${tr.type === 'instant' ? ' disabled' : ''}></div>
+      <button type="button" class="btn small" data-dkc="tr-prev">${ico('play')} Просмотр</button>`;
+}
+function dkSlideLabel(s){
+  const t = s.objs.find(o => o.t === 'text' && (o.role === 'title' || o.hd) && dkPlain(o.html)) || s.objs.find(o => o.t === 'text' && dkPlain(o.html)) || s.objs.find(o => o.t === 'btn');
+  const x = t ? dkPlain(t.t === 'btn' ? t.label : t.html) : '';
+  return (x || 'Без названия').slice(0, 30);
+}
+function dkGoPanel(o){
+  const g = o.go || null, K = [['', 'Нет'], ['slide', 'Перейти на слайд…'], ['back', 'Назад (к слайду, откуда перешли)'], ['next', 'Следующий слайд'], ['prev', 'Предыдущий слайд'], ['first', 'На первый слайд']];
+  let h = '<label>При нажатии в показе</label><select class="gs" id="dkGoK">' + K.map(x => '<option value="' + x[0] + '"' + ((g ? g.k : '') === x[0] ? ' selected' : '') + '>' + x[1] + '</option>').join('') + '</select>';
+  if(g && g.k === 'slide'){
+    const ok = dk.deck.slides.some(s => s.id === g.id);
+    h += '<select class="gs" id="dkGoS" style="margin-top:6px">' + (ok ? '' : '<option value="" selected>— выберите слайд —</option>') + dk.deck.slides.map((s, i) => '<option value="' + s.id + '"' + (s.id === g.id ? ' selected' : '') + '>' + (i + 1) + '. ' + esc(dkSlideLabel(s)) + '</option>').join('') + '</select>' + (ok ? '' : '<p class="hint" style="color:#d70015">Слайд удалён. Выберите другой.</p>');
+  }
+  if(g) h += '<p class="hint">Работает в режиме показа: нажмите на объект, и показ перейдёт на нужный слайд.</p>';
+  return h;
+}
+function dkBtnPanel(o){
+  const sw = ['#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#1d1d1f', '#ffffff'];
+  return `<label>Текст кнопки</label><input type="text" class="gs" id="dkBtL" maxlength="80" value="${esc(o.label)}"><label>Цвет</label><div class="dkbg">${sw.map(c => `<button type="button" class="dksw${o.c === c ? ' on' : ''}" data-dkshc="${c}" style="background:${c}" aria-label="Цвет"></button>`).join('')}</div>
+    <label>Размер шрифта</label><div class="dkdur"><input type="range" id="dkBtFR" min="12" max="80" value="${o.fs}"><input type="number" id="dkBtF" min="8" max="120" value="${o.fs}"></div><label>Скругление, px</label><div class="dkdur"><input type="range" id="dkBtRR" min="0" max="120" value="${o.rad}"><input type="number" id="dkBtR" min="0" max="120" value="${o.rad}"></div>`;
+}
 /* --- правая панель --- */
 function dkPanel(){
   const p = document.getElementById('dkRp'); if(!p) return;
   const objs = dkSelObjs(), sl = dkSlideObj();
   if(!objs.length){
-    const tr = sl.tr;
-    p.innerHTML = `<h4>Настройка перехода</h4><p class="hint">Слайд ${dk.i + 1} из ${dk.deck.slides.length}. Применяется при переходе на этот слайд.</p>
-      <label>Тип перехода</label><select class="gs" id="dkTrT">${DK_TR.map(x => `<option value="${x[0]}"${tr.type === x[0] ? ' selected' : ''}>${x[1]}</option>`).join('')}</select>
-      <label>Кривая скорости</label><select class="gs" id="dkTrE"${tr.type === 'instant' ? ' disabled' : ''}>${DK_EASES.map(x => `<option value="${x[0]}"${tr.ease === x[0] ? ' selected' : ''}>${x[1]}</option>`).join('')}</select>
-      <label>Длительность, мс</label><div class="dkdur"><input type="range" id="dkTrDr" min="100" max="3000" step="50" value="${tr.dur}"${tr.type === 'instant' ? ' disabled' : ''}><input type="number" id="dkTrD" min="100" max="3000" step="50" value="${tr.dur}"${tr.type === 'instant' ? ' disabled' : ''}></div>
-      <button type="button" class="btn small" data-dkc="tr-prev">${ico('play')} Просмотр</button>
-      <h4 style="margin-top:22px">Поля и линейки</h4><label class="dkchk"><input type="checkbox" id="dkRl"${dk.deck.rl === true ? ' checked' : ''}> Линейки по краям слайда</label><label class="dkchk"><input type="checkbox" id="dkMgOn"${dk.deck.mg && dk.deck.mg.on ? ' checked' : ''}> Ограничительные поля</label>
-      <label>Ширина полей, px (5–200)</label><div class="dkdur"><input type="range" id="dkMgR" min="5" max="200" value="${dk.deck.mg ? dk.deck.mg.v : 40}"><input type="number" id="dkMg" min="5" max="200" value="${dk.deck.mg ? dk.deck.mg.v : 40}"></div><p class="hint">Поля видны только в редакторе, в показе и PDF их нет. Объекты притягиваются к краю поля.</p>`;
+    const was = p.hidden;
+    if(!dk.panel){ p.hidden = true; p.innerHTML = ''; p.classList.remove('open'); if(!was) requestAnimationFrame(dkFitStage); return; }
+    p.hidden = false; p.innerHTML = dkPanelNone(sl); if(was) requestAnimationFrame(dkFitStage);
     return;
   }
+  if(p.hidden){ p.hidden = false; requestAnimationFrame(dkFitStage); }
   const o = objs[0], multi = objs.length > 1;
-  let h = `<h4>${({text: 'Текст', image: 'Изображение', video: 'Видео', chart: 'Диаграмма', task: 'Задача', file: 'Текстовый файл', shape: 'Фигура', fx: 'Формула', table: 'Таблица', code: 'Код'})[o.t]}${multi ? ' · ' + objs.length : ''}</h4>`;
+  let h = `<h4>${({text: 'Текст', image: 'Изображение', video: 'Видео', chart: 'Диаграмма', task: 'Задача', file: 'Текстовый файл', shape: 'Фигура', fx: 'Формула', table: 'Таблица', code: 'Код', btn: 'Кнопка'})[o.t]}${multi ? ' · ' + objs.length : ''}</h4>`;
   if(!multi){
+    if(o.t === 'btn') h += dkBtnPanel(o);
     if(o.t === 'video'){
       h += `<label class="dkchk"><input type="radio" name="dkva" value="click"${!o.auto ? ' checked' : ''}> Воспроизведение по клику</label><label class="dkchk"><input type="radio" name="dkva" value="auto"${o.auto ? ' checked' : ''}> Автозапуск при переходе на слайд</label>
         <label class="dkchk"><input type="checkbox" id="dkVl"${o.loop ? ' checked' : ''}> Зацикливание (Loop)</label><label class="dkchk"><input type="checkbox" id="dkVm"${o.mute ? ' checked' : ''}> Звук выключен по умолчанию</label><p class="hint">${esc(o.name)}</p><button type="button" class="btn small neutral" data-dkc="vid-replace">Заменить видео</button>`;
@@ -9327,10 +9568,116 @@ function dkPanel(){
     else if(o.t === 'tbl') h += `<button type="button" class="btn small neutral" data-dkc="tbl-style">Оформление таблицы</button> <button type="button" class="btn small neutral" data-dkc="tbl-open">Открыть данные</button><p class="hint">Таблица берётся из раздела «Таблицы» и обновляется сама. Размер окна меняется рамкой, по умолчанию только просмотр.</p>`;
     else if(o.t === 'task') h += `<p class="hint">Статус и подзадачи берутся из «Задач» и обновляются на слайде сами.</p><button type="button" class="btn small neutral" data-dkc="task-open">Открыть задачу</button>`;
   }
+  if(!multi) h += dkGoPanel(o);
   if(!multi) h += `<label>Поворот, °</label><div class="dkdur"><input type="range" id="dkRotR" min="-180" max="180" value="${o.rot || 0}"><input type="number" id="dkRot" min="-360" max="360" step="1" value="${o.rot || 0}"></div>`;
   h += `<label>Выравнивание</label><div class="dkal">${[['l', 'В левый край'], ['ch', 'По середине (по горизонтали)'], ['r', 'В правый край'], ['t', 'В верхний край'], ['cv', 'По середине (по вертикали)'], ['b', 'В нижний край']].map(x => `<button type="button" data-dkal="${x[0]}" title="${x[1]}" aria-label="${x[1]}">${ico('dkal_' + x[0])}</button>`).join('')}</div>`;
   h += `<div class="dkpa"><button type="button" class="btn small neutral" data-dkc="o-front">На передний план</button><button type="button" class="btn small neutral" data-dkc="o-back">На задний план</button><button type="button" class="btn small neutral" data-dkc="o-dup">${ico('dkdup')} Дублировать</button><button type="button" class="btn small danger" data-dkc="o-del">${ico('trash')} Удалить</button></div>`;
   p.innerHTML = h;
+}
+/* ---------- мастер-слайды ---------- */
+function dkMasterRib(){
+  const ms = dk.deck.masters || [], sl = dk.deck.slides[dk.i];
+  return '<div class="dkgrp"><span class="dklb">Мастер-слайд</span><div class="dkmr"><select class="gs" id="dkMst" aria-label="Мастер-слайд для этого слайда"><option value="">Без мастера</option>' + ms.map(m => '<option value="' + m.id + '"' + (sl.master === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('') + '<option value="__new">+ Новый мастер…</option></select><button type="button" class="btn small neutral" data-dkc="m-edit"' + (sl.master ? '' : ' disabled') + '>Изменить мастер</button><button type="button" class="btn small ghost" data-dkc="m-all"' + (sl.master ? '' : ' disabled') + '>Ко всем слайдам</button></div></div>';
+}
+const dkViewRib = () => '<div class="dkgrp"><span class="dklb">Вид</span><button type="button" class="btn small neutral" data-dkc="panel-view">Поля и линейки…</button></div>';
+const dkAiRib = () => '<div class="dkgrp"><span class="dklb">ИИ</span><button type="button" class="btn small" data-dkc="ai-slides">' + svg('ai') + ' Слайды из тезисов</button></div>';
+function dkMasterBar(){
+  const m = dkSlideObj(), g = m.grid || {on: false, cols: 12};
+  return '<div class="dkmb"><b>Мастер «' + esc(m.name) + '»</b><span class="dkmh">изменения применятся ко всем слайдам с этим мастером</span>' + dkB('m-sno', '№', 'Добавить номер слайда') + dkB('m-foot', 'Т', 'Добавить текст подвала') + '<label class="dkchk"><input type="checkbox" id="dkMGr"' + (g.on ? ' checked' : '') + '> Сетка</label><select class="gs" id="dkMGc"' + (g.on ? '' : ' disabled') + '>' + [4, 6, 12].map(n => '<option value="' + n + '"' + (g.cols === n ? ' selected' : '') + '>' + n + ' колонок</option>').join('') + '</select><button type="button" class="btn small neutral" data-dkc="m-bg">Фон</button><button type="button" class="btn small ghost" data-dkc="m-ren">Переименовать</button><button type="button" class="btn small danger" data-dkc="m-del">Удалить</button><button type="button" class="btn small" data-dkc="m-done">Готово</button></div>' + dkSep;
+}
+function dkAskName(title, val){
+  return dialog('<h3>' + esc(title) + '</h3><input type="text" id="dkNmI" class="gs" maxlength="40" value="' + esc(val || '') + '" data-focus style="width:100%;box-sizing:border-box;margin:6px 0 16px"><div class="acts"><button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" id="dkNmOk">Готово</button></div>', '', (m, done) => {
+    const i = m.querySelector('#dkNmI'); m.querySelector('#dkNmOk').addEventListener('click', () => done(i.value.trim()));
+    i.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); done(i.value.trim()); } }); setTimeout(() => i.select(), 30);
+  });
+}
+function dkMasterPick(v){
+  if(v === '__new'){ dkMasterNew(); return; }
+  dkPush(); dk.deck.slides[dk.i].master = v || ''; dkDraw(); dkDirty();
+}
+function dkMasterNew(){
+  dkPush(); const [W, H] = dkDims(dk.deck), T = dkTpl(dk.deck), n = (dk.deck.masters || []).length + 1;
+  const mk = (x, w, html, al) => { const o = dkMkObj('text', {x, y: H - 74, w, h: 44, html, fs: 20, al, b: false, role: '', hd: false}); if(/^#[0-9a-f]{6}$/i.test(T.fg2)) o.c = T.fg2; return o; };
+  const m = {id: uid(), name: 'Мастер ' + n, bg: null, lay: 'blank', grid: {on: false, cols: 12}, tr: {type: 'instant', ease: 'inout', dur: 300}, objs: [mk(60, Math.round(W * .55), '<p>Название презентации</p>', 'left'), mk(W - 190, 130, '<p>{n}</p>', 'right')]};
+  (dk.deck.masters = dk.deck.masters || []).push(m); dk.deck.slides[dk.i].master = m.id;
+  dkMasterEdit(m.id);
+}
+function dkMasterEdit(id){ dkEndEdit(); dk.mEdit = id; dk.sel = []; dk.tab = 'text'; dk.panel = ''; dkDraw(); dkDirty(); }
+function dkMasterDone(){ dkEndEdit(); dk.mEdit = ''; dk.sel = []; dkDraw(); dkDirty(); }
+async function dkMasterDel(){
+  const m = dkSlideObj(); if(!dk.mEdit || !m) return;
+  const used = dk.deck.slides.filter(s => s.master === m.id).length;
+  if(await askYN('Удалить мастер «' + m.name + '»?', used ? 'Слайды (' + used + ') останутся без мастера: логотип, подвал и номер слайда с них исчезнут.' : 'Мастер не используется ни одним слайдом.', 'Удалить') !== 'yes') return;
+  dkPush(); dk.deck.slides.forEach(s => { if(s.master === m.id) s.master = ''; }); dk.deck.masters = dk.deck.masters.filter(x => x.id !== m.id);
+  dk.mEdit = ''; dk.sel = []; dkDraw(); dkDirty();
+}
+/* ---------- слайды из тезисов (Gemini) ---------- */
+const DK_AI_SYS = 'Ты — редактор презентаций. Разбей тезисы или конспект пользователя на слайды и верни ТОЛЬКО JSON-массив без markdown и пояснений. Элемент: {"layout": "title"|"content"|"two"|"bignum"|"quote"|"section"|"imgL"|"imgR", "title": заголовок до 70 символов, "sub": необязательная подпись до 120, "bullets": массив коротких пунктов до 90 символов (до 6), "left": [..] и "right": [..] для layout two, "number": крупная цифра или процент для bignum, "caption": подпись к цифре до 90, "quote": текст цитаты, "author": автор}. Правила выбора макета: первый слайд title; сравнение, до и после, плюсы и минусы, две группы идей — two; ключевая цифра, процент, сумма, срок — bignum (number и caption); цитата или девиз — quote; смена темы — section; перечень идей — content; если к мысли просится иллюстрация — imgL или imgR с bullets. Чередуй макеты, не повторяй один и тот же подряд. Не выдумывай факты и числа, которых нет в тексте. Язык — как у пользователя.';
+const dkListHtml = a => '<ul>' + a.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+function dkAiParse(s){
+  s = String(s || '').replace(/^\s*```\w*\s*|\s*```\s*$/g, '').trim();
+  let a; const i = s.indexOf('['), j = s.lastIndexOf(']');
+  try{ if(i >= 0 && j > i) a = JSON.parse(s.slice(i, j + 1)); else { const o = JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1)); a = o.slides; } }catch(e){ throw new Error('ai_fail'); }
+  if(!Array.isArray(a) || !a.length) throw new Error('ai_fail');
+  const str = (v, n) => String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, n), arr = (v, m, n) => (Array.isArray(v) ? v : []).map(x => str(x, n)).filter(Boolean).slice(0, m);
+  const LAY = ['title', 'content', 'two', 'bignum', 'quote', 'section', 'imgL', 'imgR'];
+  return a.slice(0, 30).map(x => {
+    x = x || {}; const r = {lay: LAY.includes(x.layout) ? x.layout : 'content', title: str(x.title, 90), sub: str(x.sub, 140), bullets: arr(x.bullets, 7, 120), left: arr(x.left, 6, 100), right: arr(x.right, 6, 100), num: str(x.number, 14), cap: str(x.caption, 100), quote: str(x.quote, 260), author: str(x.author, 80)};
+    if(r.lay === 'two' && !r.left.length && !r.right.length) r.lay = 'content';
+    if(r.lay === 'bignum' && !r.num) r.lay = 'content';
+    if(r.lay === 'quote' && !r.quote) r.lay = r.bullets.length ? 'content' : 'section';
+    return r;
+  }).filter(r => r.title || r.quote || r.num);
+}
+function dkAiBuild(items){
+  const d = dk.deck, base = d.slides[dk.i];
+  return items.map(r => {
+    let texts;
+    switch(r.lay){
+      case 'title': texts = [r.title, r.sub]; break;
+      case 'section': texts = [r.title]; break;
+      case 'quote': texts = ['«' + r.quote + '»', r.author ? '— ' + r.author : r.title]; break;
+      case 'bignum': texts = [r.title, r.num, r.cap || r.sub]; break;
+      case 'two': texts = [r.title, '', '']; break;
+      case 'imgL': texts = ['', r.title, '']; break;
+      case 'imgR': texts = [r.title, '', '']; break;
+      default: texts = [r.title, ''];
+    }
+    const s = dkSlide(d, r.lay, texts); s.master = (base && base.master) || '';
+    const bodies = s.objs.filter(o => o.t === 'text' && o.role === 'body');
+    if(r.lay === 'two'){ if(bodies[0]) bodies[0].html = dkListHtml(r.left.length ? r.left : r.bullets); if(bodies[1]) bodies[1].html = dkListHtml(r.right); }
+    else if(bodies[0]){ const l = r.bullets.length ? r.bullets : r.left.concat(r.right); bodies[0].html = l.length ? dkListHtml(l) : ''; }
+    s.objs.forEach(o => { if(o.t === 'text') delete o.ph; });
+    return s;
+  });
+}
+async function dkAiDlg(){
+  dkEndEdit(); let ctl = null;
+  const form = '<h3>Слайды из тезисов</h3><p class="sub" style="margin-bottom:12px">Вставьте тезисы или сырой конспект. Gemini разобьёт текст на слайды, придумает заголовки и подберёт макеты: две колонки, крупную цифру, цитату и другие.</p><textarea id="dkAiT" maxlength="12000" data-focus placeholder="Например: Итоги года. Выручка выросла на 34%. Три причины роста: новые клиенты, запуск мобильного приложения, снижение оттока. Планы на следующий год…"></textarea><div class="dk-aiopt"><label>Сколько слайдов<select class="gs" id="dkAiN"><option value="">Выбрать автоматически</option><option value="5">около 5</option><option value="8">около 8</option><option value="12">около 12</option><option value="15">около 15</option></select></label><label>Куда добавить<select class="gs" id="dkAiW"><option value="after">после текущего слайда</option><option value="end">в конец презентации</option></select></label></div><div class="acts"><button type="button" class="btn small neutral" data-v="">Отмена</button><button type="button" class="btn small" id="dkAiGo">Создать слайды</button></div>';
+  const res = await dialog(form, 'dkdlg dk-ai', (m, done) => {
+    const box = m.querySelector('.np-dlg');
+    const run = async () => {
+      const notes = (m.querySelector('#dkAiT').value || '').trim(), n = m.querySelector('#dkAiN').value, where = m.querySelector('#dkAiW').value;
+      if(notes.length < 12){ m.querySelector('#dkAiT').focus(); toast('Добавьте хотя бы пару предложений'); return; }
+      box.innerHTML = '<h3>Слайды из тезисов</h3><div class="ai-load"><i></i><span>Gemini раскладывает текст по слайдам…</span></div><div class="acts l"><button type="button" class="btn small neutral" data-v="">Отмена</button></div>';
+      ctl = new AbortController();
+      try{
+        const prompt = 'Тезисы пользователя:\n"""\n' + notes.slice(0, 12000) + '\n"""\n' + (n ? 'Нужно около ' + n + ' слайдов.' : 'Выбери подходящее число слайдов (от 5 до 12).');
+        const out = await aiCall(prompt, ctl.signal, {system: DK_AI_SYS, asJson: true, temp: 0.4});
+        const items = dkAiParse(out); ctl = null; done({items, where});
+      }catch(e){
+        if(e && e.name === 'AbortError') return; ctl = null;
+        box.innerHTML = '<h3>Слайды из тезисов</h3><p class="ai-err">' + esc((AI_ERR[e && e.message] || 'Не удалось создать слайды.') + (aiDetail ? ' (' + aiDetail.slice(0, 120) + ')' : '')) + '</p><div class="acts"><button type="button" class="btn small neutral" data-v="">Закрыть</button><button type="button" class="btn small" id="dkAiAgain">Повторить</button></div>';
+        box.querySelector('#dkAiAgain').addEventListener('click', () => { box.innerHTML = form; box.querySelector('#dkAiT').value = notes; box.querySelector('#dkAiN').value = n; box.querySelector('#dkAiW').value = where; box.querySelector('#dkAiGo').addEventListener('click', run); });
+      }
+    };
+    m.querySelector('#dkAiGo').addEventListener('click', run);
+  });
+  if(ctl) ctl.abort();
+  if(!res || !res.items || !res.items.length) return;
+  dkPush(); const slides = dkAiBuild(res.items), at = res.where === 'end' ? dk.deck.slides.length : dk.i + 1;
+  dk.deck.slides.splice(at, 0, ...slides); dk.i = at; dk.sel = []; dkDraw(); dkDirty();
+  toast('Добавлено слайдов: ' + slides.length, 'Отменить', dkUndo);
 }
 /* --- действия с объектами --- */
 function dkDelSel(){ if(!dk.sel.length) return; dkPush(); const s = dkSlideObj(); s.objs = s.objs.filter(o => !dk.sel.includes(o.id)); dk.sel = []; dkStageDraw(); dkPanel(); dkDirty(); dkThumbs(); }
@@ -9340,7 +9687,7 @@ function dkDupSel(){
   dkStageDraw(); dkSelect(ids); dkDirty(); dkThumbs();
 }
 function dkAddSlide(lay){
-  dkPush(); const s = dkSlide(dk.deck, lay || 'content', lay ? null : ['', '']); dk.deck.slides.splice(dk.i + 1, 0, s); dk.i++; dk.sel = [];
+  dkPush(); const s = dkSlide(dk.deck, lay || 'content', lay ? null : ['', '']); s.master = (dk.deck.slides[dk.i] || {}).master || ''; dk.deck.slides.splice(dk.i + 1, 0, s); dk.i++; dk.sel = [];
   dkDraw(); dkDirty();
 }
 function dkDupSlide(i){ dkPush(); const c = JSON.parse(JSON.stringify(dk.deck.slides[i])); c.id = uid(); dk.deck.slides.splice(i + 1, 0, c); dk.i = i + 1; dk.sel = []; dkDraw(); dkDirty(); }
@@ -9369,11 +9716,11 @@ function dkApplyLayout(lay){
 function dkSetFormat(f){
   if(dk.deck.fmt === f) return; dkPush();
   const [W1] = dkDims(dk.deck); dk.deck.fmt = f; const [W2] = dkDims(dk.deck), q = W2 / W1;
-  dk.deck.slides.forEach(s => s.objs.forEach(o => { o.x = Math.round(o.x * q); o.w = Math.max(20, Math.round(o.w * q)); }));
+  dk.deck.slides.concat(dk.deck.masters || []).forEach(s => s.objs.forEach(o => { o.x = Math.round(o.x * q); o.w = Math.max(20, Math.round(o.w * q)); }));
   dkDraw(); dkDirty();
 }
 function dkSetBg(bg){
-  dkPush(); (dk.bgAll ? dk.deck.slides : [dkSlideObj()]).forEach(s => { s.bg = bg ? JSON.parse(JSON.stringify(bg)) : null; });
+  dkPush(); (dk.bgAll && !dk.mEdit ? dk.deck.slides : [dkSlideObj()]).forEach(s => { s.bg = bg ? JSON.parse(JSON.stringify(bg)) : null; });
   dkStageDraw(); dkThumbs(); dkRibDraw(); dkDirty();
 }
 async function dkPreviewTr(){
@@ -9395,11 +9742,11 @@ function dkWire(){
     let b;
     if(e.target.closest('#dkBack')){ nav('#/slides'); return; }
     if(e.target.closest('#dkPlay')){ dkStartShow(dk.i); return; }
-    if((b = e.target.closest('[data-dkt]'))){ dkEndEdit(); dkTabSet(b.dataset.dkt); return; }
+    if((b = e.target.closest('[data-dkt]'))){ if(dk.mEdit){ toast('Сначала завершите редактирование мастер-слайда'); return; } dkEndEdit(); dkTabSet(b.dataset.dkt); return; }
     if(e.target.closest('#dkAddS')){ dkAddSlide(); return; }
     if((b = e.target.closest('[data-dkdup]'))){ e.stopPropagation(); dkDupSlide(+b.dataset.dkdup); return; }
     if((b = e.target.closest('[data-dkdel]'))){ e.stopPropagation(); dkDelSlide(+b.dataset.dkdel); return; }
-    if((b = e.target.closest('.dkth'))){ dkEndEdit(); dk.i = +b.dataset.i; dk.sel = []; dkThumbs(); dkStageDraw(); dkPanel(); dkRibDraw(); return; }
+    if((b = e.target.closest('.dkth'))){ dkEndEdit(); dk.mEdit = ''; dk.i = +b.dataset.i; dk.sel = []; dkThumbs(); dkStageDraw(); dkPanel(); dkRibDraw(); return; }
     if((b = e.target.closest('[data-dktp]'))){ dkPush(); dk.deck.tpl = b.dataset.dktp; dkDraw(); dkDirty(); return; }
     if((b = e.target.closest('[data-dklay]'))){ dkApplyLayout(b.dataset.dklay); return; }
     if((b = e.target.closest('[data-dkfm]'))){ dkSetFormat(b.dataset.dkfm); return; }
@@ -9419,6 +9766,9 @@ function dkWire(){
     const t = e.target, o = dkSelObjs()[0];
     if(t.id === 'dkBgC'){ dkSetBg({c: t.value}); return; }
     if(t.id === 'dkBgAll'){ dk.bgAll = t.checked; return; }
+    if(t.id === 'dkMst'){ dkMasterPick(t.value); return; }
+    if(t.id === 'dkMGr'){ dkPush(); const m = dkSlideObj(); m.grid = m.grid || {on: false, cols: 12}; m.grid.on = t.checked; dkStageDraw(); dkRibDraw(); dkThumbs(); dkDirty(); return; }
+    if(t.id === 'dkMGc'){ dkPush(); const m = dkSlideObj(); m.grid = m.grid || {on: true, cols: 12}; m.grid.cols = +t.value || 12; dkStageDraw(); dkThumbs(); dkDirty(); return; }
     if(t.id === 'dkTrT'){ dkPush(); dkSlideObj().tr.type = t.value; dkPanel(); dkRibDraw(); dkDirty(); return; }
     if(t.id === 'dkTrE'){ dkPush(); dkSlideObj().tr.ease = t.value; dkDirty(); return; }
     if(t.id === 'dkTrDr' || t.id === 'dkTrD'){ const v = Math.max(100, Math.min(3000, Math.round(+t.value) || 300)); dkSlideObj().tr.dur = v; document.getElementById('dkTrDr').value = v; if(t.id === 'dkTrDr') document.getElementById('dkTrD').value = v; dkDirty(); return; }
@@ -9426,6 +9776,11 @@ function dkWire(){
     if(t.id === 'dkMgOn'){ dk.deck.mg = dk.deck.mg || {on: false, v: 40}; dk.deck.mg.on = t.checked; dkRulers(); dkDirty(); return; }
     if(t.id === 'dkMgR' || t.id === 'dkMg'){ const v = Math.max(5, Math.min(200, Math.round(+t.value) || 5)); dk.deck.mg = dk.deck.mg || {on: false, v: 40}; dk.deck.mg.v = v; document.getElementById('dkMgR').value = v; if(t.id === 'dkMgR') document.getElementById('dkMg').value = v; dkRulers(); dkDirty(); return; }
     if(!o) return;
+    if(t.id === 'dkGoK'){ dkPush(); if(!t.value) delete o.go; else if(t.value === 'slide'){ const cand = dk.deck.slides.find((s, i) => i !== dk.i) || dk.deck.slides[dk.i]; o.go = {k: 'slide', id: cand.id}; } else o.go = {k: t.value}; dkStageDraw(); dkSelect([o.id]); dkDirty(); dkThumbs(); return; }
+    if(t.id === 'dkGoS'){ if(!t.value) return; dkPush(); o.go = {k: 'slide', id: t.value}; dkStageDraw(); dkSelect([o.id]); dkDirty(); return; }
+    if(t.id === 'dkBtL'){ o.label = t.value.slice(0, 80); const el = dkObjEl(o.id), x = el && el.querySelector('.dk-btn'); if(x) x.textContent = o.label; dkDirty(); return; }
+    if(t.id === 'dkBtFR' || t.id === 'dkBtF'){ const v = Math.max(8, Math.min(120, Math.round(+t.value) || o.fs)); o.fs = v; const el = dkObjEl(o.id); if(el) el.style.fontSize = v + 'px'; document.getElementById('dkBtFR').value = v; if(t.id === 'dkBtFR') document.getElementById('dkBtF').value = v; dkDirty(); return; }
+    if(t.id === 'dkBtRR' || t.id === 'dkBtR'){ const v = Math.max(0, Math.min(120, Math.round(+t.value) || 0)); o.rad = v; const el = dkObjEl(o.id); if(el) el.style.borderRadius = v + 'px'; document.getElementById('dkBtRR').value = v; if(t.id === 'dkBtRR') document.getElementById('dkBtR').value = v; dkDirty(); return; }
     if(t.id === 'dkRot' || t.id === 'dkRotR'){ let v = parseFloat(t.value); if(!isFinite(v)) v = 0; v = Math.max(-360, Math.min(360, Math.round(v * 10) / 10)); if(v) o.rot = v; else delete o.rot; const el = dkObjEl(o.id); if(el) el.style.transform = v ? `rotate(${v}deg)` : ''; const sb = document.querySelector('#dkStage .dk-selbox'); if(sb) sb.style.transform = v ? `rotate(${v}deg)` : ''; if(t.id === 'dkRotR') document.getElementById('dkRot').value = v; else document.getElementById('dkRotR').value = Math.max(-180, Math.min(180, v)); dkDirty(); return; }
     if(t.id === 'dkFsR' || t.id === 'dkFs'){ const v = Math.max(8, Math.min(200, Math.round(+t.value) || o.fs)); o.fs = v; const el = dkObjEl(o.id); if(el){ if(o.t === 'text') el.style.fontSize = v + 'px'; else { const x = el.querySelector('.dk-fx, .dk-tb, .dk-cd'); if(x) x.style.fontSize = v + 'px'; } } const other = document.getElementById(t.id === 'dkFs' ? 'dkFsR' : 'dkFs'); if(other) other.value = v; dkDirty(); return; }
     if(t.id === 'dkTb'){ o.b = t.checked; const el = dkObjEl(o.id); if(el) el.style.fontWeight = o.b ? '700' : ''; dkDirty(); return; }
@@ -9560,6 +9915,18 @@ async function dkCmd(c){
   if(/^(bold|italic|underline|strike|mark|h1|h2|h3|alignL|alignC|alignR|alignJ|ul|ol|quote|codeb|link|clear)$/.test(c)){ dkTextCmd(c); return; }
   switch(c){
     case 'undo': dkUndo(); return; case 'redo': dkRedo(); return;
+    case 'panel-tr': case 'panel-view': case 'panel-menu': { const k = c.slice(6); dk.panel = dk.panel === k ? '' : k; if(dk.panel && dk.sel.length) dkSelect([]); else dkPanel(); return; }
+    case 'panel-close': dk.panel = ''; dkPanel(); return;
+    case 'i-btn': { const T = dkTpl(dk.deck); dkAddObj(dkCenter(dkMkObj('btn', {w: 320, h: 84, label: 'Перейти', c: /^#[0-9a-f]{6}$/i.test(T.ac) ? T.ac : '#0a84ff', fs: 30, rad: 18, go: {k: 'next'}}))); return; }
+    case 'ai-slides': await dkAiDlg(); return;
+    case 'm-edit': { const s = dk.deck.slides[dk.i]; if(s.master) dkMasterEdit(s.master); return; }
+    case 'm-all': { dkPush(); const id = dk.deck.slides[dk.i].master; dk.deck.slides.forEach(s => { s.master = id; }); dkDraw(); dkDirty(); toast('Мастер применён ко всем слайдам'); return; }
+    case 'm-done': dkMasterDone(); return;
+    case 'm-del': await dkMasterDel(); return;
+    case 'm-ren': { const m = dkSlideObj(), v = await dkAskName('Название мастера', m.name); if(v){ dkPush(); m.name = v.slice(0, 40); dkRibDraw(); dkDirty(); } return; }
+    case 'm-bg': { const m = dkSlideObj(), c = await askColor(m.bg && m.bg.c || null); if(c) dkSetBg({c}); return; }
+    case 'm-sno': { const [W, H] = dkDims(dk.deck), o = dkMkObj('text', {x: W - 190, y: H - 74, w: 130, h: 44, html: '<p>{n}</p>', fs: 20, al: 'right', b: false, role: '', hd: false}); if(/^#[0-9a-f]{6}$/i.test(dkTpl(dk.deck).fg2)) o.c = dkTpl(dk.deck).fg2; dkAddObj(o); return; }
+    case 'm-foot': { const [W, H] = dkDims(dk.deck), o = dkMkObj('text', {x: 60, y: H - 74, w: Math.round(W * .55), h: 44, html: '<p>Подвал: название и дата</p>', fs: 20, al: 'left', b: false, role: '', hd: false}); if(/^#[0-9a-f]{6}$/i.test(dkTpl(dk.deck).fg2)) o.c = dkTpl(dk.deck).fg2; dkAddObj(o); dkStartEdit(o); return; }
     case 'i-text': dkInsText(); return;
     case 'i-image': { const f = await dkPickFile('image/*', true); if(f.length) dkInsImage(f); return; }
     case 'i-video': { const f = await dkPickFile('.mp4,.webm,.mov,video/mp4,video/webm,video/quicktime', false); if(f[0]) dkInsVideo(f[0]); return; }
@@ -9627,7 +9994,7 @@ document.addEventListener('dblclick', e => {
   const hit = document.elementFromPoint(e.clientX, e.clientY) || e.target, v = hit.closest && hit.closest('.bd-dkv'); if(!v) return;
   const o = BD.objs.find(x => x.id === v.dataset.dkid); if(o && DR[o.ref]) nav('#/deck/' + o.ref);
 }, true);
-document.addEventListener('click', e => { if(e.target.closest && e.target.closest('#dkRpT')){ const p = document.getElementById('dkRp'); p.classList.toggle('open'); } });
+document.addEventListener('click', e => { if(e.target.closest && e.target.closest('#dkRpT')){ const p = document.getElementById('dkRp'); if(!p.classList.contains('open') && p.hidden){ dk.panel = 'menu'; dkPanel(); } p.classList.toggle('open'); } });
 document.addEventListener('pointerdown', e => { const p = document.getElementById('dkRp'); if(p && p.classList.contains('open') && !e.target.closest('#dkRp, #dkRpT')) p.classList.remove('open'); }, true);
 
 /* ================= view settings (Aa) ================= */
@@ -9641,27 +10008,6 @@ function applyView(){
   document.body.classList.toggle('wide', !!VIEW.wide);
   store.set('yng-view', VIEW);
 }
-function popView(anchor){
-  openPop(anchor, `<div class="mh">Шрифт</div><div class="seg" data-g="font"><button data-v="sans">Обычный</button><button data-v="serif">С засечками</button><button data-v="mono">Моно</button></div>
-    <div class="mh">Размер текста</div><div class="sz"><button data-s="-1" aria-label="Меньше">A−</button><b id="szv"></b><button data-s="1" aria-label="Больше">A+</button></div>
-    <div class="mh">Ширина страницы</div><div class="seg" data-g="wide"><button data-v="0">Узкая</button><button data-v="1">Широкая</button></div>`, p => {
-    const sync = () => {
-      p.querySelectorAll('[data-g="font"] button').forEach(b => b.classList.toggle('on', b.dataset.v === VIEW.font));
-      p.querySelectorAll('[data-g="wide"] button').forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === !!VIEW.wide));
-      p.querySelector('#szv').textContent = VIEW.size + ' px';
-    };
-    sync();
-    p.addEventListener('click', e => {
-      const b = e.target.closest('button'); if(!b) return;
-      const g = b.closest('[data-g]');
-      if(g && g.dataset.g === 'font') VIEW.font = b.dataset.v;
-      else if(g && g.dataset.g === 'wide') VIEW.wide = b.dataset.v === '1';
-      else if(b.dataset.s) VIEW.size += +b.dataset.s;
-      applyView(); sync();
-    });
-  });
-}
-
 /* ================= шрифт и размер выделенного текста ================= */
 const FMT_SIZES = [10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
 const FMT_PROPS = /^(font-family|font-size|background-color)$/;
@@ -9748,23 +10094,35 @@ function fmtSync(){
 }
 document.addEventListener('selectionchange', () => { cancelAnimationFrame(fmtRaf); fmtRaf = requestAnimationFrame(fmtSync); });
 function popFont(anchor){
-  if(!fmtHasSel()) return;
-  const st0 = fmtState() || {fam: '', size: 17};
-  openPop(anchor, '<div class="fm-w"><div class="mh">Размер текста, px</div><div class="fz-r"><button type="button" data-s="-1" aria-label="Меньше">A−</button><input type="number" id="fzIn" min="8" max="120" step="1" value="' + Math.round(st0.size) + '" aria-label="Размер в пикселях"><button type="button" data-s="1" aria-label="Больше">A+</button></div><div class="fz-g">' + FMT_SIZES.map(n => '<button type="button" data-z="' + n + '">' + n + '</button>').join('') + '</div><button type="button" class="fz-d" data-z="">Размер по умолчанию</button><div class="mh">Шрифт</div><div class="fp-l"><button type="button" data-f="">По умолчанию</button>' + FMT_FONTS.map(f => '<button type="button" data-f="' + f.k + '" style="font-family:' + f.css + '">' + f.n + '</button>').join('') + '</div><div class="mh" style="text-transform:none;letter-spacing:0">Системные шрифты: на разных устройствах выглядят чуть по-разному.</div></div>', p => {
-    const inp = p.querySelector('#fzIn'), clampv = v => Math.max(8, Math.min(120, Math.round(+v) || 17));
+  const has = fmtHasSel(true), st0 = (has && fmtState()) || {fam: '', size: 17};
+  const SW = [10, 12, 14, 16, 18, 20, 24, 32, 48, 64];
+  const fonts = '<button type="button" class="fm2-f" data-f=""><span class="fm2-s">Аа</span><span class="fm2-n">По умолчанию</span></button>' + FMT_FONTS.map(f => '<button type="button" class="fm2-f" data-f="' + f.k + '"><span class="fm2-s" style="font-family:' + f.css + '">Аа</span><span class="fm2-n">' + f.n + '</span></button>').join('');
+  openPop(anchor, '<div class="fm2">' + (has ? '' : '<div class="fm2-note">Выделите текст, чтобы изменить шрифт и размер. Ширину страницы можно менять и без выделения.</div>') +
+    '<div class="fm2-sec' + (has ? '' : ' off') + '"><div class="fm2-h"><span>Шрифт</span></div><div class="fm2-body"><div class="fm2-fonts">' + fonts + '</div></div></div>' +
+    '<div class="fm2-sec' + (has ? '' : ' off') + '"><div class="fm2-h"><span>Размер</span><span class="fm2-v" id="fmV"></span></div><div class="fm2-body"><div class="fm2-step"><button type="button" data-s="-1" aria-label="Меньше">−</button><input type="number" id="fzIn" min="8" max="120" step="1" aria-label="Размер в пикселях"><button type="button" data-s="1" aria-label="Больше">+</button></div><input type="range" class="fm2-range" id="fzR" min="8" max="72" step="1" aria-label="Размер ползунком"><div class="fm2-chips">' + SW.map(n => '<button type="button" data-z="' + n + '">' + n + '</button>').join('') + '</div></div></div>' +
+    '<div class="fm2-sec"><div class="fm2-h"><span>Ширина страницы</span></div><div class="fm2-seg" data-g="wide"><button type="button" data-v="0">Узкая</button><button type="button" data-v="1">Широкая</button></div></div>' +
+    '<div class="fm2-foot"><button type="button" class="fm2-reset" data-reset="1"' + (has ? '' : ' disabled') + '>Сбросить шрифт и размер</button></div></div>', p => {
+    const inp = p.querySelector('#fzIn'), rng = p.querySelector('#fzR'), clampv = v => Math.max(8, Math.min(120, Math.round(+v) || 17));
     const sync = () => {
-      const st = fmtState() || {fam: '', size: 17}, sz = Math.round(st.size);
-      p.querySelectorAll('[data-f]').forEach(b => b.classList.toggle('on', b.dataset.f === st.fam));
-      p.querySelectorAll('[data-z]').forEach(b => b.classList.toggle('on', b.dataset.z !== '' && +b.dataset.z === sz));
+      const st = (fmtHasSel(true) && fmtState()) || st0, sz = Math.round(st.size);
+      p.querySelectorAll('[data-f]').forEach(b => b.classList.toggle('on', has && b.dataset.f === st.fam));
+      p.querySelectorAll('[data-z]').forEach(b => b.classList.toggle('on', has && +b.dataset.z === sz));
+      p.querySelectorAll('[data-g="wide"] button').forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === !!VIEW.wide));
       if(document.activeElement !== inp) inp.value = sz;
+      rng.value = Math.min(72, Math.max(8, sz)); p.querySelector('#fmV').textContent = sz + ' px';
     };
     sync();
+    const setSize = v => { v = clampv(v); fmtApply('font-size', v + 'px'); sync(); };
     p.addEventListener('click', e => {
       const f = e.target.closest('[data-f]'); if(f){ fmtApply('font-family', fmtCss(f.dataset.f)); sync(); return; }
-      const z = e.target.closest('[data-z]'); if(z){ fmtApply('font-size', z.dataset.z ? z.dataset.z + 'px' : ''); sync(); return; }
-      const s = e.target.closest('[data-s]'); if(s){ const v = clampv(+inp.value + (+s.dataset.s)); inp.value = v; fmtApply('font-size', v + 'px'); sync(); }
+      const z = e.target.closest('[data-z]'); if(z){ setSize(z.dataset.z); return; }
+      const s = e.target.closest('[data-s]'); if(s){ setSize(clampv(inp.value) + (+s.dataset.s)); return; }
+      const w = e.target.closest('[data-g="wide"] button'); if(w){ VIEW.wide = w.dataset.v === '1'; applyView(); sync(); return; }
+      if(e.target.closest('[data-reset]')){ fmtApply('font-family', '', true); fmtApply('font-size', '', true); sync(); }
     });
-    inp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); const v = clampv(inp.value); inp.value = v; fmtApply('font-size', v + 'px'); sync(); } });
+    rng.addEventListener('input', () => setSize(rng.value));
+    inp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); setSize(inp.value); } });
+    inp.addEventListener('change', () => setSize(inp.value));
   });
 }
 
@@ -9787,6 +10145,10 @@ const SV = {
   tbl:'<rect x="3" y="8" width="13.500" height="12" rx="2"/><path d="M3 13h13.500M9.500 13v7"/><path d="M7 4.500h11a2.500 2.500 0 0 1 2.500 2.500v9"/>',
   page:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
   eraser: IC.eraser,
+  nav:'<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.500 4.500v15M13 9h4.500M13 12.500h4.500M13 16h3"/>',
+  para:'<path d="M13 4.500v15M17 4.500v15M13 4.500H9.500a3.500 3.500 0 0 0 0 7H13"/>',
+  foldall:'<path d="M7 5l5 4 5-4M7 19l5-4 5 4"/>',
+  unfoldall:'<path d="M7 9l5-4 5 4M7 15l5 4 5-4"/>',
   font:'<path d="M3.5 7V4.500h11V7M9 4.500v12M6.500 16.500h5"/><path d="M14 20.500l3.500-8 3.500 8M15.300 18h4.400"/>',
   ai:'<path d="M10.5 3.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6L3 11l5.600-1.9zM18.500 15l.9 2.600 2.600.9-2.600.9-.9 2.600-.9-2.600-2.600-.9 2.600-.9z"/>',
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
@@ -9797,12 +10159,12 @@ const TOOLS = [
   ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],['spell',svg('spell'),'Проверка орфографии (словарь) и грамматики (ИИ)'],['mic',svg('mic'),'Голосовой ввод: встроенный или Gemini (русский и английский)'],'|',
   ['font',svg('font'),'Шрифт и размер выделенного текста'],['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
   '|',['h1','H1','Заголовок 1'],['h2','H2','Заголовок 2'],['h3','H3','Заголовок 3'],
-  '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],
-  '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить вложенность (Shift+Tab)'],['indent',svg('indent'),'Вложенный пункт (Tab)'],
+  '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],['para',svg('para'),'Абзацы: красная строка, интервалы, отступы'],
+  '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить отступ или вложенность (Shift+Tab)'],['indent',svg('indent'),'Увеличить отступ или вложенность (Tab)'],
   '|',['quote',svg('quote'),'Цитата / акцентный блок'],['code',svg('code'),'Блок кода или формулы'],['hr',svg('hr'),'Разделитель'],
   '|',['table',svg('table'),'Таблица'],['tbl',svg('tbl'),'Таблица из раздела «Таблицы» (обновляется сама)'],['mus','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17V5l10-2v12"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>','Ноты из «Нотной тетради» (вставка окном)'],['image',svg('image'),'Изображение'],['link',svg('link'),'Ссылка (Ctrl+K)'],['linkcard','<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8" width="19" height="8" rx="4"/><circle cx="7.5" cy="12" r="1.5"/><path d="M12 12h6"/></svg>','Ссылка-плашка'],['task',svg('task'),'Задача в тексте'],['attach','<svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.5 17.2a1.7 1.7 0 0 1-2.4-2.4L14.5 7.5"/></svg>','Прикрепить файл (до 15 МБ)'],['fx','<svg viewBox="0 0 24 24"><path d="M17.500 5.500H7l5.500 6.500L7 18.500h10.500"/></svg>','Формулы: визуальный конструктор'],['chart','<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg>','Диаграммы'],
   '|',['clear',svg('eraser'),'Убрать форматирование'],['undo',svg('undo'),'Отменить'],['redo',svg('redo'),'Повторить'],
-  '|',['page',svg('page'),'Параметры страницы: A5, A4, A3'],['view','Aa','Вид: шрифт, размер, ширина']
+  '|',['page',svg('page'),'Параметры страницы: A5, A4, A3']
 ];
 const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['cell-merge','Объединить','Объединить выделенные ячейки (выделение: протяните мышью или Shift+клик)'],['cell-split','Разъединить','Разъединить объединённую ячейку'],['cell-range','Диапазон','Выделять ячейки касанием: нажмите здесь, затем на конечную ячейку'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
 const BUB = ['ai','|','bold','italic','underline','strike','mark','|','h2','quote','code','link'];
@@ -9950,8 +10312,8 @@ function run(c, b){
     case 'h1': case 'h2': case 'h3': return toggleBlock(c);
     case 'ul': return ex('insertUnorderedList');
     case 'ol': return ex('insertOrderedList');
-    case 'indent': restore(); if(up(/^LI$/)) ex('indent'); else toast('Вложенность работает внутри списков'); return;
-    case 'outdent': restore(); if(up(/^LI$/)) ex('outdent'); return;
+    case 'indent': restore(); if(up(/^LI$/)) ex('indent'); else if(!blockIndent(1)) toast('Дальше сдвигать нельзя'); return;
+    case 'outdent': restore(); if(up(/^LI$/)) ex('outdent'); else blockIndent(-1); return;
     case 'quote': { restore(); const bq = up(/^BLOCKQUOTE$/); return bq ? unwrap(bq) : ex('formatBlock', 'blockquote'); }
     case 'code': return toggleCode();
     case 'hr': restore(); document.execCommand('insertHorizontalRule'); ensureTail(ed); changed(); return;
@@ -9964,8 +10326,9 @@ function run(c, b){
     case 'spell': return gcToggle();
     case 'mic': return vcToggle();
     case 'font': return popFont(b);
+    case 'nav': return nvToggle();
+    case 'para': return popPara(b);
     case 'page': return popPage(b);
-    case 'view': return popView(b);
     case 'table': {
       restore();
       return openPop(b, '<div class="tg-l" id="tgl">Выберите размер</div><div class="tg">' + Array.from({length: 36}, (_, i) => `<i data-r="${Math.floor(i / 6) + 1}" data-c="${i % 6 + 1}"></i>`).join('') + '</div>', p => {
@@ -10054,7 +10417,7 @@ function load(rec){
   ed.classList.toggle('is-empty', isEmptyEl(ed));
   setSt(rec.transient ? 'пусто' : 'сохранено', rec.transient ? '' : 'ok');
   saved = null; dirty = false; counter(); updDate(); setDocTitle(); badge(); ehReset();
-  store.set('yng-cur', rec.id); if(!rec.transient) touchRecent(rec.id); updProps(); deselImg(); applyPage();
+  store.set('yng-cur', rec.id); if(!rec.transient) touchRecent(rec.id); updProps(); deselImg(); applyPage(); paraApply(); foldApply(); nvVis();
 }
 async function commit(){
   clearTimeout(timer); timer = null;
@@ -10157,6 +10520,7 @@ ed.addEventListener('keydown', e => {
       return;
     }
     if(up(/^LI$/)){ e.preventDefault(); ex(e.shiftKey ? 'outdent' : 'indent'); return; }
+    if(up(/^(P|H[123]|BLOCKQUOTE)$/)){ const did = blockIndent(e.shiftKey ? -1 : 1, true); if(did || !e.shiftKey) e.preventDefault(); return; }
     if(up(/^PRE$/)){ e.preventDefault(); document.execCommand('insertText', false, '  '); return; }
   }
   if(e.key === 'Enter' && !e.shiftKey && !mod){
@@ -10179,6 +10543,175 @@ function normalizeEd(){
   if(ch && an && ed.contains(an)){ try{ const r = document.createRange(); r.setStart(an, Math.min(ao, an.nodeType === 3 ? an.length : an.childNodes.length)); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }catch(e){} }
   return ch;
 }
+/* ================= абзацы, отступы, сворачивание разделов, навигатор ================= */
+const PARA_DEF = {ind: 0, gap: .7, lh: 1.65};
+const paraGet = () => { const p = (cur && cur.para) || {}; return {ind: p.ind >= 0 ? +p.ind : PARA_DEF.ind, gap: p.gap >= 0 ? +p.gap : PARA_DEF.gap, lh: p.lh > 0 ? +p.lh : PARA_DEF.lh}; };
+function paraApply(){ const p = paraGet(); ed.style.setProperty('--p-ind', p.ind + 'em'); ed.style.setProperty('--p-gap', p.gap + 'em'); ed.style.setProperty('--p-lh', String(p.lh)); }
+function paraSet(patch){ if(!cur) return; cur.para = Object.assign(paraGet(), patch); paraApply(); touch(); changed(); }
+function paraCss(r){
+  const p = (r && r.para) || {}, ind = +p.ind || 0, gap = p.gap >= 0 ? +p.gap : .7, lh = +p.lh || 1.65;
+  let s = 'body{line-height:' + lh + '}body>p{margin:0 0 ' + gap + 'em;' + (ind ? 'text-indent:' + ind + 'em' : '') + '}body>p[style*="text-align:center"],body>p[style*="text-align:right"]{text-indent:0}';
+  for(let i = 1; i <= 8; i++) s += '[data-ind="' + i + '"]{margin-left:' + (i * 2) + 'em}';
+  return s;
+}
+function popPara(anchor){
+  const IND = [[0, 'Нет'], [1, '1 em'], [1.5, '1,5 em'], [2.5, '2,5 em']], GAP = [[0, 'Нет'], [.35, 'Малый'], [.7, 'Обычный'], [1.2, 'Большой']], LH = [1.3, 1.5, 1.65, 1.9, 2.2];
+  const draw = () => {
+    const p = paraGet();
+    const row = (k, list) => '<div class="pa-r">' + list.map(x => { const v = Array.isArray(x) ? x[0] : x, n = Array.isArray(x) ? x[1] : String(x).replace('.', ','); return '<button type="button" data-pk="' + k + '" data-pv="' + v + '" class="' + (Math.abs(p[k] - v) < .001 ? 'on' : '') + '">' + n + '</button>'; }).join('') + '</div>';
+    return '<div class="mh">Красная строка</div>' + row('ind', IND) + '<div class="mh">Отступ между абзацами</div>' + row('gap', GAP) + '<div class="mh">Межстрочный интервал</div>' + row('lh', LH) + '<div class="mh">Готовые стили</div><div class="pa-r"><button type="button" data-pp="book">Книжный</button><button type="button" data-pp="air">Воздушный</button><button type="button" data-pp="def">Сбросить</button></div><div class="mh" style="text-transform:none;letter-spacing:0">Сдвиг блоков вправо и влево: Tab и Shift+Tab или кнопки со стрелками на панели.</div>';
+  };
+  openPop(anchor, '<div class="pa-w">' + draw() + '</div>', p => {
+    const box = p.querySelector('.pa-w');
+    box.addEventListener('click', e => {
+      const b = e.target.closest('[data-pk],[data-pp]'); if(!b || !cur) return;
+      if(b.dataset.pk) paraSet({[b.dataset.pk]: +b.dataset.pv});
+      else paraSet({book: {ind: 1.5, gap: 0, lh: 1.5}, air: {ind: 0, gap: 1.1, lh: 1.7}, def: PARA_DEF}[b.dataset.pp]);
+      box.innerHTML = draw();
+    });
+  });
+}
+/* сдвиг блоков (абзацы, заголовки, цитаты) вправо и влево; списки сдвигаются встроенной вложенностью */
+function blockIndent(dir, live){
+  if(!live) restore();
+  const s = getSelection(); if(!s.rangeCount) return false;
+  const r = s.getRangeAt(0), kids = Array.from(ed.children), top = n => { while(n && n.parentNode !== ed) n = n.parentNode; return n; };
+  const a = r.startContainer === ed ? kids[Math.min(r.startOffset, kids.length - 1)] : top(r.startContainer);
+  const b = r.endContainer === ed ? kids[Math.max(0, Math.min(r.endOffset, kids.length) - 1)] : top(r.endContainer);
+  if(!a || !b) return false;
+  let i = kids.indexOf(a), j = kids.indexOf(b); if(i < 0 || j < 0) return false; if(i > j){ const t = i; i = j; j = t; }
+  let did = false;
+  kids.slice(i, j + 1).forEach(el => {
+    if(!/^(P|H1|H2|H3|BLOCKQUOTE)$/.test(el.tagName) || el.hasAttribute('data-fh')) return;
+    if(el.matches('[data-tk],[data-ms],[data-tb],[data-ch],[data-fx],[data-fw],[data-lk]')) return;
+    const c = +el.getAttribute('data-ind') || 0, n = Math.max(0, Math.min(8, c + dir));
+    if(n === c) return;
+    if(n) el.setAttribute('data-ind', n); else el.removeAttribute('data-ind');
+    did = true;
+  });
+  if(did) changed();
+  return did;
+}
+
+/* ---- сворачивание разделов по заголовкам ---- */
+const foldLv = el => /^H[123]$/.test(el.tagName) ? +el.tagName[1] : 0;
+function foldApply(){
+  let hide = 0;
+  Array.from(ed.children).forEach(c => {
+    const lv = foldLv(c);
+    if(lv && hide && lv <= hide) hide = 0;
+    if(hide) c.setAttribute('data-fh', '1'); else c.removeAttribute('data-fh');
+    if(lv && !hide && c.hasAttribute('data-fold')) hide = lv;
+  });
+}
+function foldToggle(h, on){
+  const was = h.hasAttribute('data-fold'); on = on == null ? !was : on; if(on === was) return;
+  if(on) h.setAttribute('data-fold', '1'); else h.removeAttribute('data-fold');
+  foldApply();
+  const s = getSelection();
+  if(on && s.rangeCount && s.anchorNode && ed.contains(s.anchorNode)){ let n = s.anchorNode; while(n && n.parentNode !== ed) n = n.parentNode; if(n && n.nodeType === 1 && n.hasAttribute('data-fh')) caretIn(h, false); }
+  touch(); nvBuild();
+}
+/* раскрыть вышестоящие свёрнутые разделы, чтобы заголовок стал виден */
+function foldReveal(h){
+  const kids = Array.from(ed.children); let lv = foldLv(h), ch = false;
+  for(let i = kids.indexOf(h) - 1; i >= 0 && lv > 1; i--){
+    const l = foldLv(kids[i]);
+    if(l && l < lv){ if(kids[i].hasAttribute('data-fold')){ kids[i].removeAttribute('data-fold'); ch = true; } lv = l; }
+  }
+  if(ch) foldApply();
+  return ch;
+}
+ed.addEventListener('mousedown', e => {
+  const h = e.target.closest && e.target.closest('h1,h2,h3'); if(!h || h.parentNode !== ed || e.button !== 0) return;
+  if(e.clientX < h.getBoundingClientRect().left){ e.preventDefault(); foldToggle(h); }
+});
+ed.addEventListener('keydown', e => {
+  if((e.key === 'Enter' || e.key === 'Delete') && !e.ctrlKey && !e.metaKey){ const h = up(/^H[123]$/); if(h && h.parentNode === ed && h.hasAttribute('data-fold')) foldToggle(h, false); }
+}, true);
+
+/* ---- навигатор ---- */
+let nvOn = !!store.get('yng-nv', false), nvRaf = 0, nvT = 0;
+const nvHeads = () => Array.from(ed.children).filter(c => foldLv(c));
+function nvPanel(){
+  let p = document.getElementById('nvp'); if(p) return p;
+  p = document.createElement('aside'); p.id = 'nvp'; p.className = 'nvp'; p.hidden = true; p.setAttribute('aria-label', 'Навигатор по заголовкам');
+  p.innerHTML = '<div class="nvp-h"><b>Навигатор</b><span class="nvp-n" id="nvpN"></span><button type="button" data-nv="fold" title="Свернуть все разделы" aria-label="Свернуть все разделы">' + svg('foldall') + '</button><button type="button" data-nv="unfold" title="Развернуть все разделы" aria-label="Развернуть все разделы">' + svg('unfoldall') + '</button><button type="button" data-nv="close" title="Закрыть навигатор" aria-label="Закрыть навигатор">×</button></div><div class="nvp-l" id="nvpL"></div>';
+  p.addEventListener('mousedown', e => { if(e.target.closest('button')) e.preventDefault(); });
+  p.addEventListener('click', nvClick); document.body.appendChild(p); return p;
+}
+function nvBuild(){
+  const p = document.getElementById('nvp'), L = document.getElementById('nvpL'); if(!p || !L || p.hidden) return;
+  const hs = nvHeads(), kids = Array.from(ed.children);
+  document.getElementById('nvpN').textContent = hs.length ? String(hs.length) : '';
+  L.innerHTML = hs.length ? hs.map((h, i) => {
+    const lv = foldLv(h), nx = kids[kids.indexOf(h) + 1], has = !!nx && !(foldLv(nx) && foldLv(nx) <= lv), tx = (h.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 90);
+    return '<div class="nvi lv' + lv + (h.hasAttribute('data-fold') ? ' fd' : '') + '"><button type="button" class="nvc" data-nvt="' + i + '"' + (has ? '' : ' disabled') + ' aria-label="Свернуть или развернуть раздел"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><button type="button" class="nvt" data-nvg="' + i + '" title="' + esc(tx) + '">' + esc(tx || 'Без названия') + '</button></div>';
+  }).join('') : '<div class="nvp-e">Заголовков пока нет.<br>Сделайте H1, H2 или H3 на панели инструментов, и здесь появится оглавление.</div>';
+  nvSpy();
+}
+function nvClick(e){
+  const b = e.target.closest('[data-nv],[data-nvt],[data-nvg]'); if(!b) return;
+  if(b.dataset.nv === 'close') return nvToggle(false);
+  if(b.dataset.nv === 'fold'){ nvHeads().forEach(h => h.setAttribute('data-fold', '1')); foldApply(); touch(); nvBuild(); return; }
+  if(b.dataset.nv === 'unfold'){ nvHeads().forEach(h => h.removeAttribute('data-fold')); foldApply(); touch(); nvBuild(); return; }
+  const hs = nvHeads();
+  if(b.dataset.nvt != null){ const h = hs[+b.dataset.nvt]; if(h) foldToggle(h); return; }
+  const h = hs[+b.dataset.nvg]; if(!h) return;
+  if(foldReveal(h)){ touch(); nvBuild(); }
+  h.scrollIntoView({behavior: 'smooth', block: 'start'});
+  h.classList.remove('nv-fl'); void h.offsetWidth; h.classList.add('nv-fl'); setTimeout(() => h.classList.remove('nv-fl'), 1500);
+}
+function nvSpy(){
+  cancelAnimationFrame(nvRaf);
+  nvRaf = requestAnimationFrame(() => {
+    nvPos();
+    const p = document.getElementById('nvp'), L = document.getElementById('nvpL'); if(!p || p.hidden || !L) return;
+    let at = -1; nvHeads().forEach((h, i) => { if(!h.hasAttribute('data-fh') && h.getBoundingClientRect().top <= 190) at = i; });
+    const items = L.querySelectorAll('.nvi'); items.forEach((el, i) => el.classList.toggle('cur', i === at));
+    const c = items[at]; if(c){ const lr = L.getBoundingClientRect(), cr = c.getBoundingClientRect(); if(cr.top < lr.top + 4 || cr.bottom > lr.bottom - 4) L.scrollTop += cr.top - lr.top - 40; }
+  });
+}
+function nvPos(){
+  const p = document.getElementById('nvp'); if(!p || p.hidden) return;
+  if(innerWidth <= 700){ p.style.top = ''; return; }
+  const hd = document.querySelector('header'), t = document.getElementById('edTitle');
+  const min = (hd ? hd.getBoundingClientRect().bottom : 56) + 12;
+  p.style.top = Math.max(min, Math.round(t ? t.getBoundingClientRect().top : min)) + 'px';
+}
+function nvVis(){
+  const p = nvPanel(), show = nvOn && view === 'ed' && !(cur && cur.page === 'music');
+  p.hidden = !show; document.body.classList.toggle('nv-open', show);
+  const bn = document.getElementById('btnNav'); if(bn){ bn.classList.toggle('on', nvOn && view === 'ed'); bn.setAttribute('aria-pressed', nvOn && view === 'ed' ? 'true' : 'false'); }
+  nvPos();
+  if(show) nvBuild();
+}
+function nvToggle(on){ nvOn = on == null ? !nvOn : !!on; store.set('yng-nv', nvOn); nvVis(); }
+document.getElementById('btnNav').addEventListener('click', () => nvToggle());
+ed.addEventListener('input', () => { clearTimeout(nvT); nvT = setTimeout(() => { foldApply(); nvBuild(); }, 260); });
+window.addEventListener('scroll', nvSpy, {passive: true}); window.addEventListener('resize', nvSpy);
+
+/* ---- всплывающие подсказки: любой элемент с data-tip ---- */
+(function(){
+  let box = null, cur = null;
+  const hide = () => { if(box) box.style.display = 'none'; cur = null; };
+  const show = el => {
+    const tx = el.getAttribute('data-tip'); if(!tx) return;
+    if(!box){ box = document.createElement('div'); box.className = 'tipbox'; box.setAttribute('role', 'tooltip'); document.body.appendChild(box); }
+    box.textContent = tx; box.style.display = 'block'; cur = el;
+    const r = el.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
+    let left = Math.min(Math.max(12, r.left + r.width / 2 - w / 2), innerWidth - w - 12), top = r.bottom + 10;
+    if(top + h > innerHeight - 12) top = Math.max(12, r.top - h - 10);
+    box.style.left = Math.round(left) + 'px'; box.style.top = Math.round(top) + 'px';
+  };
+  document.addEventListener('mouseover', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if(el && el !== cur) show(el); });
+  document.addEventListener('mouseout', e => { if(cur && !(e.relatedTarget && cur.contains(e.relatedTarget))) hide(); });
+  document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if(el) show(el); });
+  document.addEventListener('focusout', hide);
+  document.addEventListener('click', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if(el){ if(cur === el && matchMedia('(hover:none)').matches) hide(); else show(el); } else hide(); });
+  document.addEventListener('scroll', hide, true);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') hide(); });
+})();
 /* ================= «--» → «—» (Backspace сразу после замены возвращает два дефиса) ================= */
 let dashUndo = null, dashBusy = false;
 function dashSel(n, a, b){ const r = document.createRange(); r.setStart(n, a); r.setEnd(n, b); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
@@ -10940,7 +11473,7 @@ const mdOne = r => `# ${r.title || 'Без названия'}\n\n${htmlToMd(r.ht
 function exHtml(h){ const d = document.createElement('div'); d.innerHTML = sanitize(h); tkPre(d); d.querySelectorAll('[data-tk]').forEach(p => { p.removeAttribute('data-tk'); p.removeAttribute('contenteditable'); }); d.querySelectorAll('[data-lk]').forEach(p => { p.removeAttribute('data-lk'); p.removeAttribute('data-lt'); p.removeAttribute('contenteditable'); }); return d.innerHTML; }
 function docHtml(r){
   return `<!DOCTYPE html>\n<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(r.title || 'Без названия')}</title>
-<style>body{max-width:760px;margin:40px auto;padding:0 20px;font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#1d1d1f}h1,h2,h3{line-height:1.25;letter-spacing:-.015em}blockquote{border-left:4px solid #0066cc;background:rgba(0,102,204,.09);margin:0 0 1em;padding:.6em 1em;border-radius:0 12px 12px 0}pre{background:#1d1d1f;color:#f5f5f7;padding:12px 14px;border-radius:12px;white-space:pre-wrap}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d2d2d7;padding:7px 10px;text-align:left}th{background:#f5f5f7}img{max-width:100%;height:auto;border-radius:12px}img[data-al=c]{display:block;margin:.6em auto}img[data-al=l]{float:left;margin:.3em 1em .6em 0}img[data-al=r]{float:right;margin:.3em 0 .6em 1em}a{color:#0066cc}${PAGES[r.page] ? `@page{size:${PAGES[r.page].w}mm ${PAGES[r.page].h}mm;margin:15mm}` : ''}tr,img,pre,blockquote{break-inside:avoid}</style></head>
+<style>body{max-width:760px;margin:40px auto;padding:0 20px;font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#1d1d1f}h1,h2,h3{line-height:1.25;letter-spacing:-.015em}blockquote{border-left:4px solid #0066cc;background:rgba(0,102,204,.09);margin:0 0 1em;padding:.6em 1em;border-radius:0 12px 12px 0}pre{background:#1d1d1f;color:#f5f5f7;padding:12px 14px;border-radius:12px;white-space:pre-wrap}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d2d2d7;padding:7px 10px;text-align:left}th{background:#f5f5f7}img{max-width:100%;height:auto;border-radius:12px}img[data-al=c]{display:block;margin:.6em auto}img[data-al=l]{float:left;margin:.3em 1em .6em 0}img[data-al=r]{float:right;margin:.3em 0 .6em 1em}a{color:#0066cc}${PAGES[r.page] ? `@page{size:${PAGES[r.page].w}mm ${PAGES[r.page].h}mm;margin:15mm}` : ''}tr,img,pre,blockquote{break-inside:avoid}${paraCss(r)}</style></head>
 <body><h1>${esc(r.title || 'Без названия')}</h1>\n${exHtml(r.html)}\n</body></html>`;
 }
 async function exportOne(rec, fmt){
@@ -11272,7 +11805,7 @@ function setView(v){
   document.body.classList.toggle('board-mode', v === 'board');
   document.body.classList.toggle('on-home', v === 'home');
   document.body.classList.toggle('deck-mode', v === 'deck');
-  updTrash(); applyWp(); msVis();
+  updTrash(); applyWp(); msVis(); nvVis();
 }
 const TTL = {home: 'Главная', files: 'Все файлы', tasks: 'Задачи', cal: 'Календарь', board: 'Холст', slides: 'Презентации', deck: 'Презентация', teams: 'Команды', tables: 'Таблицы', quiz: 'Тесты'};
 function setDocTitle(){ document.title = TTL[view] ? TTL[view] + ' — yng text' : ((cur && cur.title) || 'Без названия') + ' — yng text'; }
@@ -12232,7 +12765,7 @@ const ehFlush = () => { if(EH.t) ehCommit(); };
 function ehApply(snap){
   EH.lock = true;
   try{
-    ed.innerHTML = snap.html; refreshInline(); ed.classList.toggle('is-empty', isEmptyEl(ed));
+    ed.innerHTML = snap.html; refreshInline(); foldApply(); ed.classList.toggle('is-empty', isEmptyEl(ed));
     if(document.activeElement !== ed){ try{ ed.focus({preventScroll: true}); }catch(e){} }
     if(!ehPlace(snap.sel)){ const b = ed.lastElementChild; if(b){ try{ caretIn(b, false); }catch(e){} } }
     try{ deselImg(); }catch(e){}
