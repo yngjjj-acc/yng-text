@@ -1992,6 +1992,45 @@ p.tbe{margin:14px 0;cursor:pointer;overflow:visible}p.tbe:hover .tbe-w{border-co
 .sel-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line-2);border-radius:10px;background:var(--bg-elev);color:var(--text);font:inherit;text-align:left;cursor:pointer;margin:4px 0 10px}
 .sel-btn::after{content:'';width:7px;height:7px;border-right:2px solid var(--text-2);border-bottom:2px solid var(--text-2);transform:rotate(45deg) translateY(-2px);flex:none}
 .sel-btn:disabled{opacity:.5;cursor:default}.sel-menu{max-height:50vh;overflow:auto;min-width:200px}
+/* ===== v5.5: цвет текста и HEX у маркера в Редакторе ===== */
+.sw button.custom{background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)}
+.sw.cl{flex-wrap:wrap;width:212px;box-sizing:border-box}
+.np-pop .mh+.sw.cl{padding-top:6px}
+.tb svg .tc-bar{fill:none}
+/* ===== v5.5: плашка «Сайты и платформы» на главной ===== */
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,96px);gap:16px 14px;padding:4px 2px 6px;justify-content:start}
+.st-w{position:relative;display:flex;flex-direction:column;align-items:center;width:96px}
+.st-t{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;color:var(--text);text-decoration:none;position:relative;border-radius:22px;outline:0}
+.st-i{width:72px;height:72px;border-radius:20px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--line-2),0 2px 10px rgba(0,0,0,.06);display:grid;place-items:center;overflow:hidden;flex:none;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s}
+.st-i img{width:44px;height:44px;object-fit:contain;border-radius:10px;display:block;pointer-events:none}
+.st-i svg,.st-ph svg{width:34px;height:34px;stroke:var(--text-3);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.st-ph{display:grid;place-items:center;width:100%;height:100%}
+.st-t:hover .st-i,.st-t:focus-visible .st-i{transform:translateY(-2px) scale(1.04);box-shadow:inset 0 0 0 1px var(--line-2),0 10px 24px -8px rgba(0,0,0,.28)}
+.st-t:focus-visible .st-i{outline:2px solid var(--accent);outline-offset:2px}
+.st-n{font-size:12.5px;line-height:1.25;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)}
+.st-t[data-tip]:hover::after,.st-t[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(240px,70vw);padding:7px 11px;border-radius:10px;background:var(--text);color:var(--bg);font-size:12.5px;line-height:1.35;text-align:center;white-space:normal;z-index:30;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.st-e{position:absolute;top:-5px;right:2px;width:24px;height:24px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-elev,var(--bg));color:var(--text-2);display:grid;place-items:center;padding:0;opacity:0;transition:opacity .15s;cursor:pointer;z-index:2}
+.st-e svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.st-w:hover .st-e,.st-e:focus-visible{opacity:1}
+@media (hover:none){.st-e{opacity:.85}}
+.st-add{width:72px;height:72px;border-radius:20px;border:2px dashed var(--line-2);background:transparent;color:var(--text-3);display:grid;place-items:center;padding:0;cursor:pointer;transition:border-color .15s,color .15s,background .15s;margin:0 12px 0 12px}
+.st-add svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+.st-add:hover,.st-add:focus-visible{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);outline:0}
+.st-addw{width:96px;display:flex;justify-content:center}
+.st-addw .st-add{margin:0}
+.st-lg{display:flex;align-items:center;gap:14px;margin:4px 0 14px}
+.st-lg .st-i{width:64px;height:64px;box-shadow:inset 0 0 0 1px var(--line-2)}
+.st-lg .st-i:hover{transform:none}
+.st-lgb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
+.st-lgb [hidden]{display:none!important}
+.st-t,.st-t:hover,.st-t:hover .st-n,.st-n{text-decoration:none}
+.st-lgb small{flex-basis:100%;color:var(--text-3);font-size:12px}
+.st-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.st-act .st-del{margin-left:auto;color:#d70015}
+body.on-home #vHome .dgrid .wd:nth-child(4){animation-delay:.24s}
+body.on-home #vHome .st-i{background:rgba(255,255,255,.55)}
+:root[data-theme="dark"] body.on-home #vHome .st-i{background:rgba(255,255,255,.1)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.on-home #vHome .st-i{background:rgba(255,255,255,.1)}}
 .tb-hex{display:flex;align-items:center;gap:10px;margin:6px 0 12px}.tb-hex span{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);flex:none}.tb-hex input{margin:0!important}
 
 /* ===== главный экран: сцена, эффекты, стекло ===== */
@@ -2318,6 +2357,183 @@ body.qz-nosel .qz-win input{user-select:text;-webkit-user-select:text}
 .qz-hist .c span{font-size:11px;color:var(--text-3);white-space:nowrap}
 .qz-an .r span:first-child small{font-size:12px}
 .qz-tbl .btn{margin:0}
+
+/* ===== yng desk: обновлённый дизайн редактора презентаций ===== */
+.dk-top{padding:10px 16px;gap:10px}
+.dk-title{font-size:17px;font-weight:700;max-width:520px;border-radius:10px}
+.dk-play{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 20px;border-radius:999px;font-weight:600;font-size:14.5px;box-shadow:0 4px 14px rgba(10,132,255,.32)}
+.dk-play svg{width:15px;height:15px}
+.dk-tabs{gap:6px;padding:10px 16px 6px;border-bottom:0}
+.dk-tabs button{display:inline-flex;align-items:center;gap:8px;border:0;border-bottom:0;border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;color:var(--text-2);transition:background .15s,color .15s}
+.dk-tabs button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dk-tabs button:hover{background:var(--bg-alt);color:var(--text)}
+.dk-tabs button.on{background:var(--accent-soft);color:var(--accent);border-bottom:0}
+.dk-rib{align-items:center;gap:2px;padding:8px 16px 12px;min-height:0}
+.dk-rib .dksep{margin:6px 8px}
+.dkb{min-width:36px;height:36px;border-radius:10px}
+.rg{align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:0 18px;border-left:1px solid var(--line)}
+.rg:first-child{padding-left:0;border-left:0}
+.rg-b{display:flex;align-items:center;gap:8px;flex:1;min-height:64px}
+.rg-col{display:flex;flex-direction:column;gap:8px;justify-content:center}
+.rg-row{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.rg-l{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);text-align:center;white-space:nowrap}
+.rg .gs{height:34px;min-width:200px}
+.rbtn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:10px;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;white-space:nowrap;flex:none;transition:background .15s,border-color .15s,color .15s}
+.rbtn:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.rbtn:disabled{opacity:.4;pointer-events:none}
+.rbtn svg{width:16px;height:16px;flex:none}
+.rbig{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:96px;max-width:130px;height:68px;padding:6px 12px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:14px;font:inherit;font-size:12.5px;font-weight:600;line-height:1.15;text-align:center;cursor:pointer;flex:none;transition:transform .12s,background .15s,border-color .15s,box-shadow .15s}
+.rbig svg{width:24px;height:24px}
+.rbig:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);transform:translateY(-1px)}
+.rbig.pri{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(10,132,255,.3)}
+.rbig.pri:hover{background:var(--accent);color:#fff;filter:brightness(1.08)}
+.rbig.ai{background:linear-gradient(135deg,rgba(191,90,242,.12),rgba(10,132,255,.12));border-color:transparent}
+.dk-rib svg.fill{fill:currentColor;stroke:none}
+.dk-rib .dkchk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-2);white-space:nowrap;cursor:pointer;margin:0 0 0 4px}
+.dk-rib .dklay{gap:6px}
+.dk-rib .dkl{border-radius:10px;padding:6px 8px;gap:3px;background:var(--bg)}
+.dk-rib .dkbg{flex-wrap:nowrap;gap:7px}
+.dk-rib .dksw{width:26px;height:26px;flex:none}
+.dk-rib .dk-seg button{min-width:54px;height:34px}
+.trgrid{display:flex;gap:8px}
+.trt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:84px;height:68px;padding:6px 4px;border:1.5px solid var(--line-2);background:var(--bg);color:var(--text-2);border-radius:14px;font:inherit;font-size:11.5px;font-weight:500;line-height:1.1;text-align:center;cursor:pointer;flex:none;transition:background .15s,border-color .15s,color .15s,transform .12s}
+.trt svg{width:25px;height:25px}
+.trt:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.trt.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.trs{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);white-space:nowrap}
+.trs svg{width:17px;height:17px;color:var(--text-3)}
+.trs b{color:var(--text);font-weight:600}
+.dk-rp{padding:18px;font-size:14px}
+.dkp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dkp-h h4{margin:0;font-size:16px;font-weight:700}
+.dkp-x{width:30px;height:30px;border:0;border-radius:50%;background:var(--bg-alt);color:var(--text-2);font-size:19px;line-height:1;cursor:pointer}
+.dkp-x:hover{background:var(--accent-soft);color:var(--accent)}
+.dk-thc{background:var(--bg-alt)}
+.dkth.on .dkthv{box-shadow:0 0 0 3px var(--accent-soft)}
+.dk-stage>.dk-slide{box-shadow:0 12px 40px rgba(0,0,0,.2)}
+@media (max-width:700px){
+  .dk-tabs{padding:8px 10px 4px}
+  .dk-tabs button{padding:7px 12px}
+  .dk-rib{padding:8px 10px 10px}
+  .rg{padding:0 12px}
+  .dk-play{padding:0 14px}
+}
+
+/* ===== yng desk: компактная панель инструментов + новая вкладка «Слайд» ===== */
+.dk-top{padding:6px 14px;gap:8px}
+.dk-title{font-size:15.5px;padding:4px 8px}
+.dk-play{height:32px;padding:0 16px;font-size:13.5px;box-shadow:0 2px 8px rgba(10,132,255,.28)}
+.dk-tabs{gap:4px;padding:4px 14px 0}
+.dk-tabs button{padding:5px 13px;font-size:13px}
+.dk-tabs button svg{width:15px;height:15px}
+.dk-rib{padding:6px 14px 8px}
+.dk-rib .dksep{margin:4px 6px}
+.dkb{min-width:32px;height:32px;border-radius:8px}
+.dkb svg{width:18px;height:18px}
+.rg{padding:0 14px;gap:5px}
+.rg-b{min-height:0;gap:6px}
+.rg-l{font-size:10px;letter-spacing:.05em;line-height:1;font-weight:600}
+.rg-col{gap:6px}
+.rg-row{gap:6px}
+.rg .gs{height:30px;min-width:0;width:148px;padding:0 10px;font-size:13px;border-radius:8px}
+.rbtn{height:30px;padding:0 11px;font-size:13px;border-radius:8px;gap:6px}
+.rbtn svg{width:16px;height:16px}
+.rbtn.ai{background:linear-gradient(135deg,rgba(191,90,242,.14),rgba(10,132,255,.14));border-color:transparent}
+.rbig{flex-direction:row;gap:8px;height:34px;min-width:0;max-width:none;padding:0 14px;border-radius:9px;font-size:13px;white-space:nowrap}
+.rbig svg{width:18px;height:18px}
+.rbig:hover{transform:none}
+.rbig.pri{box-shadow:0 2px 8px rgba(10,132,255,.25)}
+.trgrid{gap:6px}
+.trt{width:66px;height:50px;gap:4px;padding:4px 2px;border-radius:10px;font-size:11px}
+.trt svg{width:20px;height:20px}
+.trt:hover{transform:none}
+.dkt-row{gap:8px}
+.dkt{padding:3px}
+.dk-rib .dk-seg button{min-width:48px;height:30px;border-radius:8px;font-size:13px}
+.dk-rib .dk-seg{padding:0;gap:3px}
+/* вкладка «Слайд» */
+.sl-btn{display:inline-flex;align-items:center;gap:9px;height:34px;padding:0 9px 0 8px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:9px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
+.sl-btn:hover,.sl-btn.open{border-color:var(--accent);background:var(--accent-soft)}
+.sl-btn svg.ch{width:14px;height:14px;color:var(--text-3);stroke-width:2.2}
+.sl-btn .lay-i{display:inline-flex;color:var(--accent)}
+.sl-btn .lay-i svg{width:30px;height:18px;stroke:none;fill:none}
+.sl-btn .lay-i svg rect{stroke:currentColor}
+.sl-btn .bg-i{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;border:1px solid var(--line-2);background:linear-gradient(135deg,var(--bg-alt),var(--line-2));color:var(--text-2);flex:none}
+.sl-btn .bg-i svg{width:12px;height:12px}
+.dk-pop{position:absolute;z-index:30;background:var(--bg-elev);border:1px solid var(--line-2);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.22);padding:12px 12px 14px;max-width:calc(100% - 16px);box-sizing:border-box}
+.dk-pop[hidden]{display:none}
+.dk-pop h5{margin:0 0 10px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3)}
+.dk-pop.pw-lay{width:372px}
+.dk-pop.pw-bg{width:276px}
+.pop-lay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dk-pop .dkl{width:100%;padding:8px 4px 6px;gap:5px;background:var(--bg);border-radius:10px}
+.dk-pop .dkl svg{width:66px;height:40px;stroke:none;fill:none}
+.dk-pop .dkl svg rect{stroke:currentColor}
+.dk-pop .dkl small{font-size:11.5px;text-align:center;line-height:1.15}
+.pop-sw{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;justify-items:center;margin-bottom:12px}
+.dk-pop .dksw{width:30px;height:30px}
+.pop-row{display:flex;gap:6px;margin-bottom:12px}
+.pop-row .rbtn{flex:1;justify-content:center}
+.dk-pop .rbtn svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dk-pop .dkchk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer;margin:0;padding-top:10px;border-top:1px solid var(--line)}
+@media (max-width:700px){.dk-pop.pw-lay{width:calc(100% - 16px)}.rg{padding:0 10px}}
+
+/* ===== масштаб слайда ===== */
+.dk-swc{flex:1;min-width:0;min-height:0;position:relative;display:flex}
+.dk-swc>.dk-sw{flex:1;min-width:0;overflow:auto;align-items:flex-start;justify-content:flex-start;scrollbar-width:thin}
+.dk-sw .dk-stage{margin:auto}
+@media (max-width:640px){.dk-sw .dk-stage{margin:0 auto}}
+.dk-zm{position:absolute;right:16px;bottom:16px;z-index:5;display:flex;align-items:center;gap:2px;padding:3px;background:var(--bg-elev);border:1px solid var(--line-2);border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.16)}
+.dk-zm button{border:0;background:transparent;color:var(--text);height:28px;min-width:28px;border-radius:999px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.dk-zm button:hover:not(:disabled){background:var(--accent-soft);color:var(--accent)}
+.dk-zm button:disabled{opacity:.35;cursor:default}
+.dk-zm .zl{min-width:52px;font-variant-numeric:tabular-nums}
+.dk-zm .zfit.on{color:var(--accent);background:var(--accent-soft)}
+.dk-zm svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dk-zm i{flex:none;width:1px;height:16px;background:var(--line-2);margin:0 2px}
+/* выпадающие списки внутри ленты */
+.dk-rib .sel-btn{width:148px;height:30px;margin:0;padding:0 10px;font-size:13px;border-radius:8px;background:var(--bg);white-space:nowrap;overflow:hidden}
+.dk-rib .sel-btn::after{width:6px;height:6px;margin-left:auto}
+.dk-rib .dkt b{font-size:11px}
+
+/* ===== правки: форматирование текста слайда и плитки переходов ===== */
+.trgrid{flex-wrap:nowrap}
+.trt{width:auto;min-width:92px;height:auto;min-height:50px;padding:5px 8px;white-space:nowrap}
+.trt span{display:block;white-space:nowrap;font-weight:inherit}
+.dk-pop.pw-fn{width:332px}.dk-pop.pw-cl{width:276px}.dk-pop.pw-pa{width:312px}
+.dk-pop.pw-fn,.dk-pop.pw-pa{max-height:min(560px,74vh);overflow-y:auto}
+.dk-pop .fm-note{font-size:12px;line-height:1.35;color:var(--text-3);margin:-2px 0 10px}
+.dk-pop .fm-h{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);margin:12px 0 7px}
+.fm-fonts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fm-f{display:flex;align-items:center;gap:8px;min-width:0;height:36px;padding:0 9px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:9px;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.fm-f:hover{border-color:var(--accent)}
+.fm-f.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.fm-f .s{font-size:16px;flex:none}
+.fm-f .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fm-step{display:flex;gap:6px;align-items:center}
+.fm-step button{width:36px;height:34px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:9px;font:inherit;font-size:18px;line-height:1;cursor:pointer}
+.fm-step button:hover{border-color:var(--accent)}
+.fm-step input{width:86px;height:34px;box-sizing:border-box;text-align:center;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:9px;font:inherit;font-size:14px}
+.fm-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fm-chips:first-child{margin-top:0}
+.fm-chips button{min-width:38px;height:28px;padding:0 9px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);border-radius:8px;font:inherit;font-size:12.5px;cursor:pointer}
+.fm-chips button:hover{border-color:var(--accent)}
+.fm-chips button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.dk-pop .dksw.no{background:linear-gradient(135deg,transparent 44%,#ff3b30 44% 56%,transparent 56%),#fff}
+.dk-tx hr{border:0;border-top:.07em solid currentColor;opacity:.4;margin:.45em 0}
+.dko-text[style*="--ff:"] .dk-tx,.dko-text[style*="--ff:"] .dk-tx h1,.dko-text[style*="--ff:"] .dk-tx h2,.dko-text[style*="--ff:"] .dk-tx h3{font-family:var(--ff)}
+.dko-text[style*="--p-lh:"] .dk-tx{line-height:var(--p-lh)}
+.dko-text[style*="--p-gap:"] .dk-tx p{margin-bottom:var(--p-gap)}
+.dko-text[style*="--p-ind:"] .dk-tx>p{text-indent:var(--p-ind)}
+.dko-text .dk-tx>p[style*="text-align:center"],.dko-text .dk-tx>p[style*="text-align:right"]{text-indent:0}
+.dk-tx [data-ind="1"]{margin-left:1.5em}
+.dk-tx [data-ind="2"]{margin-left:3.0em}
+.dk-tx [data-ind="3"]{margin-left:4.5em}
+.dk-tx [data-ind="4"]{margin-left:6.0em}
+.dk-tx [data-ind="5"]{margin-left:7.5em}
+.dk-tx [data-ind="6"]{margin-left:9.0em}
+.dk-tx [data-ind="7"]{margin-left:10.5em}
+.dk-tx [data-ind="8"]{margin-left:12.0em}
 </style>
 <script>
 /* ресурсы главного экрана */
@@ -2617,7 +2833,7 @@ const FMT_FONTS = [
 ];
 const fmtKey = v => { const f = String(v || '').split(',')[0].replace(/["']/g, '').trim().toLowerCase(); const x = FMT_FONTS.find(o => o.k === f); return x ? x.k : ''; };
 const fmtCss = k => { const x = FMT_FONTS.find(o => o.k === k); return x ? x.css : ''; };
-const fmtSizeOf = st => { const m = String(st || '').match(/font-size:\s*(\d+(?:\.\d+)?)px/i); if(!m) return 0; const n = +m[1]; return n >= 8 && n <= 120 ? Math.round(n * 10) / 10 : 0; };
+const fmtSizeOf = st => { const m = String(st || '').match(/font-size:\s*(\d+(?:\.\d+)?)px/i); if(!m) return 0; const n = +m[1]; return n >= 8 && n <= 300 ? Math.round(n * 10) / 10 : 0; };
 function sanitize(html){
   const doc = new DOMParser().parseFromString('<body>' + html, 'text/html');
   const out = document.createElement('div');
@@ -2653,6 +2869,7 @@ function sanitize(html){
           const fk = fmtKey((st.match(/font-family:\s*([^;]+)/i) || [])[1]), fz = fmtSizeOf(st);
           if(fk){ parts.push('font-family:' + fmtCss(fk)); fm = true; }
           if(fz){ parts.push('font-size:' + fz + 'px'); fm = true; }
+          const fcm = st.match(/(?:^|;)\s*color:\s*([^;]+)/i); if(fcm && COLOR.test(fcm[1].trim())){ parts.push('color:' + fcm[1].trim()); fm = true; }
         }
         if(parts.length){ const sp = document.createElement('span'); sp.setAttribute('style', parts.join(';')); if(fm) sp.setAttribute('data-f', '1'); walk(n, sp); dst.appendChild(sp); }
         else walk(n, dst);
@@ -3450,6 +3667,7 @@ function mergeExtra(o){
   let nt = 0, nf = 0;
   if(Array.isArray(o.folders)) o.folders.map(fixFolder).filter(Boolean).forEach(f => { if(!M.folders.some(x => x.id === f.id)){ M.folders.push(f); nf++; } });
   if(Array.isArray(o.tasks)) o.tasks.map(fixTask).filter(Boolean).forEach(t => { const i = M.tasks.findIndex(x => x.id === t.id); if(i < 0){ M.tasks.push(t); nt++; } else { M.tasks[i] = t; } });
+  if(Array.isArray(o.sites)){ let ns = 0; o.sites.map(siteFix).filter(Boolean).forEach(x => { const i = SITES.findIndex(y => y.id === x.id || y.url === x.url); if(i < 0){ SITES.push(x); ns++; } }); if(ns){ sitesSave(); extraN += ns; toast('Загружено сайтов: ' + ns); } }
   if(o.board){ const nb = bdMerge(o.board); if(nb){ extraN += nb; toast('Загружено объектов холста: ' + nb); } }
   if(nt || nf){ extraN += nt + nf; metaSave('tasks'); metaSave('folders'); toast('Загружено задач: ' + nt + ', папок: ' + nf); }
 }
@@ -3979,6 +4197,119 @@ function hsInit(){
   new MutationObserver(re).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
   try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', re); }catch(e){}
 }
+/* ===== Сайты и платформы (главный экран) ===== */
+const SITE_PH = '<span class="st-ph"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></span>';
+const SITE_EDIT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>';
+function siteUrl(v){
+  v = String(v || '').trim(); if(!v) return '';
+  if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) v = 'https://' + v;
+  try{ const u = new URL(v); return (u.protocol === 'http:' || u.protocol === 'https:') && u.hostname ? u.href : ''; }catch(e){ return ''; }
+}
+const siteHost = u => { try{ return new URL(u).hostname.replace(/^www\./, ''); }catch(e){ return u; } };
+function siteFix(o){
+  if(!o || typeof o !== 'object') return null;
+  const url = siteUrl(o.url); if(!url) return null;
+  return {id: typeof o.id === 'string' && /^[\w-]{3,40}$/.test(o.id) ? o.id : uid(), name: String(o.name || '').trim().slice(0, 40), desc: String(o.desc || '').trim().slice(0, 160), url,
+    logo: typeof o.logo === 'string' && o.logo.length < 600000 && /^data:image\/(png|jpe?g|webp|gif|avif|bmp|svg\+xml|x-icon|vnd\.microsoft\.icon);/i.test(o.logo) ? o.logo : ''};
+}
+let SITES = (() => { const a = store.get('yng-sites', []); return Array.isArray(a) ? a.map(siteFix).filter(Boolean) : []; })();
+const sitesSave = () => store.set('yng-sites', SITES);
+function siteSrcs(url){
+  let o = ''; try{ o = new URL(url).origin; }catch(e){ return []; }
+  return ['https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=' + encodeURIComponent(o) + '&size=128', o + '/favicon.ico'];
+}
+function siteImg(logo, url){
+  const srcs = logo ? [logo] : siteSrcs(url);
+  if(!srcs.length) return SITE_PH;
+  return '<img class="st-img" alt="" draggable="false" referrerpolicy="no-referrer" src="' + esc(srcs[0]) + '" data-rest="' + esc(JSON.stringify(srcs.slice(1))) + '">';
+}
+function siteImgFail(img){
+  let rest = []; try{ rest = JSON.parse(img.dataset.rest || '[]'); }catch(e){}
+  if(rest.length){ img.dataset.rest = JSON.stringify(rest.slice(1)); img.src = rest[0]; }
+  else img.outerHTML = SITE_PH;
+}
+function siteTile(s){
+  const nm = s.name || siteHost(s.url), tip = s.desc || siteHost(s.url);
+  return '<div class="st-w"><a class="st-t" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer" draggable="false" data-tip="' + esc(tip) + '" aria-label="' + esc(nm + (s.desc ? ' — ' + s.desc : '')) + '"><span class="st-i">' + siteImg(s.logo, s.url) + '</span><span class="st-n">' + esc(nm) + '</span></a>' +
+    '<button type="button" class="st-e" data-sedit="' + s.id + '" title="Изменить" aria-label="Изменить: ' + esc(nm) + '">' + SITE_EDIT + '</button></div>';
+}
+function sitesHtml(){
+  return '<section class="wd wide" id="stBox"><div class="wd-h"><h2>Сайты и платформы</h2><span class="cnt">' + (SITES.length || '') + '</span></div><div class="st-grid">' + SITES.map(siteTile).join('') +
+    '<div class="st-addw"><button type="button" class="st-add" id="stAdd" title="Добавить сайт" aria-label="Добавить сайт"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div></div></section>';
+}
+let sitesWired = false;
+function sitesWire(){
+  if(!sitesWired){
+    sitesWired = true;
+    vHome.addEventListener('error', e => { if(e.target.classList && e.target.classList.contains('st-img')) siteImgFail(e.target); }, true);
+    vHome.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < 2) siteImgFail(i); }, true);
+  }
+  const a = document.getElementById('stAdd'); if(a) a.onclick = () => siteDlg(null);
+  vHome.querySelectorAll('[data-sedit]').forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); siteDlg(b.dataset.sedit); }; });
+  vHome.querySelectorAll('.st-t').forEach(t => { t.addEventListener('contextmenu', e => { const w = t.parentNode.querySelector('[data-sedit]'); if(w){ e.preventDefault(); siteDlg(w.dataset.sedit); } }); });
+}
+function siteLogoFromFile(f){
+  return new Promise((res, rej) => {
+    if(!f || !/^image\//.test(f.type) || f.size > 6e6){ rej(new Error('bad')); return; }
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error('read'));
+    fr.onload = () => {
+      const im = new Image();
+      im.onerror = () => rej(new Error('img'));
+      im.onload = () => {
+        try{
+          const S = 128, c = document.createElement('canvas'); c.width = c.height = S;
+          const w = im.naturalWidth || im.width || S, h = im.naturalHeight || im.height || S, k = Math.min(S / w, S / h), dw = w * k, dh = h * k;
+          c.getContext('2d').drawImage(im, (S - dw) / 2, (S - dh) / 2, dw, dh);
+          res(c.toDataURL('image/png'));
+        }catch(e){ rej(e); }
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(f);
+  });
+}
+function siteDlg(id){
+  const cur = id ? SITES.find(x => x.id === id) : null;
+  if(id && !cur) return;
+  let logo = cur ? cur.logo : '', delArm = false;
+  const ov = tmDlg('<h3>' + (cur ? 'Изменить сайт' : 'Добавить сайт') + '</h3>' +
+    '<label>Название<input id="stN" maxlength="40" placeholder="Например, Google Диск" autocomplete="off" value="' + esc(cur ? cur.name : '') + '"></label>' +
+    '<label>Описание (показывается при наведении)<input id="stD" maxlength="160" placeholder="Для чего этот сайт" autocomplete="off" value="' + esc(cur ? cur.desc : '') + '"></label>' +
+    '<label>Ссылка<input id="stU" inputmode="url" placeholder="https://example.com" autocomplete="off" spellcheck="false" value="' + esc(cur ? cur.url : '') + '"></label>' +
+    '<div class="st-lg"><span class="st-i" id="stP"></span><div class="st-lgb"><button type="button" class="btn small neutral" id="stUp"></button><button type="button" class="btn small neutral" id="stRm" hidden>Убрать свой логотип</button><small>Логотип подгружается автоматически. Если не подгрузился — загрузите свой.</small></div></div>' +
+    '<div class="st-act"><button type="button" class="btn small" id="stOk">Сохранить</button><button type="button" class="btn small neutral" id="stNo">Отмена</button>' + (cur ? '<button type="button" class="btn small neutral st-del" id="stDel">Удалить</button>' : '') + '</div>');
+  const $i = q => ov.querySelector(q), N = $i('#stN'), D = $i('#stD'), U = $i('#stU'), P = $i('#stP'), Up = $i('#stUp'), Rm = $i('#stRm');
+  P.addEventListener('error', e => { if(e.target.classList && e.target.classList.contains('st-img')) siteImgFail(e.target); }, true);
+  P.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < 2) siteImgFail(i); }, true);
+  let pt = 0;
+  const prev = () => { const u = siteUrl(U.value); P.innerHTML = (logo || u) ? siteImg(logo, u) : SITE_PH; Up.textContent = logo ? 'Изменить логотип' : 'Загрузить логотип'; Rm.hidden = !logo; };
+  prev();
+  U.addEventListener('input', () => { clearTimeout(pt); pt = setTimeout(prev, 350); });
+  const fi = document.createElement('input'); fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; ov.appendChild(fi);
+  Up.onclick = () => fi.click();
+  fi.onchange = () => { const f = fi.files && fi.files[0]; fi.value = ''; if(!f) return; siteLogoFromFile(f).then(d => { logo = d; prev(); }).catch(() => toast('Не удалось прочитать изображение')); };
+  Rm.onclick = () => { logo = ''; prev(); };
+  const close = () => ov.remove();
+  $i('#stNo').onclick = close;
+  const save = () => {
+    const u = siteUrl(U.value);
+    if(!u){ toast('Укажите корректную ссылку на сайт'); U.focus(); return; }
+    const o = {id: cur ? cur.id : uid(), name: N.value.trim() || siteHost(u), desc: D.value.trim(), url: u, logo};
+    const f = siteFix(o); if(!f) return;
+    if(cur) SITES[SITES.findIndex(x => x.id === cur.id)] = f; else SITES.push(f);
+    sitesSave(); close(); if(view === 'home') renderHome();
+    toast(cur ? 'Сайт обновлён' : 'Сайт добавлен');
+  };
+  $i('#stOk').onclick = save;
+  const del = $i('#stDel');
+  if(del) del.onclick = () => {
+    if(!delArm){ delArm = true; del.textContent = 'Точно удалить?'; return; }
+    SITES = SITES.filter(x => x.id !== cur.id); sitesSave(); close(); if(view === 'home') renderHome(); toast('Сайт удалён');
+  };
+  ov.addEventListener('keydown', e => { if(e.key === 'Escape'){ e.stopPropagation(); close(); } else if(e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'file'){ e.preventDefault(); save(); } });
+  setTimeout(() => (cur ? N : U).focus(), 30);
+}
 function renderHome(){
   const now = new Date(), k = dkey(now), per = periodOf(now.getHours());
   homeKey = k; homePer = per.k;
@@ -4008,9 +4339,11 @@ function renderHome(){
       <div class="wd-s">Недавние</div>
       ${rec.length ? `<div class="hub">${rec.map(r => fileRow(r, true)).join('')}</div>` : '<div class="wd-e">Пока нет файлов. <a href="#/edit">Открыть редактор</a></div>'}
     </section>
+    ${sitesHtml()}
   </div>`;
   if(oldHs){ const nh = document.getElementById('hs'); if(nh) nh.replaceWith(oldHs); }
   hsInit();
+  sitesWire();
   tickHome(true);
   $('#hQa').addEventListener('submit', e => {
     e.preventDefault();
@@ -8485,7 +8818,7 @@ function dkFixObj(o){
   const t = ['text', 'image', 'video', 'chart', 'task', 'file', 'tbl', 'shape', 'fx', 'table', 'code', 'btn'].includes(o.t) ? o.t : null; if(!t) return null;
   const r = {id: okId(o.id) ? o.id : uid(), t, x: dkNum(o.x, 0), y: dkNum(o.y, 0), w: Math.max(20, Math.min(4000, dkNum(o.w, 300))), h: Math.max(20, Math.min(4000, dkNum(o.h, 100)))};
   { const rt = dkNum(o.rot, 0); if(rt) r.rot = Math.max(-360, Math.min(360, Math.round(rt * 10) / 10)); }
-  if(t === 'text'){ r.html = sanitize(String(o.html || '')).slice(0, 40000); if(typeof o.ph === 'string') r.ph = sanitize(o.ph).slice(0, 2000); r.fs = Math.max(8, Math.min(200, dkNum(o.fs, 28))); r.al = ['left', 'center', 'right', 'justify'].includes(o.al) ? o.al : 'left'; r.b = !!o.b; r.role = String(o.role || '').slice(0, 10); r.hd = !!o.hd; if(/^#[0-9a-f]{6}$/i.test(o.bgc || '')){ r.bgc = o.bgc; r.rad = Math.max(0, Math.min(120, Math.round(dkNum(o.rad, 20)))); } if(/^#[0-9a-f]{6}$/i.test(o.c || '')) r.c = o.c; }
+  if(t === 'text'){ r.html = sanitize(String(o.html || '')).slice(0, 40000); if(typeof o.ph === 'string') r.ph = sanitize(o.ph).slice(0, 2000); r.fs = Math.max(8, Math.min(200, dkNum(o.fs, 28))); r.al = ['left', 'center', 'right', 'justify'].includes(o.al) ? o.al : 'left'; r.b = !!o.b; r.role = String(o.role || '').slice(0, 10); r.hd = !!o.hd; if(/^#[0-9a-f]{6}$/i.test(o.bgc || '')){ r.bgc = o.bgc; r.rad = Math.max(0, Math.min(120, Math.round(dkNum(o.rad, 20)))); } if(/^#[0-9a-f]{6}$/i.test(o.c || '')) r.c = o.c; { const fk = fmtKey(o.ff); if(fk) r.ff = fk; } if(o.para && typeof o.para === 'object'){ const pa = o.para, cl = (v, a, b, d) => Math.max(a, Math.min(b, dkNum(v, d))); r.para = {ind: cl(pa.ind, 0, 4, 0), gap: cl(pa.gap, 0, 3, .3), lh: cl(pa.lh, .8, 3, 1.25)}; } }
   else if(t === 'image'){ r.src = typeof o.src === 'string' && /^data:image\/(png|jpe?g|webp|gif|avif|bmp);/i.test(o.src) ? o.src : ''; r.fit = o.fit === 'contain' ? 'contain' : 'cover'; }
   else if(t === 'video'){ r.fid = okId(o.fid) ? o.fid : ''; r.name = String(o.name || 'video').slice(0, 200); r.auto = !!o.auto; r.loop = !!o.loop; r.mute = o.mute !== false; r.type = String(o.type || '').slice(0, 60); }
   else if(t === 'chart'){ r.ch = dkFixChart(o.ch); if(!r.ch) return null; }
@@ -8660,6 +8993,7 @@ function dkObjInner(o, deck, slide, mode){
 function dkObjStyle(o){
   let s = `left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;`;
   if(o.t === 'text'){ s += `font-size:${o.fs}px;text-align:${o.al};` + (o.b ? 'font-weight:700;' : '') + (o.c ? `color:${o.c};` : (o.bgc ? `color:${dkLum(o.bgc) < .55 ? '#fff' : '#111'};` : '')) + (o.bgc ? `background:${o.bgc};border-radius:${o.rad == null ? 20 : o.rad}px;` : ''); }
+  if(o.t === 'text'){ const fk = fmtKey(o.ff); if(fk) s += '--ff:' + fmtCss(fk) + ';'; if(o.para) s += `--p-ind:${o.para.ind}em;--p-gap:${o.para.gap}em;--p-lh:${o.para.lh};`; }
   if(o.t === 'shape') s += `background:${o.c};opacity:${o.op};` + (o.kind === 'ellipse' ? 'border-radius:50%;' : 'border-radius:14px;');
   if(o.t === 'btn') s += `background:${o.c};color:${dkLum(o.c) < .55 ? '#fff' : '#111'};font-size:${o.fs}px;border-radius:${o.rad}px;`;
   if(o.rot) s += `transform:rotate(${o.rot}deg);`;
@@ -9072,7 +9406,7 @@ Object.assign(IC, {
   dkimg: '<rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 16l-5-5L7 19.5"/>',
   dkfile: '<path d="M7 3.5h7l4.5 4.5v11A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M9 12h6M9 16h4"/>'
 });
-const dk = {rec: null, deck: null, i: 0, sel: [], undo: [], redo: [], tab: 'text', mEdit: '', panel: '', editing: null, k: 1, built: false, clip: null, bgAll: false, timer: 0, thTimer: 0};
+const dk = {rec: null, deck: null, i: 0, sel: [], undo: [], redo: [], tab: 'text', mEdit: '', panel: '', pop: '', zoom: 0, fit: 1, editing: null, k: 1, built: false, clip: null, bgAll: false, timer: 0, thTimer: 0};
 const dkV = () => document.getElementById('vDeck'), dkL = () => document.getElementById('vSlides');
 const dkSlideObj = () => (dk.mEdit && (dk.deck.masters || []).find(m => m.id === dk.mEdit)) || dk.deck.slides[dk.i];
 const dkSelObjs = () => dkSlideObj().objs.filter(o => dk.sel.includes(o.id));
@@ -9247,16 +9581,16 @@ function dkBuild(){
       <input type="text" class="dk-title" id="dkTitle" maxlength="160" placeholder="Название презентации" aria-label="Название">
       <span class="dk-st" id="dkSt"></span><span class="grow"></span>
       <button type="button" class="btn small neutral dk-rpt" id="dkRpT">Панель</button><button type="button" class="btn small dk-play" id="dkPlay">${ico('play')} Показ</button></div>
-    <div class="dk-tabs" role="tablist">${DK_TABS.map(t => `<button type="button" role="tab" data-dkt="${t[0]}">${t[1]}</button>`).join('')}</div>
+    <div class="dk-tabs" role="tablist">${DK_TABS.map(t => `<button type="button" role="tab" data-dkt="${t[0]}">${dkIc(DK_TRI['tab_' + t[0]] || '')}<span>${t[1]}</span></button>`).join('')}</div>
     <div class="dk-rib" id="dkRib"></div>
-    <div class="dk-main"><aside class="dk-thc" id="dkThc" aria-label="Слайды"></aside><div class="dk-sw" id="dkSw"><div class="dk-stage" id="dkStage"></div></div><aside class="dk-rp" id="dkRp"></aside></div></div>`;
+    <div class="dk-main"><aside class="dk-thc" id="dkThc" aria-label="Слайды"></aside><div class="dk-swc"><div class="dk-sw" id="dkSw"><div class="dk-stage" id="dkStage"></div></div><div class="dk-zm" id="dkZm" role="group" aria-label="Масштаб слайда"><button type="button" data-dkz="out" title="Уменьшить (Ctrl −)" aria-label="Уменьшить"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button type="button" class="zl" id="dkZl" data-dkz="reset" title="Реальный размер, 100%" aria-label="Реальный размер">100%</button><button type="button" data-dkz="in" title="Увеличить (Ctrl +)" aria-label="Увеличить"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><i></i><button type="button" class="zfit on" data-dkz="fit" title="Вписать в окно (Ctrl 0)" aria-label="Вписать в окно"><svg viewBox="0 0 24 24"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg></button></div></div><aside class="dk-rp" id="dkRp"></aside></div></div>`;
   dkWire(); dk.built = true;
 }
 function dkEnter(id){
   const rec = DR[id];
   if(!isDeck(rec)){ toast('Презентация не найдена'); nav('#/slides'); return; }
   if(!dk.built) dkBuild();
-  if(dk.rec && dk.rec.id !== rec.id){ dk.i = 0; dk.sel = []; dk.undo = []; dk.redo = []; }
+  if(dk.rec && dk.rec.id !== rec.id){ dk.i = 0; dk.sel = []; dk.undo = []; dk.redo = []; dk.zoom = 0; }
   dk.rec = rec; dk.deck = rec.deck; dk.i = Math.min(dk.i, dk.deck.slides.length - 1); dk.mEdit = '';
   document.getElementById('dkTitle').value = rec.title || '';
   document.getElementById('dkSt').textContent = 'сохранено';
@@ -9267,11 +9601,57 @@ function dkDraw(){ dkThumbs(); dkStageDraw(); dkRibDraw(); dkPanel(); }
 function dkFitStage(){
   const sw = document.getElementById('dkSw'); if(!sw || !dk.deck) return;
   const [W, H] = dkDims(dk.deck), pad = dk.deck.rl === true ? 92 : 28, aw = sw.clientWidth - pad, ah = sw.clientHeight - pad;
-  dk.k = Math.max(.1, Math.min(aw / W, ah / H, 2));
+  dk.fit = Math.max(.1, Math.min(aw / W, ah / H, 2));
+  dk.k = dk.zoom ? Math.max(.1, Math.min(4, dk.zoom)) : dk.fit;
   const st = document.getElementById('dkStage'); st.style.width = (W * dk.k) + 'px'; st.style.height = (H * dk.k) + 'px';
   const sl = st.firstElementChild; if(sl){ sl.style.transform = `scale(${dk.k})`; }
   st.style.setProperty('--ik', 1 / dk.k);
-  dkRulers();
+  dkRulers(); dkZoomSync();
+}
+
+/* --- масштаб слайда --- */
+const DK_ZSTEPS = [.1, .15, .2, .25, .33, .5, .67, .75, .9, 1, 1.25, 1.5, 2, 3, 4];
+function dkZoomSync(){
+  const l = document.getElementById('dkZl'); if(!l) return;
+  l.textContent = Math.round(dk.k * 100) + '%';
+  const f = document.querySelector('#dkZm .zfit'), o = document.querySelector('#dkZm [data-dkz="out"]'), i = document.querySelector('#dkZm [data-dkz="in"]');
+  if(f) f.classList.toggle('on', !dk.zoom);
+  if(o) o.disabled = dk.k <= .1001; if(i) i.disabled = dk.k >= 3.999;
+}
+function dkZoomTo(z, ax, ay){
+  const sw = document.getElementById('dkSw'), st = document.getElementById('dkStage'); if(!sw || !st || !dk.deck) return;
+  if(z === null){ dk.zoom = 0; dkFitStage(); sw.scrollLeft = 0; sw.scrollTop = 0; return; }
+  z = Math.max(.1, Math.min(4, z));
+  if(ax == null){ ax = sw.clientWidth / 2; ay = sw.clientHeight / 2; }
+  const k0 = dk.k, px = (sw.scrollLeft + ax - st.offsetLeft) / k0, py = (sw.scrollTop + ay - st.offsetTop) / k0;
+  dk.zoom = z; dkFitStage();
+  sw.scrollLeft = px * dk.k + st.offsetLeft - ax; sw.scrollTop = py * dk.k + st.offsetTop - ay;
+}
+function dkZoomStep(dir, ax, ay){
+  const k = dk.k;
+  const z = dir > 0 ? (DK_ZSTEPS.find(v => v > k * 1.02) || 4) : (DK_ZSTEPS.slice().reverse().find(v => v < k / 1.02) || .1);
+  dkZoomTo(z, ax, ay);
+}
+function dkZoomWire(){
+  const sw = document.getElementById('dkSw'); if(!sw) return;
+  sw.addEventListener('wheel', e => {
+    if(!(e.ctrlKey || e.metaKey)) return; e.preventDefault();
+    const r = sw.getBoundingClientRect(); dkZoomTo(dk.k * Math.exp(-e.deltaY * .0022), e.clientX - r.left, e.clientY - r.top);
+  }, {passive: false});
+  let pd = 0, pz = 1; const td = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  sw.addEventListener('touchstart', e => { if(e.touches.length === 2){ pd = td(e.touches); pz = dk.k; } }, {passive: true});
+  sw.addEventListener('touchmove', e => {
+    if(e.touches.length !== 2 || !pd) return; e.preventDefault();
+    const r = sw.getBoundingClientRect(), t = e.touches;
+    dkZoomTo(pz * td(t) / pd, (t[0].clientX + t[1].clientX) / 2 - r.left, (t[0].clientY + t[1].clientY) / 2 - r.top);
+  }, {passive: false});
+  sw.addEventListener('touchend', e => { if(e.touches.length < 2) pd = 0; }, {passive: true});
+  document.addEventListener('keydown', e => {
+    if(!(e.ctrlKey || e.metaKey) || e.altKey || view !== 'deck' || !dk.deck || document.querySelector('.dkdlg')) return;
+    const k = e.key;
+    if(k === '+' || k === '=') dkZoomStep(1); else if(k === '-' || k === '_') dkZoomStep(-1); else if(k === '0') dkZoomTo(null); else return;
+    e.preventDefault();
+  });
 }
 function dkRulers(){
   const st = document.getElementById('dkStage'); if(!st || !dk.deck) return;
@@ -9459,42 +9839,278 @@ function dkTextCmd(c, arg){
     case 'clear': document.execCommand('removeFormat'); document.execCommand('formatBlock', false, 'p'); break;
     case 'link': { const sl0 = getSelection(), r0 = sl0.rangeCount ? sl0.getRangeAt(0).cloneRange() : null; askText('Адрес ссылки', 'https://', 'https://').then(v => { const u = normUrl(v || ''); if(!u) return; ed.focus(); if(r0){ const s2 = getSelection(); s2.removeAllRanges(); s2.addRange(r0); } document.execCommand('createLink', false, u); changed(); }); break; }
     case 'color': document.execCommand('foreColor', false, arg); break;
+    case 'hr': document.execCommand('insertHorizontalRule'); break;
+    case 'indent': dkIndent(1); break;
+    case 'outdent': dkIndent(-1); break;
   }
   const o = dkSlideObj().objs.find(x => x.id === dk.editing.id); if(o){ o.html = sanitize(dk.editing.el.innerHTML); dkDirty(); }
 }
+
+/* ===== форматирование текста слайда: шрифт, размер, цвет, маркер, абзацы, отступы ===== */
+document.addEventListener('selectionchange', () => {
+  if(!dk.editing) return;
+  const s = getSelection(), el = dk.editing.el;
+  if(s.rangeCount && el.contains(s.anchorNode) && el.contains(s.focusNode)) dk.selR = s.getRangeAt(0).cloneRange();
+});
+const DK_FSZ = [12, 16, 20, 24, 28, 32, 40, 48, 64, 80, 96];
+const DK_TCOL = ['#1d1d1f', '#ffffff', '#8e8e93', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#64d2ff'];
+const DK_MCOL = ['rgba(255,214,10,.5)', 'rgba(48,209,88,.4)', 'rgba(255,105,180,.4)', 'rgba(41,151,255,.35)', 'rgba(175,82,222,.35)'];
+const DK_PARA0 = {ind: 0, gap: .3, lh: 1.25};
+const DK_TXP = {font: 'pw-fn', color: 'pw-cl', mark: 'pw-cl', para: 'pw-pa'};
+function dkTxtObj(quiet){
+  const o = dk.editing ? dkSlideObj().objs.find(x => x.id === dk.editing.id) : dkSelObjs()[0];
+  if(!o || o.t !== 'text'){ if(!quiet) toast('Выберите текстовый блок'); return null; }
+  return o;
+}
+/* есть ли выделенный фрагмент внутри редактируемого блока (при необходимости возвращаем его после диалога) */
+function dkSelRestore(){
+  if(!dk.editing) return false;
+  const el = dk.editing.el, s = getSelection();
+  const ok = () => s.rangeCount && !s.isCollapsed && el.contains(s.anchorNode) && el.contains(s.focusNode);
+  if(ok()) return true;
+  if(dk.selR && !dk.selR.collapsed && el.contains(dk.selR.commonAncestorContainer)){ el.focus(); s.removeAllRanges(); s.addRange(dk.selR); return ok(); }
+  return false;
+}
+function dkStripProp(sp, prop){
+  sp.style.removeProperty(prop);
+  if(!sp.style.length){ while(sp.firstChild) sp.parentNode.insertBefore(sp.firstChild, sp); sp.remove(); }
+}
+function dkLiveStyle(o){ const b = dkObjEl(o.id); if(b) b.setAttribute('style', dkObjStyle(o)); }
+/* значение одного свойства для выделенного текста: оборачиваем текстовые узлы в span со стилем */
+function dkFmtInline(prop, val){
+  const el = dk.editing.el, s = getSelection(); if(!s.rangeCount) return;
+  const r = s.getRangeAt(0);
+  let sc = r.startContainer, so = r.startOffset, ec = r.endContainer, eo = r.endOffset;
+  if(ec.nodeType === 3 && eo < ec.length) ec.splitText(eo);
+  if(sc.nodeType === 3 && so > 0){ const mid = sc.splitText(so); if(sc === ec) ec = mid; sc = mid; so = 0; }
+  const r2 = document.createRange(); r2.setStart(sc, sc.nodeType === 3 ? 0 : so); r2.setEnd(ec, ec.nodeType === 3 ? ec.length : eo);
+  const cc = r2.commonAncestorContainer, root = cc.nodeType === 1 ? cc : cc.parentNode;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = []; let n;
+  while((n = w.nextNode())){
+    if(!n.nodeValue || !r2.intersectsNode(n)) continue;
+    const pe = n.parentNode;
+    if(pe.closest && pe.closest('pre,code,[contenteditable="false"]')) continue;
+    if(!/\S/.test(n.nodeValue) && /^(UL|OL|TABLE|TBODY|THEAD|TR)$/.test(pe.tagName)) continue;
+    nodes.push(n);
+  }
+  if(!nodes.length) return;
+  nodes.forEach(t => {
+    const pe = t.parentNode;
+    if(pe !== el && pe.tagName === 'SPAN' && pe.hasAttribute('data-f') && pe.childNodes.length === 1){ pe.style.setProperty(prop, val); return; }
+    const sp = document.createElement('span'); sp.setAttribute('data-f', '1'); sp.style.setProperty(prop, val);
+    pe.insertBefore(sp, t); sp.appendChild(t);
+  });
+  const nr = document.createRange(); nr.setStart(nodes[0], 0); nr.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].nodeValue.length);
+  s.removeAllRanges(); s.addRange(nr); dk.selR = nr.cloneRange();
+}
+function dkFmtStripSel(props){
+  const el = dk.editing.el, s = getSelection(), r = s.rangeCount ? s.getRangeAt(0) : null;
+  el.querySelectorAll('span[data-f]').forEach(sp => { if(r && !r.intersectsNode(sp)) return; props.forEach(p => dkStripProp(sp, p)); });
+}
+/* общая точка: есть выделение — меняем его; нет — меняем весь блок */
+function dkFmtGo(prop, css, setObj){
+  const o = dkTxtObj(); if(!o) return false;
+  const el = dk.editing && dk.editing.el;
+  if(el && dkSelRestore()){
+    if(css) dkFmtInline(prop, css); else dkFmtStripSel([prop]);
+    o.html = sanitize(el.innerHTML); dkDirty(); dkThumbs(); return true;
+  }
+  dkPush();
+  const host = el || Object.assign(document.createElement('div'), {innerHTML: o.html || ''});
+  host.querySelectorAll('span[data-f]').forEach(sp => dkStripProp(sp, prop));
+  setObj(o);
+  o.html = sanitize(host.innerHTML);
+  if(el) dkLiveStyle(o); else { dkStageDraw(); dkSelect([o.id]); }
+  dkDirty(); dkThumbs(); dkPanel(); return true;
+}
+function dkSetFont(key){ return dkFmtGo('font-family', key ? fmtCss(key) : '', o => { if(key) o.ff = key; else delete o.ff; }); }
+function dkSetSize(px){ px = Math.max(8, Math.min(200, Math.round(+px) || 28)); return dkFmtGo('font-size', px + 'px', o => { o.fs = px; }); }
+function dkSetColor(c){
+  const ok = dkFmtGo('color', c || '', o => { if(c) o.c = c; else delete o.c; });
+  if(ok && c){ dk.tcLast = c; const bar = document.getElementById('dkTcBar'); if(bar) bar.style.stroke = c; }
+  return ok;
+}
+function dkFmtReset(){
+  const o = dkTxtObj(); if(!o) return;
+  const el = dk.editing && dk.editing.el;
+  if(el && dkSelRestore()){ dkFmtStripSel(['font-family', 'font-size']); o.html = sanitize(el.innerHTML); dkDirty(); dkThumbs(); return; }
+  dkPush();
+  const host = el || Object.assign(document.createElement('div'), {innerHTML: o.html || ''});
+  host.querySelectorAll('span[data-f]').forEach(sp => { dkStripProp(sp, 'font-family'); dkStripProp(sp, 'font-size'); });
+  delete o.ff; o.html = sanitize(host.innerHTML);
+  if(el) dkLiveStyle(o); else { dkStageDraw(); dkSelect([o.id]); }
+  dkDirty(); dkThumbs(); dkPanel();
+}
+function dkMark(c){
+  if(!dk.editing){ dkTextCmd('mark', c); return; }
+  if(!dkSelRestore()){ dk.editing.el.focus(); document.execCommand('selectAll'); }
+  dkTextCmd('mark', c);
+}
+function dkParaSet(patch){
+  const o = dkTxtObj(); if(!o) return;
+  dkPush();
+  if(patch === null) delete o.para; else o.para = Object.assign({}, DK_PARA0, o.para || {}, patch);
+  dkLiveStyle(o); dkDirty(); dkThumbs(); dkPopDraw();
+}
+function dkIndent(dir){
+  const el = dk.editing.el, s = getSelection(); if(!s.rangeCount) return;
+  const r = s.getRangeAt(0); let n = s.anchorNode;
+  while(n && n !== el && n.nodeName !== 'LI') n = n.parentNode;
+  if(n && n !== el){ document.execCommand(dir > 0 ? 'indent' : 'outdent'); return; }
+  let did = false;
+  const blocks = () => { const rr = getSelection().rangeCount ? getSelection().getRangeAt(0) : r; return Array.from(el.children).filter(b => /^(P|H1|H2|H3|BLOCKQUOTE)$/.test(b.tagName) && rr.intersectsNode(b)); };
+  let bl = blocks();
+  if(!bl.length){ document.execCommand('formatBlock', false, 'p'); bl = blocks(); }   /* первая строка нового блока ещё не обёрнута в абзац */
+  bl.forEach(b => {
+    const c = +b.getAttribute('data-ind') || 0, k = Math.max(0, Math.min(8, c + dir));
+    if(k === c) return; if(k) b.setAttribute('data-ind', k); else b.removeAttribute('data-ind'); did = true;
+  });
+  if(!did && dir > 0) toast('Дальше сдвигать нельзя');
+}
+/* что сейчас у выделения: шрифт и размер */
+function dkFmtState(){
+  const o = dkTxtObj(true) || {}; let fam = o.ff || '', size = o.fs || 28;
+  const R = dk.selR;
+  if(dk.editing && R && !R.collapsed && dk.editing.el.contains(R.commonAncestorContainer)){
+    let n = R.startContainer; if(n.nodeType === 1 && n.childNodes[R.startOffset]) n = n.childNodes[R.startOffset];
+    if(n.nodeType === 3) n = n.parentElement;
+    let f2 = '', s2 = 0;
+    for(let e = n; e && e !== dk.editing.el; e = e.parentElement){ if(e.style){ if(!f2 && e.style.fontFamily) f2 = fmtKey(e.style.fontFamily); if(!s2 && e.style.fontSize) s2 = parseFloat(e.style.fontSize); } }
+    if(f2) fam = f2; if(s2) size = s2;
+  }
+  return {fam, size: Math.round(size)};
+}
+function dkTxtPop(k){
+  const o = dkTxtObj(true), R = dk.selR;
+  const has = !!(dk.editing && R && !R.collapsed && dk.editing.el.contains(R.commonAncestorContainer));
+  const note = '<div class="fm-note">' + (!o ? 'Выберите текстовый блок на слайде или выделите текст внутри него.' : has ? 'Изменения применятся к выделенному тексту.' : 'Нет выделения: изменения применятся ко всему блоку.') + '</div>';
+  if(k === 'font'){
+    const st = dkFmtState();
+    return '<h5>Шрифт и размер</h5>' + note + '<div class="fm-fonts"><button type="button" class="fm-f' + (!st.fam ? ' on' : '') + '" data-dkff=""><span class="s">Аа</span><span class="n">По шаблону</span></button>' +
+      FMT_FONTS.map(f => `<button type="button" class="fm-f${st.fam === f.k ? ' on' : ''}" data-dkff="${f.k}"><span class="s" style="font-family:${f.css}">Аа</span><span class="n">${f.n}</span></button>`).join('') + '</div>' +
+      '<div class="fm-h">Размер, px</div><div class="fm-step"><button type="button" data-dkfs="-2" aria-label="Меньше">−</button><input type="number" id="dkFzIn" min="8" max="200" step="1" value="' + st.size + '" aria-label="Размер в пикселях"><button type="button" data-dkfs="2" aria-label="Больше">+</button></div>' +
+      '<div class="fm-chips">' + DK_FSZ.map(n => `<button type="button" data-dkfz="${n}" class="${n === st.size ? 'on' : ''}">${n}</button>`).join('') + '</div>' +
+      '<div class="fm-h">Сброс</div><button type="button" class="rbtn" data-dkc="fmt-reset">Сбросить шрифт и размер</button>';
+  }
+  if(k === 'color'){
+    return '<h5>Цвет текста</h5>' + note + '<div class="pop-sw"><button type="button" class="dksw" data-dktc="" style="background:conic-gradient(#ccc,#fff,#ccc)" title="По шаблону" aria-label="Цвет по шаблону"></button>' +
+      DK_TCOL.map(c => `<button type="button" class="dksw" data-dktc="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('') +
+      '<button type="button" class="dksw custom" id="dkTcCb" title="Свой цвет (HEX)" aria-label="Свой цвет"></button></div>';
+  }
+  if(k === 'mark'){
+    return '<h5>Маркер</h5>' + note + '<div class="pop-sw">' + DK_MCOL.map(c => `<button type="button" class="dksw" data-dkmk="${c}" style="background:${c}" aria-label="Цвет маркера"></button>`).join('') +
+      '<button type="button" class="dksw no" data-dkmk="transparent" title="Убрать выделение" aria-label="Убрать выделение"></button>' +
+      '<button type="button" class="dksw custom" id="dkMkCb" title="Свой цвет (HEX)" aria-label="Свой цвет"></button></div>';
+  }
+  const p = Object.assign({}, DK_PARA0, (o && o.para) || {});
+  const row = (key, list) => '<div class="fm-chips">' + list.map(x => { const v = Array.isArray(x) ? x[0] : x, n = Array.isArray(x) ? x[1] : String(x).replace('.', ','); return `<button type="button" data-dkpk="${key}" data-dkpv="${v}" class="${Math.abs(p[key] - v) < .001 ? 'on' : ''}">${n}</button>`; }).join('') + '</div>';
+  return '<h5>Абзацы</h5><div class="fm-note">Настройки применяются ко всему текстовому блоку.</div>' +
+    '<div class="fm-h">Красная строка</div>' + row('ind', [[0, 'Нет'], [1, '1 em'], [1.5, '1,5 em'], [2.5, '2,5 em']]) +
+    '<div class="fm-h">Отступ между абзацами</div>' + row('gap', [[0, 'Нет'], [.15, 'Малый'], [.3, 'Обычный'], [.7, 'Большой']]) +
+    '<div class="fm-h">Межстрочный интервал</div>' + row('lh', [1.1, 1.25, 1.5, 1.75, 2]) +
+    '<div class="fm-h">Готовые стили</div><div class="fm-chips"><button type="button" data-dkpp="book">Книжный</button><button type="button" data-dkpp="air">Воздушный</button><button type="button" data-dkpp="def">Сбросить</button></div>' +
+    '<div class="fm-note" style="margin-top:10px">Сдвиг блоков вправо и влево: кнопки со стрелками на панели.</div>';
+}
+
 /* --- ленты вкладок --- */
 const dkB = (c, h, t, extra) => `<button type="button" class="dkb${extra || ''}" data-dkc="${c}" title="${t}" aria-label="${t}">${h}</button>`;
 const dkSep = '<span class="dksep"></span>';
+const dkPB = (k, h, t) => `<button type="button" class="dkb${dk.pop === k ? ' hi' : ''}" data-dkpop="${k}" title="${t}" aria-label="${t}" aria-haspopup="true">${h}</button>`;
+const dkIc = (p, c) => '<svg class="' + (c || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>';
+const dkG = (label, body) => '<div class="rg"><div class="rg-b">' + body + '</div><span class="rg-l">' + label + '</span></div>';
+const DK_TRI = {
+  instant: '<path d="M13 3L5 13h6l-1 8 8-10h-6z"/>',
+  dissolve: '<circle cx="9.5" cy="12" r="5.5"/><circle cx="14.5" cy="12" r="5.5" opacity=".55"/>',
+  smart: '<rect x="3.5" y="4.5" width="8" height="6" rx="1.5"/><rect x="12.5" y="13.5" width="8" height="6" rx="1.5"/><path d="M11.5 7.5H14a2 2 0 0 1 2 2v4"/>',
+  push: '<rect x="3.5" y="6" width="9" height="12" rx="1.5"/><path d="M16 8.5l3.5 3.5-3.5 3.5"/>',
+  cover: '<rect x="3.5" y="6" width="11" height="12" rx="1.5" opacity=".5"/><rect x="9.5" y="6" width="11" height="12" rx="1.5"/>',
+  wipe: '<rect x="3.5" y="6" width="17" height="12" rx="1.5"/><path d="M10 6v12M13.5 9.5v5M17 9.5v5"/>',
+  zoom: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8.5v5M8.5 11h5"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.5M12 18v2.5M3.5 12H6M18 12h2.5M6 6l1.8 1.8M16.2 16.2L18 18M18 6l-1.8 1.8M7.8 16.2L6 18"/>',
+  all: '<rect x="3.5" y="4" width="11" height="8" rx="1.5"/><rect x="9.5" y="12" width="11" height="8" rx="1.5"/>',
+  cur: '<path d="M5 5v14"/><path d="M9.5 5.5v13l10-6.5z"/>',
+  down: '<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/>',
+  up: '<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19.5h14"/>',
+  view: '<path d="M3 8V5h3M21 8V5h-3M3 16v3h3M21 16v3h-3"/><rect x="8" y="8.5" width="8" height="7" rx="1"/>',
+  tab_text: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
+  tab_tpl: '<rect x="3.5" y="4" width="17" height="7" rx="1.5"/><rect x="3.5" y="14" width="7.5" height="6" rx="1.5"/><rect x="13" y="14" width="7.5" height="6" rx="1.5"/>',
+  tab_slide: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  tab_tr: '<rect x="3" y="5" width="9" height="14" rx="1.5"/><path d="M15 9l3 3-3 3M21 12h-6.500"/>',
+  tab_show: '<path d="M8 5.5v13l11-6.5z"/>'
+};
 function dkRibDraw(){
   if(dk.mEdit) dk.tab = 'text';
   const r = document.getElementById('dkRib'), t = dk.tab; if(!r) return;
   document.querySelectorAll('.dk-tabs [data-dkt]').forEach(b => { b.classList.toggle('on', b.dataset.dkt === t); b.setAttribute('aria-selected', b.dataset.dkt === t); });
   const sl = dkSlideObj();
   if(t === 'text'){
-    r.innerHTML = (dk.mEdit ? dkMasterBar() : '') + dkB('bold', '<b>B</b>', 'Жирный') + dkB('italic', '<i>I</i>', 'Курсив') + dkB('underline', '<u>U</u>', 'Подчёркнутый') + dkB('strike', '<s>S</s>', 'Зачёркнутый') + dkB('mark', '<span class="hl"></span>', 'Маркер') + dkSep +
+    const tcIc = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 15L12 5l4.5 10M9 11.5h6"/><path id="dkTcBar" d="M5 20h14" style="stroke:' + (dk.tcLast || '#0a84ff') + ';stroke-width:3"/></svg>';
+    r.innerHTML = (dk.mEdit ? dkMasterBar() : '') + dkPB('font', svg('font'), 'Шрифт и размер выделенного текста') + dkPB('color', tcIc, 'Цвет текста') + dkSep + dkB('bold', '<b>B</b>', 'Жирный') + dkB('italic', '<i>I</i>', 'Курсив') + dkB('underline', '<u>U</u>', 'Подчёркнутый') + dkB('strike', '<s>S</s>', 'Зачёркнутый') + dkPB('mark', '<span class="hl"></span>', 'Маркер / цвет выделения') + dkSep +
       dkB('h1', 'H1', 'Заголовок 1') + dkB('h2', 'H2', 'Заголовок 2') + dkB('h3', 'H3', 'Заголовок 3') + dkSep +
-      dkB('alignL', svg('alL'), 'По левому краю') + dkB('alignC', svg('alC'), 'По центру') + dkB('alignR', svg('alR'), 'По правому краю') + dkB('alignJ', svg('alJ'), 'По ширине') + dkSep +
-      dkB('ul', svg('ul'), 'Маркированный список') + dkB('ol', svg('ol'), 'Нумерованный список') + dkB('quote', svg('quote'), 'Цитата') + dkB('codeb', svg('code'), 'Код в тексте') + dkB('link', svg('link'), 'Ссылка') + dkB('clear', svg('eraser'), 'Убрать форматирование') + dkSep +
+      dkB('alignL', svg('alL'), 'По левому краю') + dkB('alignC', svg('alC'), 'По центру') + dkB('alignR', svg('alR'), 'По правому краю') + dkB('alignJ', svg('alJ'), 'По ширине') + dkPB('para', svg('para'), 'Абзацы: красная строка, интервалы') + dkSep +
+      dkB('ul', svg('ul'), 'Маркированный список') + dkB('ol', svg('ol'), 'Нумерованный список') + dkB('outdent', svg('outdent'), 'Уменьшить отступ или вложенность') + dkB('indent', svg('indent'), 'Увеличить отступ или вложенность') + dkSep +
+      dkB('quote', svg('quote'), 'Цитата') + dkB('codeb', svg('code'), 'Код в тексте') + dkB('hr', svg('hr'), 'Разделитель') + dkB('link', svg('link'), 'Ссылка') + dkB('clear', svg('eraser'), 'Убрать форматирование') + dkSep +
       dkB('i-text', 'Aa', 'Добавить текстовый блок') + dkB('i-image', ico('dkimg'), 'Изображение') + dkB('i-video', ico('dkvideo'), 'Видео на слайд (.mp4, .webm, .mov, до 35 МБ)') + dkB('i-table', svg('table'), 'Таблица') + dkB('i-code', svg('code'), 'Блок кода') +
       dkB('i-fx', ico('dkfx'), 'Формулы') + dkB('i-chart', ico('dkchart'), 'Диаграммы') + dkB('i-tbl', svg('tbl'), 'Таблица из раздела «Таблицы»') + dkB('i-plate', ico('dkplate'), 'Плашка с текстом') + dkB('i-shape', ico('dkshape'), 'Фигура') + dkB('i-btn', '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.500" width="18" height="9" rx="4.500"/><path d="M9 12h6M13 10l2 2-2 2"/></svg>', 'Кнопка-ссылка: переход на другой слайд') + dkB('i-emoji', ico('dkemoji'), 'Эмодзи') + dkSep +
       dkB('i-task', svg('task'), 'Карточка задачи на слайд') + dkB('i-file', ico('dkfile'), 'Текстовый файл на слайд') + dkB('i-mus', ico('music'), 'Ноты из «Нотной тетради» на слайд') + dkSep + dkB('undo', svg('undo'), 'Отменить (Ctrl+Z)') + dkB('redo', svg('redo'), 'Повторить (Ctrl+Y)');
   } else if(t === 'tpl'){
     r.innerHTML = `<div class="dkt-row">${DK_TPL.map(x => {
-      const d = {fmt: dk.deck.fmt, tpl: x.k, slides: []}, s = dkSlide(d, 'title', ['Заголовок', 'Подзаголовок']), [W, H] = dkDims(d), w = 118;
+      const d = {fmt: dk.deck.fmt, tpl: x.k, slides: []}, s = dkSlide(d, 'title', ['Заголовок', 'Подзаголовок']), [W, H] = dkDims(d), w = 84;
       return `<button type="button" class="dkt${x.k === dk.deck.tpl ? ' on' : ''}" data-dktp="${x.k}" title="${esc(x.n)}"><span class="dkt-th" style="width:${w}px;height:${Math.round(w * H / W)}px"><span class="dkt-in" style="width:${W}px;height:${H}px;transform:scale(${w / W})">${dkSlideHtml(d, s, 'thumb')}</span></span><b>${esc(x.n)}</b></button>`;
     }).join('')}</div>`;
   } else if(t === 'slide'){
-    const sw = ['#ffffff', '#f5f5f7', '#1d1d1f', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#0b3d91'];
-    r.innerHTML = `<div class="dkgrp"><span class="dklb">Макет</span><div class="dklay">${DK_LAYOUTS.map(l => `<button type="button" class="dkl${sl.lay === l[0] ? ' on' : ''}" data-dklay="${l[0]}" title="${l[1]}">${dkLayIcon(l[0])}<small>${l[1]}</small></button>`).join('')}</div></div>${dkSep}
-      <div class="dkgrp"><span class="dklb">Формат</span><div class="seg dk-seg"><button type="button" data-dkfm="16:9" class="${dk.deck.fmt === '16:9' ? 'on' : ''}">16:9</button><button type="button" data-dkfm="4:3" class="${dk.deck.fmt === '4:3' ? 'on' : ''}">4:3</button></div></div>${dkSep}
-      <div class="dkgrp"><span class="dklb">Фон слайда</span><div class="dkbg">${sw.map(c => `<button type="button" class="dksw${sl.bg && sl.bg.c === c ? ' on' : ''}" data-dkbg="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('')}<button type="button" class="dksw custom" id="dkBgCb" title="Свой цвет" aria-label="Свой цвет"></button><button type="button" class="btn small neutral" data-dkc="bg-img">${ico('dkimg')} Изображение</button><button type="button" class="btn small ghost" data-dkc="bg-reset">Из шаблона</button><label class="dkchk"><input type="checkbox" id="dkBgAll"${dk.bgAll ? ' checked' : ''}> ко всем слайдам</label></div></div>` + dkSep + dkMasterRib() + dkSep + dkViewRib() + dkSep + dkAiRib();
+    const cur = DK_LAYOUTS.find(l => l[0] === sl.lay) || DK_LAYOUTS[1], bg = sl.bg || null;
+    const chev = '<svg class="ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    const bgSw = bg && bg.c ? '<span class="bg-i" style="background:' + bg.c + '"></span>' : '<span class="bg-i">' + (bg && bg.img ? ico('dkimg') : '') + '</span>';
+    const bgTx = bg && bg.img ? 'Изображение' : bg && bg.c ? bg.c.toUpperCase() : 'Из шаблона';
+    const pb = (k, inner) => '<button type="button" class="sl-btn' + (dk.pop === k ? ' open' : '') + '" data-dkpop="' + k + '" aria-haspopup="true" aria-expanded="' + (dk.pop === k) + '">' + inner + chev + '</button>';
+    r.innerHTML = dkG('Макет', pb('lay', '<span class="lay-i">' + dkLayIcon(cur[0]) + '</span><span>' + cur[1] + '</span>')) +
+      dkG('Формат', `<div class="seg dk-seg"><button type="button" data-dkfm="16:9" class="${dk.deck.fmt === '16:9' ? 'on' : ''}">16:9</button><button type="button" data-dkfm="4:3" class="${dk.deck.fmt === '4:3' ? 'on' : ''}">4:3</button></div>`) +
+      dkG('Фон', pb('bg', bgSw + '<span>' + bgTx + '</span>')) +
+      dkMasterRib() + dkViewRib() + dkAiRib();
   } else if(t === 'tr'){
-    r.innerHTML = `<button type="button" class="btn small neutral" data-dkc="panel-tr">Настройка перехода…</button><button type="button" class="dk-info" data-tip="Кривая скорости и длительность открываются кнопкой «Настройка перехода». «Умный переход» сопоставляет одинаковые объекты на соседних слайдах и плавно перемещает их." aria-label="Подсказка о переходах"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button>${dkSep}<div class="dkgrp"><span class="dklb">Переход к этому слайду</span><div class="dktr">${DK_TR.map(x => `<button type="button" class="chip${sl.tr.type === x[0] ? ' on' : ''}" data-dktr="${x[0]}">${x[1]}</button>`).join('')}</div></div>${dkSep}
-      <button type="button" class="btn small" data-dkc="tr-prev">${ico('play')} Просмотр</button><button type="button" class="btn small neutral" data-dkc="tr-all">Применить ко всем слайдам</button>`;
+    const trT = sl.tr || {}, inst = trT.type === 'instant', es = (DK_EASES.find(x => x[0] === trT.ease) || ['', ''])[1];
+    const sum = inst ? 'Без анимации' : (((+trT.dur || 300) / 1000).toString().replace('.', ',') + ' с · ' + es.toLowerCase());
+    const tiles = DK_TR.map(x => `<button type="button" class="trt${sl.tr.type === x[0] ? ' on' : ''}" data-dktr="${x[0]}" title="${x[1]}">${dkIc(DK_TRI[x[0]] || DK_TRI.instant)}<span>${x[1]}</span></button>`).join('');
+    r.innerHTML = dkG('Эффект перехода к слайду ' + (dk.i + 1), `<div class="trgrid">${tiles}</div>`) +
+      dkG('Параметры', `<div class="rg-col"><div class="trs">${dkIc(DK_TRI.clock)}<b>${sum}</b></div><div class="rg-row"><button type="button" class="rbtn" data-dkc="panel-tr">${dkIc(DK_TRI.gear)} Настроить…</button><button type="button" class="dk-info" data-tip="Кривая скорости и длительность открываются кнопкой «Настроить». «Умный переход» сопоставляет одинаковые объекты на соседних слайдах и плавно перемещает их." aria-label="Подсказка о переходах"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button></div></div>`) +
+      dkG('Применить', `<button type="button" class="rbig pri" data-dkc="tr-prev">${ico('play', 'fill')}<span>Просмотр</span></button><button type="button" class="rbig" data-dkc="tr-all">${dkIc(DK_TRI.all)}<span>Ко всем слайдам</span></button>`);
   } else {
-    r.innerHTML = `<button type="button" class="btn small" data-dkc="show-0">${ico('play')} С первого слайда</button><button type="button" class="btn small neutral" data-dkc="show-cur">С текущего слайда</button>${dkSep}<button type="button" class="btn small neutral" data-dkc="pdf">Скачать PDF / печать</button>${dkSep}<button type="button" class="btn small neutral" data-dkc="backup">Скачать резервную копию</button><button type="button" class="btn small ghost" data-dkc="restore">Открыть копию…</button>`;
+    r.innerHTML = dkG('Запуск показа', `<button type="button" class="rbig pri" data-dkc="show-0">${ico('play', 'fill')}<span>С первого слайда</span></button><button type="button" class="rbig" data-dkc="show-cur">${dkIc(DK_TRI.cur)}<span>С слайда ${dk.i + 1}</span></button>`) +
+      dkG('Экспорт', `<button type="button" class="rbig" data-dkc="pdf">${ico('file')}<span>PDF / печать</span></button>`) +
+      dkG('Резервная копия', `<button type="button" class="rbig" data-dkc="backup">${dkIc(DK_TRI.down)}<span>Скачать копию</span></button><button type="button" class="rbig" data-dkc="restore">${dkIc(DK_TRI.up)}<span>Открыть копию…</span></button>`);
   }
-  dkRibSync();
+  dkRibSync(); dkPopDraw();
+}
+
+/* --- всплывающие окна вкладки «Слайд» --- */
+function dkPopClose(){
+  dk.pop = ''; const p = document.getElementById('dkPop'); if(p) p.hidden = true;
+  document.querySelectorAll('#dkRib .sl-btn.open').forEach(b => { b.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); });
+}
+function dkPopDraw(){
+  const root = document.querySelector('#vDeck .dk'); if(!root) return;
+  let p = document.getElementById('dkPop');
+  const txp = !!DK_TXP[dk.pop], btn = dk.pop && (txp ? dk.tab === 'text' : dk.tab === 'slide' && !dk.mEdit) ? document.querySelector('#dkRib [data-dkpop="' + dk.pop + '"]') : null;
+  if(!btn){ dk.pop = ''; if(p) p.hidden = true; return; }
+  if(!p){ p = document.createElement('div'); p.id = 'dkPop'; root.appendChild(p); }
+  const sl = dkSlideObj();
+  p.className = 'dk-pop ' + (txp ? DK_TXP[dk.pop] : dk.pop === 'lay' ? 'pw-lay' : 'pw-bg');
+  if(txp) p.innerHTML = dkTxtPop(dk.pop);
+  else if(dk.pop === 'lay'){
+    p.innerHTML = '<h5>Макет слайда</h5><div class="pop-lay">' + DK_LAYOUTS.map(l => `<button type="button" class="dkl${sl.lay === l[0] ? ' on' : ''}" data-dklay="${l[0]}" title="${l[1]}">${dkLayIcon(l[0])}<small>${l[1]}</small></button>`).join('') + '</div>';
+  } else {
+    const sw = ['#ffffff', '#f5f5f7', '#1d1d1f', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#0b3d91'];
+    p.innerHTML = '<h5>Фон слайда</h5><div class="pop-sw">' + sw.map(c => `<button type="button" class="dksw${sl.bg && sl.bg.c === c ? ' on' : ''}" data-dkbg="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('') +
+      '<button type="button" class="dksw custom" id="dkBgCb" title="Свой цвет" aria-label="Свой цвет"></button></div>' +
+      `<div class="pop-row"><button type="button" class="rbtn" data-dkc="bg-img">${ico('dkimg')} Изображение</button><button type="button" class="rbtn" data-dkc="bg-reset">Из шаблона</button></div>` +
+      `<label class="dkchk"><input type="checkbox" id="dkBgAll"${dk.bgAll ? ' checked' : ''}> Применить ко всем слайдам</label>`;
+  }
+  const rr = root.getBoundingClientRect(), br = btn.getBoundingClientRect();
+  p.hidden = false;
+  const left = Math.max(8, Math.min(br.left - rr.left, rr.width - p.offsetWidth - 8));
+  p.style.left = left + 'px'; p.style.top = (br.bottom - rr.top + 6) + 'px';
 }
 function dkLayIcon(k){
   const S = DK_SLOTS[k] || [], bx = (x, y, w, h, f) => `<rect x="${(x * 40).toFixed(1)}" y="${(y * 24).toFixed(1)}" width="${(w * 40).toFixed(1)}" height="${(h * 24).toFixed(1)}" rx="1.5" ${f ? 'fill="currentColor" opacity=".35"' : 'fill="none" stroke="currentColor" stroke-width="1"'}/>`;
@@ -9503,7 +10119,7 @@ function dkLayIcon(k){
 function dkRibSync(){
   if(dk.tab !== 'text') return;
   const o = dkSelObjs()[0], dis = !(dk.editing || (o && o.t === 'text'));
-  document.querySelectorAll('#dkRib [data-dkc]').forEach(b => { if(/^(bold|italic|underline|strike|mark|h1|h2|h3|align.|ul|ol|quote|codeb|link|clear)$/.test(b.dataset.dkc)) b.classList.toggle('dim', dis); });
+  document.querySelectorAll('#dkRib [data-dkc], #dkRib [data-dkpop]').forEach(b => { if(/^(bold|italic|underline|strike|mark|h1|h2|h3|align.|ul|ol|quote|codeb|link|clear|indent|outdent|hr|font|color|para)$/.test(b.dataset.dkc || b.dataset.dkpop)) b.classList.toggle('dim', dis); });
 }
 function dkTabSet(t, silent){ dk.tab = t; dkRibDraw(); }
 function dkPanelNone(sl){
@@ -9557,7 +10173,7 @@ function dkPanel(){
       h += `<label class="dkchk"><input type="radio" name="dkva" value="click"${!o.auto ? ' checked' : ''}> Воспроизведение по клику</label><label class="dkchk"><input type="radio" name="dkva" value="auto"${o.auto ? ' checked' : ''}> Автозапуск при переходе на слайд</label>
         <label class="dkchk"><input type="checkbox" id="dkVl"${o.loop ? ' checked' : ''}> Зацикливание (Loop)</label><label class="dkchk"><input type="checkbox" id="dkVm"${o.mute ? ' checked' : ''}> Звук выключен по умолчанию</label><p class="hint">${esc(o.name)}</p><button type="button" class="btn small neutral" data-dkc="vid-replace">Заменить видео</button>`;
     } else if(o.t === 'text'){
-      h += `<label>Размер шрифта</label><div class="dkdur"><input type="range" id="dkFsR" min="12" max="140" value="${o.fs}"><input type="number" id="dkFs" min="8" max="200" value="${o.fs}"></div><label>Цвет текста</label><div class="dkbg">${[null, '#1d1d1f', '#ffffff', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2'].map(c => `<button type="button" class="dksw${(o.c || null) === c ? ' on' : ''}" data-dkoc="${c || ''}" style="background:${c || 'conic-gradient(#ccc,#fff,#ccc)'}" aria-label="Цвет"></button>`).join('')}</div>
+      h += `<label>Размер шрифта</label><div class="dkdur"><input type="range" id="dkFsR" min="12" max="140" value="${o.fs}"><input type="number" id="dkFs" min="8" max="200" value="${o.fs}"></div><label>Цвет текста</label><div class="dkbg">${[null, '#1d1d1f', '#ffffff', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2'].map(c => `<button type="button" class="dksw${(o.c || null) === c ? ' on' : ''}" data-dkoc="${c || ''}" style="background:${c || 'conic-gradient(#ccc,#fff,#ccc)'}" aria-label="Цвет"></button>`).join('')}<button type="button" class="dksw custom${o.c && ![null, '#1d1d1f', '#ffffff', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2'].includes(o.c.toLowerCase()) ? ' on' : ''}" id="dkOcCb" title="Свой цвет (HEX)" aria-label="Свой цвет"${o.c && ![null, '#1d1d1f', '#ffffff', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2'].includes(o.c.toLowerCase()) ? ' style="background:' + o.c + '"' : ''}></button></div>
         <label class="dkchk"><input type="checkbox" id="dkTb"${o.b ? ' checked' : ''}> Жирный по умолчанию</label>` + (o.bgc ? `<label>Цвет плашки</label><div class="dkbg">${['#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#1d1d1f', '#ffffff', '#e5e5ea'].map(c => `<button type="button" class="dksw${o.bgc.toLowerCase() === c ? ' on' : ''}" data-dkpc="${c}" style="background:${c}" aria-label="Цвет ${c}"></button>`).join('')}<button type="button" class="dksw custom" id="dkPcCb" title="Свой цвет" aria-label="Свой цвет"></button></div><label>Скругление, px</label><div class="dkdur"><input type="range" id="dkRadR" min="0" max="80" value="${o.rad == null ? 20 : o.rad}"><input type="number" id="dkRad" min="0" max="120" value="${o.rad == null ? 20 : o.rad}"></div><button type="button" class="btn small neutral" data-dkc="plate-off">Убрать плашку</button>` : `<button type="button" class="btn small neutral" data-dkc="plate-on">Сделать плашкой</button>`);
     } else if(o.t === 'image'){
       h += `<label>Вписывание</label><div class="seg dk-seg"><button type="button" data-dkfit="cover" class="${o.fit !== 'contain' ? 'on' : ''}">Заполнить</button><button type="button" data-dkfit="contain" class="${o.fit === 'contain' ? 'on' : ''}">Вписать</button></div><button type="button" class="btn small neutral" data-dkc="img-replace">${o.src ? 'Заменить' : 'Добавить'} изображение</button>`;
@@ -9576,11 +10192,11 @@ function dkPanel(){
 }
 /* ---------- мастер-слайды ---------- */
 function dkMasterRib(){
-  const ms = dk.deck.masters || [], sl = dk.deck.slides[dk.i];
-  return '<div class="dkgrp"><span class="dklb">Мастер-слайд</span><div class="dkmr"><select class="gs" id="dkMst" aria-label="Мастер-слайд для этого слайда"><option value="">Без мастера</option>' + ms.map(m => '<option value="' + m.id + '"' + (sl.master === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('') + '<option value="__new">+ Новый мастер…</option></select><button type="button" class="btn small neutral" data-dkc="m-edit"' + (sl.master ? '' : ' disabled') + '>Изменить мастер</button><button type="button" class="btn small ghost" data-dkc="m-all"' + (sl.master ? '' : ' disabled') + '>Ко всем слайдам</button></div></div>';
+  const ms = dk.deck.masters || [], sl = dk.deck.slides[dk.i], off = sl.master ? '' : ' disabled';
+  return dkG('Мастер-слайд', '<div class="rg-row"><select class="gs" id="dkMst" aria-label="Мастер-слайд для этого слайда"><option value="">Без мастера</option>' + ms.map(m => '<option value="' + m.id + '"' + (sl.master === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('') + '<option value="__new">+ Новый мастер…</option></select><button type="button" class="rbtn" data-dkc="m-edit"' + off + '>Изменить</button><button type="button" class="rbtn" data-dkc="m-all"' + off + ' title="Применить мастер ко всем слайдам">Ко всем</button></div>');
 }
-const dkViewRib = () => '<div class="dkgrp"><span class="dklb">Вид</span><button type="button" class="btn small neutral" data-dkc="panel-view">Поля и линейки…</button></div>';
-const dkAiRib = () => '<div class="dkgrp"><span class="dklb">ИИ</span><button type="button" class="btn small" data-dkc="ai-slides">' + svg('ai') + ' Слайды из тезисов</button></div>';
+const dkViewRib = () => dkG('Вид', '<button type="button" class="rbtn" data-dkc="panel-view">' + dkIc(DK_TRI.view) + '<span>Поля и линейки</span></button>');
+const dkAiRib = () => dkG('ИИ', '<button type="button" class="rbtn ai" data-dkc="ai-slides">' + svg('ai') + '<span>Слайды из тезисов</span></button>');
 function dkMasterBar(){
   const m = dkSlideObj(), g = m.grid || {on: false, cols: 12};
   return '<div class="dkmb"><b>Мастер «' + esc(m.name) + '»</b><span class="dkmh">изменения применятся ко всем слайдам с этим мастером</span>' + dkB('m-sno', '№', 'Добавить номер слайда') + dkB('m-foot', 'Т', 'Добавить текст подвала') + '<label class="dkchk"><input type="checkbox" id="dkMGr"' + (g.on ? ' checked' : '') + '> Сетка</label><select class="gs" id="dkMGc"' + (g.on ? '' : ' disabled') + '>' + [4, 6, 12].map(n => '<option value="' + n + '"' + (g.cols === n ? ' selected' : '') + '>' + n + ' колонок</option>').join('') + '</select><button type="button" class="btn small neutral" data-dkc="m-bg">Фон</button><button type="button" class="btn small ghost" data-dkc="m-ren">Переименовать</button><button type="button" class="btn small danger" data-dkc="m-del">Удалить</button><button type="button" class="btn small" data-dkc="m-done">Готово</button></div>' + dkSep;
@@ -9736,11 +10352,18 @@ function dkAfterShow(i){ if(view === 'deck'){ dk.i = Math.min(i, dk.deck.slides.
 /* --- события --- */
 function dkWire(){
   const V = dkV();
-  V.addEventListener('mousedown', e => { if(e.target.closest('.dkb, .dksw, .dkl, .dkt, .chip, [data-dkc]') && !e.target.closest('input,select')) e.preventDefault(); });
+  V.addEventListener('mousedown', e => { if(e.target.closest('.dkb, .dksw, .dkl, .dkt, .chip, [data-dkc], [data-dkz], #dkPop button') && !e.target.closest('input,select')) e.preventDefault(); });
   document.getElementById('dkTitle').addEventListener('input', e => { dk.rec.title = e.target.value; dkDirty(); });
+  document.getElementById('dkRib').addEventListener('scroll', () => { if(dk.pop) dkPopClose(); });
+  window.addEventListener('resize', () => { if(dk.pop) dkPopClose(); });
+  dkZoomWire();
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && dk.pop) dkPopClose(); });
   V.addEventListener('click', async e => {
     let b;
     if(e.target.closest('#dkBack')){ nav('#/slides'); return; }
+    if(dk.pop && !e.target.closest('#dkPop, [data-dkpop]')) dkPopClose();
+    if((b = e.target.closest('[data-dkpop]'))){ const k = b.dataset.dkpop; dk.pop = dk.pop === k ? '' : k; dkPopDraw(); document.querySelectorAll('#dkRib .sl-btn').forEach(x => { const on = x.dataset.dkpop === dk.pop; x.classList.toggle('open', on); x.setAttribute('aria-expanded', on); }); return; }
+    if((b = e.target.closest('[data-dkz]'))){ const a = b.dataset.dkz; if(a === 'in') dkZoomStep(1); else if(a === 'out') dkZoomStep(-1); else if(a === 'fit') dkZoomTo(null); else if(a === 'reset') dkZoomTo(1); return; }
     if(e.target.closest('#dkPlay')){ dkStartShow(dk.i); return; }
     if((b = e.target.closest('[data-dkt]'))){ if(dk.mEdit){ toast('Сначала завершите редактирование мастер-слайда'); return; } dkEndEdit(); dkTabSet(b.dataset.dkt); return; }
     if(e.target.closest('#dkAddS')){ dkAddSlide(); return; }
@@ -9748,11 +10371,21 @@ function dkWire(){
     if((b = e.target.closest('[data-dkdel]'))){ e.stopPropagation(); dkDelSlide(+b.dataset.dkdel); return; }
     if((b = e.target.closest('.dkth'))){ dkEndEdit(); dk.mEdit = ''; dk.i = +b.dataset.i; dk.sel = []; dkThumbs(); dkStageDraw(); dkPanel(); dkRibDraw(); return; }
     if((b = e.target.closest('[data-dktp]'))){ dkPush(); dk.deck.tpl = b.dataset.dktp; dkDraw(); dkDirty(); return; }
-    if((b = e.target.closest('[data-dklay]'))){ dkApplyLayout(b.dataset.dklay); return; }
+    if((b = e.target.closest('[data-dklay]'))){ dk.pop = ''; dkApplyLayout(b.dataset.dklay); return; }
     if((b = e.target.closest('[data-dkfm]'))){ dkSetFormat(b.dataset.dkfm); return; }
     if(e.target.closest('#dkPcCb')){ const o = dkSelObjs()[0]; if(o && o.t === 'task') askColor(o.bgc).then(c => { if(!c) return; dkPush(); o.bgc = c; const el = dkObjEl(o.id); if(el){ el.style.background = c; el.style.color = dkLum(c) < .55 ? '#fff' : '#111'; } dkDirty(); }); return; }
     if(e.target.closest('#dkBgCb')){ askColor(null).then(c => { if(c) dkSetBg({c}); }); return; }
     if((b = e.target.closest('[data-dkbg]'))){ dkSetBg({c: b.dataset.dkbg}); return; }
+    if(e.target.closest('#dkOcCb')){ const o = dkSelObjs()[0]; if(o && o.t === 'text') askColor(o.c || null).then(c => { if(!c) return; dkPush(); o.c = c; dkStageDraw(); dkSelect([o.id]); dkDirty(); dkThumbs(); }); return; }
+    if((b = e.target.closest('[data-dkff]'))){ dkSetFont(b.dataset.dkff); dkPopDraw(); return; }
+    if((b = e.target.closest('[data-dkfz]'))){ dkSetSize(+b.dataset.dkfz); dkPopDraw(); return; }
+    if((b = e.target.closest('[data-dkfs]'))){ const i = document.getElementById('dkFzIn'); dkSetSize((+(i && i.value) || dkFmtState().size) + (+b.dataset.dkfs)); dkPopDraw(); return; }
+    if((b = e.target.closest('[data-dktc]'))){ dkSetColor(b.dataset.dktc); dkPopClose(); return; }
+    if(e.target.closest('#dkTcCb')){ askColor(dk.tcLast || null).then(c => { if(c){ dkSetColor(c); } dkPopClose(); }); return; }
+    if((b = e.target.closest('[data-dkmk]'))){ dkMark(b.dataset.dkmk); dkPopClose(); return; }
+    if(e.target.closest('#dkMkCb')){ askColor(null).then(c => { if(c){ const n = parseInt(c.slice(1), 16); dkMark('rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',.45)'); } dkPopClose(); }); return; }
+    if((b = e.target.closest('[data-dkpk]'))){ dkParaSet({[b.dataset.dkpk]: +b.dataset.dkpv}); return; }
+    if((b = e.target.closest('[data-dkpp]'))){ dkParaSet(({book: {ind: 1.5, gap: 0, lh: 1.5}, air: {ind: 0, gap: .8, lh: 1.6}, def: null})[b.dataset.dkpp]); return; }
     if((b = e.target.closest('[data-dktr]'))){ dkPush(); dkSlideObj().tr.type = b.dataset.dktr; dkRibDraw(); dkPanel(); dkDirty(); return; }
     if((b = e.target.closest('[data-dkal]'))){ dkAlign(b.dataset.dkal); return; }
     if((b = e.target.closest('[data-dkpc]'))){ const o = dkSelObjs()[0]; if(o){ dkPush(); o.bgc = b.dataset.dkpc; dkStageDraw(); dkSelect([o.id]); dkDirty(); dkThumbs(); } return; }
@@ -9791,7 +10424,7 @@ function dkWire(){
     if(t.id === 'dkVl'){ dkPush(); o.loop = t.checked; dkStageDraw(); dkSelect([o.id]); dkDirty(); return; }
     if(t.id === 'dkVm'){ dkPush(); o.mute = t.checked; dkStageDraw(); dkSelect([o.id]); dkDirty(); return; }
   });
-  V.addEventListener('change', e => { if(e.target.id === 'dkTrD'){ dkPanel(); } });
+  V.addEventListener('change', e => { if(e.target.id === 'dkTrD'){ dkPanel(); } if(e.target.id === 'dkFzIn'){ dkSetSize(e.target.value); dkPopDraw(); } });
   /* текст: ввод внутри блока */
   V.addEventListener('input', e => {
     if(!dk.editing || !dk.editing.el.contains(e.target)) return;
@@ -9800,7 +10433,7 @@ function dkWire(){
   });
   V.addEventListener('focusout', e => {
     if(dk.editing && dk.editing.el.contains(e.target)){
-      setTimeout(() => { if(dk.editing && !dk.editing.el.contains(document.activeElement) && !document.activeElement.closest('#dkRib, #dkRp')) dkEndEdit(); }, 120);
+      setTimeout(() => { if(dk.editing && !dk.editing.el.contains(document.activeElement) && !document.activeElement.closest('#dkRib, #dkRp, #dkPop, .tm-ov')) dkEndEdit(); }, 120);
     }
   });
   /* перетаскивание и изменение размера */
@@ -9912,8 +10545,9 @@ function dkWire(){
   window.addEventListener('beforeunload', () => { if(dk.rec && view === 'deck') dkSaveNow(); });
 }
 async function dkCmd(c){
-  if(/^(bold|italic|underline|strike|mark|h1|h2|h3|alignL|alignC|alignR|alignJ|ul|ol|quote|codeb|link|clear)$/.test(c)){ dkTextCmd(c); return; }
+  if(/^(bold|italic|underline|strike|mark|h1|h2|h3|alignL|alignC|alignR|alignJ|ul|ol|quote|codeb|link|clear|indent|outdent|hr)$/.test(c)){ dkTextCmd(c); return; }
   switch(c){
+    case 'fmt-reset': dkFmtReset(); dkPopDraw(); return;
     case 'undo': dkUndo(); return; case 'redo': dkRedo(); return;
     case 'panel-tr': case 'panel-view': case 'panel-menu': { const k = c.slice(6); dk.panel = dk.panel === k ? '' : k; if(dk.panel && dk.sel.length) dkSelect([]); else dkPanel(); return; }
     case 'panel-close': dk.panel = ''; dkPanel(); return;
@@ -10010,7 +10644,7 @@ function applyView(){
 }
 /* ================= шрифт и размер выделенного текста ================= */
 const FMT_SIZES = [10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
-const FMT_PROPS = /^(font-family|font-size|background-color)$/;
+const FMT_PROPS = /^(font-family|font-size|background-color|color)$/;
 const fmtPlain = sp => sp.nodeType === 1 && sp.tagName === 'SPAN' && !sp.classList.length && sp.getAttributeNames().every(a => a === 'style' || a === 'data-f') && Array.from(sp.style).every(p => FMT_PROPS.test(p));
 function fmtHasSel(quiet){
   restore(); const s = getSelection();
@@ -10036,7 +10670,7 @@ function fmtNode(t, prop, val){
   if(!chain.length){ const sp = document.createElement('span'); t.parentNode.insertBefore(sp, t); sp.appendChild(t); chain.push(sp); }
   chain.forEach((x, i) => { if(i === 0 && val) x.style.setProperty(prop, val); else x.style.removeProperty(prop); });
   chain.forEach(x => {
-    if(x.style.fontFamily || x.style.fontSize) x.setAttribute('data-f', '1'); else x.removeAttribute('data-f');
+    if(x.style.fontFamily || x.style.fontSize || x.style.color) x.setAttribute('data-f', '1'); else x.removeAttribute('data-f');
     if(!x.style.length){ while(x.firstChild) x.parentNode.insertBefore(x.firstChild, x); x.remove(); }
   });
 }
@@ -10093,6 +10727,27 @@ function fmtSync(){
   document.querySelectorAll('[data-c="font"]').forEach(e => { const tt = 'Шрифт и размер выделенного текста' + (f ? ': ' + f.n : ''); e.title = tt; e.setAttribute('aria-label', tt); });
 }
 document.addEventListener('selectionchange', () => { cancelAnimationFrame(fmtRaf); fmtRaf = requestAnimationFrame(fmtSync); });
+/* ===== цвет текста (как в «Презентациях») ===== */
+const ED_TCOL = ['#1d1d1f', '#ffffff', '#8e8e93', '#0a84ff', '#30d158', '#ff9f0a', '#ff375f', '#bf5af2', '#ffd60a', '#64d2ff'];
+let edTcLast = (() => { const v = store.get('yng-tc', ''); return /^#[0-9a-f]{6}$/i.test(v) ? v : '#0a84ff'; })();
+function tcBarSync(){ document.querySelectorAll('.tc-bar').forEach(e => { e.style.stroke = edTcLast; }); }
+function setTextColor(c){
+  if(!fmtApply('color', c || '', true)){ toast('Выделите текст, у которого нужно изменить цвет'); return false; }
+  if(c){ edTcLast = c; store.set('yng-tc', c); tcBarSync(); }
+  return true;
+}
+function popTextColor(anchor){
+  if(!fmtHasSel(true)){ toast('Выделите текст, у которого нужно изменить цвет'); return; }
+  openPop(anchor, '<div class="mh">Цвет текста</div><div class="sw cl"><button type="button" class="no" data-tc="" title="По умолчанию" aria-label="Цвет по умолчанию"></button>' +
+    ED_TCOL.map(c => '<button type="button" data-tc="' + c + '" style="background:' + c + '" aria-label="Цвет ' + c + '"></button>').join('') +
+    '<button type="button" class="custom" id="tcCustom" title="Свой цвет (HEX)" aria-label="Свой цвет (HEX)"></button></div>', p => {
+    p.addEventListener('click', e => {
+      if(e.target.closest('#tcCustom')){ closePop(); askColor(edTcLast).then(c => { if(c) setTextColor(c); }); return; }
+      const b = e.target.closest('[data-tc]'); if(!b) return;
+      setTextColor(b.dataset.tc); closePop();
+    });
+  });
+}
 function popFont(anchor){
   const has = fmtHasSel(true), st0 = (has && fmtState()) || {fam: '', size: 17};
   const SW = [10, 12, 14, 16, 18, 20, 24, 32, 48, 64];
@@ -10157,7 +10812,7 @@ const SV = {
 const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${SV[k]}</svg>`;
 const TOOLS = [
   ['ai',svg('ai')+'<span>ИИ</span>','Помощь ИИ: улучшить, упростить, исправить, перевести…'],['spell',svg('spell'),'Проверка орфографии (словарь) и грамматики (ИИ)'],['mic',svg('mic'),'Голосовой ввод: встроенный или Gemini (русский и английский)'],'|',
-  ['font',svg('font'),'Шрифт и размер выделенного текста'],['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
+  ['font',svg('font'),'Шрифт и размер выделенного текста'],['color','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 15L12 5l4.5 10M9 11.5h6"/><path class="tc-bar" d="M5 20h14" style="stroke:#0a84ff;stroke-width:3"/></svg>','Цвет текста'],['bold','<b>B</b>','Жирный (Ctrl+B)'],['italic','<i>I</i>','Курсив (Ctrl+I)'],['underline','<u>U</u>','Подчёркнутый (Ctrl+U)'],['strike','<s>S</s>','Зачёркнутый'],['mark','<span class="hl"></span>','Маркер / цвет выделения'],
   '|',['h1','H1','Заголовок 1'],['h2','H2','Заголовок 2'],['h3','H3','Заголовок 3'],
   '|',['alignL',svg('alL'),'По левому краю (Ctrl+L)'],['alignC',svg('alC'),'По центру (Ctrl+E)'],['alignR',svg('alR'),'По правому краю (Ctrl+R)'],['alignJ',svg('alJ'),'По ширине (Ctrl+J)'],['para',svg('para'),'Абзацы: красная строка, интервалы, отступы'],
   '|',['ul',svg('ul'),'Маркированный список'],['ol',svg('ol'),'Нумерованный список'],['outdent',svg('outdent'),'Уменьшить отступ или вложенность (Shift+Tab)'],['indent',svg('indent'),'Увеличить отступ или вложенность (Tab)'],
@@ -10167,12 +10822,13 @@ const TOOLS = [
   '|',['page',svg('page'),'Параметры страницы: A5, A4, A3']
 ];
 const TBL = [['row-up','Строка ↑','Добавить строку выше'],['row-down','Строка ↓','Добавить строку ниже'],['col-left','Столбец ←','Добавить столбец слева'],['col-right','Столбец →','Добавить столбец справа'],['row-del','− Строка','Удалить строку'],['col-del','− Столбец','Удалить столбец'],['cell-merge','Объединить','Объединить выделенные ячейки (выделение: протяните мышью или Shift+клик)'],['cell-split','Разъединить','Разъединить объединённую ячейку'],['cell-range','Диапазон','Выделять ячейки касанием: нажмите здесь, затем на конечную ячейку'],['capt','Подпись','Подпись над таблицей (всегда по левому краю)'],['tbl-del','Удалить таблицу','Удалить таблицу']];
-const BUB = ['ai','|','bold','italic','underline','strike','mark','|','h2','quote','code','link'];
+const BUB = ['ai','|','bold','italic','underline','strike','color','mark','|','h2','quote','code','link'];
 const toolMap = Object.fromEntries(TOOLS.filter(t => t !== '|').map(t => [t[0], t]));
 const btn = (t) => t === '|' ? '<span class="sep-v"></span>' : `<button type="button" class="tb${t[0] === 'view' ? ' txt' :  t[0] === 'ai' ? ' txt ai' : ''}" data-c="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`;
 $('#edTools').innerHTML = TOOLS.map(btn).join('');
 $('#edTbl').innerHTML = TBL.map(t => `<button type="button" class="tb txt" data-c="${t[0]}" title="${t[2]}">${t[1]}</button>`).join('');
 bubble.innerHTML = BUB.map(k => k === '|' ? btn('|') : btn(toolMap[k])).join('');
+setTimeout(() => { try{ tcBarSync(); }catch(e){} }, 0);
 [bar, bubble].forEach(c => c.addEventListener('mousedown', e => { if(e.target.closest('button')) e.preventDefault(); }));
 [bar, bubble].forEach(c => c.addEventListener('click', e => { const b = e.target.closest('[data-c]'); if(b){ run(b.dataset.c, b); } }));
 
@@ -10306,9 +10962,13 @@ function run(c, b){
     case 'underline': return ex('underline');
     case 'strike': return ex('strikeThrough');
     case 'mark':
-      return openPop(b, `<div class="sw">${COLORS.map(k => `<button type="button" data-k="${k}" style="background:${k}" aria-label="Цвет маркера"></button>`).join('')}<button type="button" class="no" data-k="transparent" aria-label="Убрать выделение" title="Убрать выделение"></button></div>`, p => {
-        p.addEventListener('click', e => { const k = e.target.closest('[data-k]'); if(!k) return; ex('hiliteColor', k.dataset.k); closePop(); });
+      return openPop(b, `<div class="sw">${COLORS.map(k => `<button type="button" data-k="${k}" style="background:${k}" aria-label="Цвет маркера"></button>`).join('')}<button type="button" class="no" data-k="transparent" aria-label="Убрать выделение" title="Убрать выделение"></button><button type="button" class="custom" id="mkCustom" aria-label="Свой цвет (HEX)" title="Свой цвет (HEX)"></button></div>`, p => {
+        p.addEventListener('click', e => {
+          if(e.target.closest('#mkCustom')){ closePop(); askColor(null).then(c => { if(!c) return; const n = parseInt(c.slice(1), 16); ex('hiliteColor', 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',.45)'); changed(); }); return; }
+          const k = e.target.closest('[data-k]'); if(!k) return; ex('hiliteColor', k.dataset.k); closePop();
+        });
       });
+    case 'color': return popTextColor(b);
     case 'h1': case 'h2': case 'h3': return toggleBlock(c);
     case 'ul': return ex('insertUnorderedList');
     case 'ol': return ex('insertOrderedList');
@@ -11492,7 +12152,7 @@ async function exportAll(fmt){
   const recs = Object.values(DR).sort((a, b) => b.updated - a.updated);
   if(!recs.length){ toast('Пока нет сохранённых файлов'); return; }
   let ok;
-  if(fmt === 'json') ok = await download(`yng-text-backup-${todayISO()}.json`, JSON.stringify({app: 'yng-text', version: 1, exported: new Date().toISOString(), drafts: recs.map(recOut), folders: M.folders, tasks: M.tasks, board: bdOut()}, null, 1), 'application/json');
+  if(fmt === 'json') ok = await download(`yng-text-backup-${todayISO()}.json`, JSON.stringify({app: 'yng-text', version: 1, exported: new Date().toISOString(), drafts: recs.map(recOut), folders: M.folders, tasks: M.tasks, board: bdOut(), sites: SITES}, null, 1), 'application/json');
   else ok = await download(`yng-text-${todayISO()}.md`, recs.map(mdOne).join('\n---\n\n'), 'text/markdown');
   if(ok) toast('Скачано файлов: ' + recs.length);
 }
@@ -11522,7 +12182,7 @@ async function importFiles(files){
     const name = f.name || 'Без названия', ext = (name.match(/\.([^.]+)$/) || [,''])[1].toLowerCase(), base = name.replace(/\.[^.]+$/, '');
     try{
       const txt = await f.text();
-      if(ext === 'json'){ const o = JSON.parse(txt); const l = normBackup(o); if(o && (Array.isArray(o.tasks) || Array.isArray(o.folders) || (o.board && Array.isArray(o.board.objs)))) extras.push(o); if(l.length) backups.push(...l); else if(!(o && ((o.tasks || []).length || (o.folders || []).length))) bad++; }
+      if(ext === 'json'){ const o = JSON.parse(txt); const l = normBackup(o); if(o && (Array.isArray(o.tasks) || Array.isArray(o.folders) || Array.isArray(o.sites) || (o.board && Array.isArray(o.board.objs)))) extras.push(o); if(l.length) backups.push(...l); else if(!(o && ((o.tasks || []).length || (o.folders || []).length))) bad++; }
       else if(ext === 'md' || ext === 'markdown'){
         let t = txt.replace(/^\uFEFF/, ''), title = base; const m = t.match(/^\s*#\s+(.+?)\s*(?:\n|$)/);
         if(m){ title = m[1].replace(/[*_`]/g, ''); t = t.slice(m[0].length); }
