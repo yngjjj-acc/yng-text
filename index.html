@@ -2008,7 +2008,6 @@ p.tbe{margin:14px 0;cursor:pointer;overflow:visible}p.tbe:hover .tbe-w{border-co
 .st-t:hover .st-i,.st-t:focus-visible .st-i{transform:translateY(-2px) scale(1.04);box-shadow:inset 0 0 0 1px var(--line-2),0 10px 24px -8px rgba(0,0,0,.28)}
 .st-t:focus-visible .st-i{outline:2px solid var(--accent);outline-offset:2px}
 .st-n{font-size:12.5px;line-height:1.25;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)}
-.st-t[data-tip]:hover::after,.st-t[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(240px,70vw);padding:7px 11px;border-radius:10px;background:var(--text);color:var(--bg);font-size:12.5px;line-height:1.35;text-align:center;white-space:normal;z-index:30;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.28)}
 .st-e{position:absolute;top:-5px;right:2px;width:24px;height:24px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-elev,var(--bg));color:var(--text-2);display:grid;place-items:center;padding:0;opacity:0;transition:opacity .15s;cursor:pointer;z-index:2}
 .st-e svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .st-w:hover .st-e,.st-e:focus-visible{opacity:1}
@@ -4217,7 +4216,7 @@ const sitesSave = () => store.set('yng-sites', SITES);
 function siteSrcs(url){
   let o = ''; try{ o = new URL(url).origin; }catch(e){ return []; }
   /* [адрес, минимальная ширина]: мелкие картинки (серый глобус-заглушка 16px) отбрасываем и идём к следующему источнику */
-  return [[o + '/apple-touch-icon.png', 48], ['https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=' + encodeURIComponent(o) + '&size=256', 32], ['https://icons.duckduckgo.com/ip3/' + new URL(url).hostname + '.ico', 32], [o + '/favicon.ico', 1]];
+  return [['https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=' + encodeURIComponent(o) + '&size=256', 32], ['https://icons.duckduckgo.com/ip3/' + new URL(url).hostname + '.ico', 32], [o + '/apple-touch-icon.png', 100], [o + '/favicon.ico', 1]];
 }
 function siteImg(logo, url){
   const srcs = logo ? [[logo, 1]] : siteSrcs(url);
@@ -4247,6 +4246,7 @@ function sitesWire(){
   }
   const a = document.getElementById('stAdd'); if(a) a.onclick = () => siteDlg(null);
   vHome.querySelectorAll('[data-sedit]').forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); siteDlg(b.dataset.sedit); }; });
+  vHome.querySelectorAll('.st-t').forEach(t => { t.addEventListener('click', e => { if(e.button || e.ctrlKey || e.metaKey || e.shiftKey) return; e.preventDefault(); const u = t.getAttribute('href'); try{ if(typeof TG !== 'undefined' && TG && TG.openLink) TG.openLink(u); else window.open(u, '_blank', 'noopener'); }catch(err){ window.open(u, '_blank', 'noopener'); } }); });
   vHome.querySelectorAll('.st-t').forEach(t => { t.addEventListener('contextmenu', e => { const w = t.parentNode.querySelector('[data-sedit]'); if(w){ e.preventDefault(); siteDlg(w.dataset.sedit); } }); });
 }
 function siteLogoFromFile(f){
