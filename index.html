@@ -4216,16 +4216,17 @@ let SITES = (() => { const a = store.get('yng-sites', []); return Array.isArray(
 const sitesSave = () => store.set('yng-sites', SITES);
 function siteSrcs(url){
   let o = ''; try{ o = new URL(url).origin; }catch(e){ return []; }
-  return ['https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=' + encodeURIComponent(o) + '&size=128', o + '/favicon.ico'];
+  /* [адрес, минимальная ширина]: мелкие картинки (серый глобус-заглушка 16px) отбрасываем и идём к следующему источнику */
+  return [[o + '/apple-touch-icon.png', 48], ['https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=' + encodeURIComponent(o) + '&size=256', 32], ['https://icons.duckduckgo.com/ip3/' + new URL(url).hostname + '.ico', 32], [o + '/favicon.ico', 1]];
 }
 function siteImg(logo, url){
-  const srcs = logo ? [logo] : siteSrcs(url);
+  const srcs = logo ? [[logo, 1]] : siteSrcs(url);
   if(!srcs.length) return SITE_PH;
-  return '<img class="st-img" alt="" draggable="false" referrerpolicy="no-referrer" src="' + esc(srcs[0]) + '" data-rest="' + esc(JSON.stringify(srcs.slice(1))) + '">';
+  return '<img class="st-img" alt="" draggable="false" referrerpolicy="no-referrer" src="' + esc(srcs[0][0]) + '" data-min="' + srcs[0][1] + '" data-rest="' + esc(JSON.stringify(srcs.slice(1))) + '">';
 }
 function siteImgFail(img){
   let rest = []; try{ rest = JSON.parse(img.dataset.rest || '[]'); }catch(e){}
-  if(rest.length){ img.dataset.rest = JSON.stringify(rest.slice(1)); img.src = rest[0]; }
+  if(rest.length){ img.dataset.rest = JSON.stringify(rest.slice(1)); img.dataset.min = rest[0][1]; img.src = rest[0][0]; }
   else img.outerHTML = SITE_PH;
 }
 function siteTile(s){
@@ -4242,7 +4243,7 @@ function sitesWire(){
   if(!sitesWired){
     sitesWired = true;
     vHome.addEventListener('error', e => { if(e.target.classList && e.target.classList.contains('st-img')) siteImgFail(e.target); }, true);
-    vHome.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < 2) siteImgFail(i); }, true);
+    vHome.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < (+i.dataset.min || 2)) siteImgFail(i); }, true);
   }
   const a = document.getElementById('stAdd'); if(a) a.onclick = () => siteDlg(null);
   vHome.querySelectorAll('[data-sedit]').forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); siteDlg(b.dataset.sedit); }; });
@@ -4281,7 +4282,7 @@ function siteDlg(id){
     '<div class="st-act"><button type="button" class="btn small" id="stOk">Сохранить</button><button type="button" class="btn small neutral" id="stNo">Отмена</button>' + (cur ? '<button type="button" class="btn small neutral st-del" id="stDel">Удалить</button>' : '') + '</div>');
   const $i = q => ov.querySelector(q), N = $i('#stN'), D = $i('#stD'), U = $i('#stU'), P = $i('#stP'), Up = $i('#stUp'), Rm = $i('#stRm');
   P.addEventListener('error', e => { if(e.target.classList && e.target.classList.contains('st-img')) siteImgFail(e.target); }, true);
-  P.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < 2) siteImgFail(i); }, true);
+  P.addEventListener('load', e => { const i = e.target; if(i.classList && i.classList.contains('st-img') && i.naturalWidth < (+i.dataset.min || 2)) siteImgFail(i); }, true);
   let pt = 0;
   const prev = () => { const u = siteUrl(U.value); P.innerHTML = (logo || u) ? siteImg(logo, u) : SITE_PH; Up.textContent = logo ? 'Изменить логотип' : 'Загрузить логотип'; Rm.hidden = !logo; };
   prev();
